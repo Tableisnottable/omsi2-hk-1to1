@@ -1,0 +1,1 @@
+﻿$Exe = "C:\Program Files (x86)\Steam\steamapps\common\OMSI 2\OpenOMSI.exe"; if (Test-Path $Exe) { Start-Process$Exe } else { Write-Host "OpenOMSI.exe not found" -ForegroundColor Red }

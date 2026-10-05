@@ -1,0 +1,6 @@
+﻿*.bak
+*.tmp
+*.log
+*.fbx
+*.obj
+release/*.zip

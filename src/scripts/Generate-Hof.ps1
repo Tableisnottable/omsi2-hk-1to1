@@ -1,0 +1,1 @@
+﻿$HofPath = Join-Path $PSScriptRoot "..\..\Vehicles\Annan_HK\HK_Routes.hof"; [System.IO.File]::WriteAllText($HofPath, "[name]`r`nHK_Routes`r`n`r`n[servicetrip]`r`nOut of Service`r`n`r`n[line]`r`n101`r`n10100`r`n00`r`n`r`n[stop]`r`nCross Harbour Tunnel`r`n蝝ㄐ瘚瑕??折?`n10101", [System.Text.Encoding]::UTF8)

@@ -1,0 +1,1 @@
+﻿$Zip = Join-Path$PSScriptRoot "..\..\release\omsi2-hk-1to1-full.zip"; if (Test-Path $Zip) { Remove-Item$Zip -Force }; Compress-Archive -Path @((Join-Path $PSScriptRoot "..\..\maps"), (Join-Path $PSScriptRoot "..\..\Sceneryobjects"), (Join-Path $PSScriptRoot "..\..\Vehicles")) -DestinationPath $Zip
