@@ -12,6 +12,8 @@ meshes, textures, and timetable data are added incrementally.
   `KWT`, `TWW`, `TMM`, `YLN`, `NTH`, `TPO`, `STN`, `SKG`, `ISL`, `HZMB`).
 - `Sceneryobjects/HK_Objects/` is reserved for Hong Kong scenery and generated
   `.sco` definitions.
+- `Sceneryobjects/HK_Objects/texture/` is reserved for authored, redistributable
+  OMSI textures.
 - `Vehicles/Annan_HK/` contains the route `.hof` placeholder.
 - `src/scripts/` contains setup, validation, generation, packaging, and launch
   helpers.
@@ -52,6 +54,25 @@ The importer creates `osm_nodes.csv`, `osm_ways.csv`, `osm_stops.csv`, and
 `osm_import.json` under `maps\HK_HP1C_<code>`. These are source/import files;
 the OMSI tile still needs a scenery/spline conversion step before it becomes a
 fully drivable map.
+
+## Texture and imagery policy
+
+Do **not** package Google Maps or Google Earth screenshots, tiles, or extracted
+imagery in this project. Use them only as private visual reference if needed.
+
+The preferred workflow is:
+
+1. Use OpenStreetMap for roads, buildings, and stop locations.
+2. Use Hong Kong Lands Department open orthophotos or HK Map Service data for
+   local reference imagery, following their current attribution and licence
+   terms.
+3. Author simplified road, terrain, building, and signage textures in
+   `Sceneryobjects\HK_Objects\texture\` rather than redistributing raw aerial
+   imagery.
+4. Record the exact source and attribution in `ATTRIBUTION.md` before adding
+   generated textures to a release.
+
+See `ATTRIBUTION.md` for the project attribution template and source links.
 
 ## Authoring notes
 
