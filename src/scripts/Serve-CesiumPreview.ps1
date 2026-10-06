@@ -1,11 +1,15 @@
 [CmdletBinding()]
 param(
-    [string]$OutputRoot = (Join-Path $PSScriptRoot "..\.."),
+    [string]$OutputRoot = "",
     [int]$Port = 8080,
     [string]$ApiKey = $env:LANDSD_3D_API_KEY
 )
 
 $ErrorActionPreference = "Stop"
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
+    $OutputRoot = Join-Path $scriptRoot "..\.."
+}
 if ([string]::IsNullOrWhiteSpace($ApiKey)) {
     throw "Set LANDSD_3D_API_KEY in the local environment before starting the preview."
 }

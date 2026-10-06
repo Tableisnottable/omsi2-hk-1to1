@@ -25,8 +25,8 @@ meshes, textures, and timetable data are added incrementally.
 Run from the repository root in PowerShell:
 
 ```powershell
-pwsh -File .\src\scripts\Test-Map.ps1
-pwsh -File .\src\scripts\Build-Release.ps1
+powershell.exe -File .\src\scripts\Test-Map.ps1
+powershell.exe -File .\src\scripts\Build-Release.ps1
 ```
 
 The validator is offline and does not require OMSI. The release script writes
@@ -39,7 +39,7 @@ keeps the local save files inside the same repository path and creates
 deterministic CSV source data for roads, nodes, and bus stops:
 
 ```powershell
-pwsh -File .\src\scripts\Generate-OsmMap.ps1 `
+powershell.exe -File .\src\scripts\Generate-OsmMap.ps1 `
   -OsmPath .\src\osm\hong-kong.osm `
   -MapCode CW
 ```
@@ -47,7 +47,7 @@ pwsh -File .\src\scripts\Generate-OsmMap.ps1 `
 For a small permitted OSM API/Overpass export URL, use `-Download`:
 
 ```powershell
-pwsh -File .\src\scripts\Generate-OsmMap.ps1 `
+powershell.exe -File .\src\scripts\Generate-OsmMap.ps1 `
   -OsmPath "https://overpass-api.de/api/map?bbox=114.10,22.25,114.20,22.35" `
   -MapCode CW -Download
 ```
@@ -81,7 +81,7 @@ key or downloaded metadata:
 
 ```powershell
 $env:LANDSD_3D_API_KEY = "your-new-key"
-pwsh -File .\src\scripts\Get-Landsd3dTileset.ps1 -Dataset building
+powershell.exe -File .\src\scripts\Get-Landsd3dTileset.ps1 -Dataset building
 ```
 
 The script reads the key only from `LANDSD_3D_API_KEY`, writes downloaded
@@ -93,7 +93,7 @@ building and infrastructure tiles:
 
 ```powershell
 $env:LANDSD_3D_API_KEY = "your-new-key"
-pwsh -File .\src\scripts\Serve-CesiumPreview.ps1
+powershell.exe -File .\src\scripts\Serve-CesiumPreview.ps1
 ```
 
 Open `http://localhost:8080/`. The preview is temporary and the generated
