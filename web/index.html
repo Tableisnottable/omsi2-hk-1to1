@@ -6,6 +6,7 @@
   <meta name="description" content="Hong Kong 1:1 OpenOMSI map project">
   <title>Hong Kong 1:1 | OpenOMSI Map</title>
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
   <header class="hero">
@@ -95,6 +96,44 @@
       </div>
     </section>
 
+    <section class="shell section" id="map">
+      <div class="section-heading">
+        <p class="eyebrow">Live map data</p>
+        <h2>道路和巴士站地圖</h2>
+        <p>這是 TruckersMP-style 的資料預覽：道路來自 OSM 匯入檔，巴士站和建築輪廓可切換顯示。它不是遊戲引擎本身。</p>
+      </div>
+      <div class="map-toolbar">
+        <label for="map-area">區域</label>
+        <select id="map-area">
+          <option value="CW">Central & Wan Chai (CW)</option>
+          <option value="WCH">Western & Central (WCH)</option>
+          <option value="EAS">Eastern (EAS)</option>
+          <option value="KWT">Kwai Tsing (KWT)</option>
+          <option value="YTM">Yau Tsim Mong (YTM)</option>
+        </select>
+        <label><input id="show-roads" type="checkbox" checked> 道路</label>
+        <label><input id="show-stops" type="checkbox" checked> 巴士站</label>
+        <label><input id="show-buildings" type="checkbox"> 建築輪廓</label>
+        <span id="map-status" class="muted">正在載入地圖資料…</span>
+      </div>
+      <div id="map-view" class="map-view" aria-label="Interactive Hong Kong road map"></div>
+    </section>
+
+    <section class="shell section hof-section" id="hof">
+      <div class="section-heading">
+        <p class="eyebrow">OMSI route data</p>
+        <h2>HOF 路線檔案</h2>
+        <p>目前提供可放入車輛資料夾的基礎 HOF。完整逐站路線、時刻表和 AI traffic 仍要按每條路線逐步製作。</p>
+      </div>
+      <div class="hof-card">
+        <code>Vehicles/Annan_HK/HK_Routes.hof</code>
+        <div class="hof-actions">
+          <a class="button primary" href="../Vehicles/Annan_HK/HK_Routes.hof" download>下載 HOF</a>
+          <a class="button light" href="../Vehicles/Annan_HK/HK_Routes.hof" target="_blank" rel="noreferrer">查看原始檔</a>
+        </div>
+      </div>
+    </section>
+
     <section class="shell section" id="status">
       <div class="section-heading">
         <p class="eyebrow">Quality & verification</p>
@@ -119,6 +158,7 @@
   <footer class="footer">
     <div class="shell"><span>HK 1:1 OpenOMSI Map</span><span>OSM and Hong Kong official data attribution applies.</span></div>
   </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="./app.js"></script>
 </body>
 </html>

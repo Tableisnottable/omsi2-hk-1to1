@@ -4,6 +4,8 @@ const csvFiles = {
   nr: "../routes/nr_routes.csv",
   roads: "../maps/HP1C_CW/osm_ways.csv"
 };
+let map;
+let layers;
 
 function parseCsv(text) {
   const records = [];
@@ -72,6 +74,57 @@ async function loadStats() {
     } catch {
       document.querySelector(selector).textContent = "—";
     }
+
+    function csvCoordinates(value) {
+      return String(value || "").split(" ").map(pair => {
+        const [longitude, latitude] = pair.split(",").map(Number);
+        return Number.isFinite(latitude) && Number.isFinite(longitude) ? [latitude, longitude] : null;
+      }).filter(Boolean);
+    }
+
+    function updateMapVisibility() {
+      [["#show-roads", layers.roads], ["#show-stops", layers.stops], ["#show-buildings", layers.buildings]].forEach(([selector, layer]) => {
+        if (document.querySelector(selector).checked) layer.addTo(map);
+        else map.removeLayer(layer);
+      });
+    }
+
+    async function loadMapData(area) {
+      const status = document.querySelector("#map-status");
+      status.textContent = `正在載入 HP1C_${area}…`;
+      Object.values(layers).forEach(layer => layer.clearLayers());
+      try {
+        const base = `../maps/HP1C_${encodeURIComponent(area)}`;
+        const responses = await Promise.all(["osm_ways.csv", "osm_stops.csv", "osm_buildings.csv"]
+          .map(file => fetch(`${base}/${file}`)));
+        if (responses.some(response => !response.ok)) throw new Error("map CSV not found");
+        const [ways, stops, buildings] = await Promise.all(responses.map(response => response.text().then(parseCsv)));
+        const roadLines = ways.map(row => {
+          const points = csvCoordinates(row.coordinates);
+          return points.length > 1 ? L.polyline(points, { color: "#1261a0", weight: 2, opacity: .72 })
+            .bindPopup(`<b>${escapeHtml(row.name || "Unnamed road")}</b><br>${escapeHtml(row.highway || "")}`) : null;
+        }).filter(Boolean);
+        const stopPoints = stops.map(row => {
+          const point = [Number(row.latitude), Number(row.longitude)];
+          return Number.isFinite(point[0]) ? L.circleMarker(point, { radius: 4, color: "#ff7f3f", fillOpacity: .9 })
+            .bindPopup(`<b>${escapeHtml(row.name || "Bus stop")}</b>`) : null;
+        }).filter(Boolean);
+        const buildingPolygons = buildings.map(row => {
+          const points = csvCoordinates(row.coordinates);
+          return points.length > 2 ? L.polygon(points, { color: "#7a5aa6", weight: 1, fillColor: "#9f82c7", fillOpacity: .25 })
+            .bindPopup(`<b>${escapeHtml(row.name || "Building")}</b>`) : null;
+        }).filter(Boolean);
+        roadLines.forEach(item => item.addTo(layers.roads));
+        stopPoints.forEach(item => item.addTo(layers.stops));
+        buildingPolygons.forEach(item => item.addTo(layers.buildings));
+        const points = roadLines.flatMap(item => item.getLatLngs()).filter(point => point && point.lat);
+        if (points.length) map.fitBounds(L.latLngBounds(points), { padding: [20, 20] });
+        updateMapVisibility();
+        status.textContent = `${roadLines.length.toLocaleString()} roads · ${stopPoints.length.toLocaleString()} stops · ${buildingPolygons.length.toLocaleString()} buildings`;
+      } catch (error) {
+        status.textContent = `地圖載入失敗：${error.message}`;
+      }
+    }
   }));
 }
 
@@ -85,3 +138,15 @@ document.querySelectorAll(".route-tabs button").forEach(button => {
 document.querySelector("#route-search").addEventListener("input", updateRows);
 loadRoutes(state.file);
 loadStats();
+
+if (window.L) {
+  map = L.map("map-view").setView([22.285, 114.175], 15);
+  layers = { roads: L.layerGroup(), stops: L.layerGroup(), buildings: L.layerGroup() };
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19, attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
+  document.querySelectorAll("#show-roads, #show-stops, #show-buildings")
+    .forEach(item => item.addEventListener("change", updateMapVisibility));
+  document.querySelector("#map-area").addEventListener("change", event => loadMapData(event.target.value));
+  loadMapData("CW");
+}
