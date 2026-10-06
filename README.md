@@ -28,6 +28,31 @@ pwsh -File .\src\scripts\Build-Release.ps1
 The validator is offline and does not require OMSI. The release script writes
 `release\omsi2-hk-1to1-full.zip`; generated archives are ignored by Git.
 
+## Generate from OpenStreetMap
+
+The repository can import an `.osm` export into the matching map folder. This
+keeps the local save files inside the same repository path and creates
+deterministic CSV source data for roads, nodes, and bus stops:
+
+```powershell
+pwsh -File .\src\scripts\Generate-OsmMap.ps1 `
+  -OsmPath .\src\osm\hong-kong.osm `
+  -MapCode CW
+```
+
+For a small permitted OSM API/Overpass export URL, use `-Download`:
+
+```powershell
+pwsh -File .\src\scripts\Generate-OsmMap.ps1 `
+  -OsmPath "https://overpass-api.de/api/map?bbox=114.10,22.25,114.20,22.35" `
+  -MapCode CW -Download
+```
+
+The importer creates `osm_nodes.csv`, `osm_ways.csv`, `osm_stops.csv`, and
+`osm_import.json` under `maps\HK_HP1C_<code>`. These are source/import files;
+the OMSI tile still needs a scenery/spline conversion step before it becomes a
+fully drivable map.
+
 ## Authoring notes
 
 Keep map folder names stable because OMSI references them directly. Add
