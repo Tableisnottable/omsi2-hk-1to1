@@ -1,1 +1,29 @@
-﻿$ModelDir = Join-Path $PSScriptRoot "..\..\Sceneryobjects\HK_Objects\model"; $ScoDir = Join-Path $PSScriptRoot "..\..\Sceneryobjects\HK_Objects"; Get-ChildItem -Path $ModelDir -Filter "*.o3d" | ForEach-Object { $Name = $_.BaseName; [System.IO.File]::WriteAllText((Join-Path $ScoDir "$Name.sco"), "[friendlyname]`r`n$Name`r`n`r`n[groups]`r`n2`r`nHong Kong`r`nBuildings`r`n`r`n[mesh]`r`n$($_.Name)", [System.Text.Encoding]::UTF8) }
+[CmdletBinding()]
+param(
+    [string]$ModelDirectory = (Join-Path $PSScriptRoot "..\..\Sceneryobjects\HK_Objects\model"),
+    [string]$OutputDirectory = (Join-Path $PSScriptRoot "..\..\Sceneryobjects\HK_Objects")
+)
+
+$ErrorActionPreference = "Stop"
+if (-not (Test-Path $ModelDirectory -PathType Container)) {
+    throw "Model directory does not exist: $ModelDirectory"
+}
+New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
+
+$models = @(Get-ChildItem -Path $ModelDirectory -Filter "*.o3d" -File)
+foreach ($model in $models) {
+    $sco = @(
+        "[friendlyname]"
+        $model.BaseName
+        ""
+        "[groups]"
+        "2"
+        "Hong Kong"
+        "Buildings"
+        ""
+        "[mesh]"
+        $model.Name
+    ) -join [Environment]::NewLine
+    Set-Content -Path (Join-Path $OutputDirectory "$($model.BaseName).sco") -Value $sco -Encoding utf8
+}
+Write-Host "Generated $($models.Count) scenery object definition(s)."
