@@ -114,9 +114,27 @@
 - 問題描述；
 - 截圖，若有的話。
 
-## 資料及版權
+## 資料來源
 
-地圖資料和香港官方資料必須按照各自的授權及來源要求使用。Google Maps
-及 Google Earth 圖像不包含在安裝包內。
+本專案免費提供，不作出售。地圖和路線資料來源如下：
+
+- [OpenStreetMap](https://www.openstreetmap.org/) — 道路、建築輪廓和巴士站
+  位置；使用 `© OpenStreetMap contributors` attribution。
+- [HK Bus Crawling](https://hkbus.github.io/hk-bus-crawling/) — 專營巴士路線
+  和方向資料。
+- [香港運輸署非專營巴士資料](https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/)
+  — NR 居民巴士、合約租賃及酒店服務資料。
+- [HKeMobility](https://www.hkemobility.gov.hk/en/route-search/pt) — 香港
+  公共交通路線參考資料。
+- [香港地政總署 CSDI](https://portal.csdi.gov.hk/csdi-webpage/) — 香港官方
+  地圖、地形和 3D 參考資料。
+- [香港地政總署 3D Spatial Data API](https://portal.csdi.gov.hk/csdi-webpage/apidoc/3d-spatial-data-api)
+  — 3D 建築、基礎設施和地形資料服務。
+
+使用官方 API 或需要 key 的資料服務時，key 只應由使用者在自己的本機設定；
+API key 不會放入 GitHub、網站或地圖 ZIP。各資料集仍按照其提供者的
+attribution 和授權條件使用。
+
+Google Maps 及 Google Earth 圖像不包含在安裝包內。
 
 此專案不是 OpenOMSI／OMSI 2 官方產品。
