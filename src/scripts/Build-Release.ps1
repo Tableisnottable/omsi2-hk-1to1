@@ -1,10 +1,14 @@
 [CmdletBinding()]
 param(
-    [string]$OutputPath = (Join-Path $PSScriptRoot "..\..\release\omsi2-hk-1to1-full.zip")
+    [string]$OutputPath = ""
 )
 
 $ErrorActionPreference = "Stop"
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+if ([string]::IsNullOrWhiteSpace($OutputPath)) {
+    $OutputPath = Join-Path $scriptRoot "..\..\release\omsi2-hk-1to1-full.zip"
+}
+$repoRoot = (Resolve-Path (Join-Path $scriptRoot "..\..")).Path
 $output = if ([System.IO.Path]::IsPathRooted($OutputPath)) {
     [System.IO.Path]::GetFullPath($OutputPath)
 } else {

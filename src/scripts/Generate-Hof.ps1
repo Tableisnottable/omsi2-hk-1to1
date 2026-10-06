@@ -1,9 +1,13 @@
 [CmdletBinding()]
 param(
-    [string]$OutputPath = (Join-Path $PSScriptRoot "..\..\Vehicles\Annan_HK\HK_Routes.hof")
+    [string]$OutputPath = ""
 )
 
 $ErrorActionPreference = "Stop"
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+if ([string]::IsNullOrWhiteSpace($OutputPath)) {
+    $OutputPath = Join-Path $scriptRoot "..\..\Vehicles\Annan_HK\HK_Routes.hof"
+}
 New-Item -Path (Split-Path -Parent $OutputPath) -ItemType Directory -Force | Out-Null
 $hof = @(
     "[name]"

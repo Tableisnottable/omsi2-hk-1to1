@@ -1,9 +1,12 @@
 [CmdletBinding()]
 param(
-    [string]$RepositoryRoot = (Join-Path $PSScriptRoot "..\..")
+    [string]$RepositoryRoot = ""
 )
 
 $ErrorActionPreference = "Stop"
+if ([string]::IsNullOrWhiteSpace($RepositoryRoot)) {
+    $RepositoryRoot = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) "..\.."
+}
 $root = (Resolve-Path $RepositoryRoot).Path
 $mapRoot = Join-Path $root "maps"
 $routeRoot = Join-Path $root "routes"
