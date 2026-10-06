@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 SOURCE_URL = "https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json"
+HKEMOBILITY_URL = "https://www.hkemobility.gov.hk/en/route-search/pt"
 NR_SOURCES = {
     "hong_kong_island": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
     "kowloon": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
@@ -90,6 +91,9 @@ def main() -> None:
         "route_count": len(rows),
         "operators": sorted({operator for row in rows for operator in row["operator"].split("|")}),
         "route_source": args.source,
+        "hkemobility_route_search": HKEMOBILITY_URL,
+        "hkemobility_api": "https://www.hkemobility.gov.hk/api/em",
+        "hkemobility_api_status": "Interactive route-search backend; direct bulk requests require a browser session and returned Forbidden during validation.",
         "nr_route_source": NR_SOURCES,
         "nr_status": "NR route lists require separate Transport Department approval-list ingestion; no NR rows are fabricated.",
     }

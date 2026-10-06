@@ -64,7 +64,9 @@ Run `python .\src\scripts\Import-BusRoutes.py` to refresh
 snapshot currently contains 3,777 route-direction records. NR (Residents'
 Service) routes are kept in `routes\nr_routes.csv`; their official approval
 lists are published separately by the Transport Department and are not mixed
-with the franchised-route feed. See `routes\README.md` and
+with the franchised-route feed. HKeMobility is recorded as the manual route
+search reference, but its interactive backend does not expose a permitted
+bulk download for this generator. See `routes\README.md` and
 `routes\sources.json` for source and coverage details.
 
 ## Texture and imagery policy
