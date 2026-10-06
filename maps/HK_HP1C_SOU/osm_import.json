@@ -1,0 +1,9 @@
+﻿{
+    "source":  ".\\src\\osm\\hong-kong-central.osm",
+    "importedUtc":  "2026-10-06T08:28:56.9737961Z",
+    "mapCode":  "SOU",
+    "nodes":  6995,
+    "highwayWays":  878,
+    "stops":  66,
+    "nextStep":  "Convert osm_ways.csv and osm_stops.csv into OMSI spline and scenery files."
+}
