@@ -120,6 +120,8 @@
 
 - [OpenStreetMap](https://www.openstreetmap.org/) — 道路、建築輪廓和巴士站
   位置；使用 `© OpenStreetMap contributors` attribution。
+- [Overpass API — 北新界 source snapshot](https://overpass-api.de/api/map?bbox=114.0568,22.3364,114.2185,22.4180)
+  — `HP1C_NTH` 的道路、建築和巴士站資料來源。
 - [HK Bus Crawling](https://hkbus.github.io/hk-bus-crawling/) — 專營巴士路線
   和方向資料。
 - [香港運輸署非專營巴士資料](https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/)

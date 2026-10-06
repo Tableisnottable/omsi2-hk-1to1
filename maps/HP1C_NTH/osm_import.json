@@ -1,10 +1,10 @@
-﻿{
-    "source":  ".\\src\\osm\\hong-kong-central.osm",
-    "importedUtc":  "2026-10-06T09:19:07.7155965Z",
-    "mapCode":  "NTH",
-    "nodes":  6995,
-    "highwayWays":  878,
-    "buildings":  88,
-    "stops":  66,
-    "nextStep":  "Convert osm_ways.csv and osm_stops.csv into OMSI spline and scenery files."
+{
+  "source": "https://overpass-api.de/api/map?bbox=114.0568,22.3364,114.2185,22.4180",
+  "importedUtc": "2026-10-06T10:12:04.594265+00:00",
+  "mapCode": "NTH",
+  "nodes": 545450,
+  "highwayWays": 37462,
+  "buildings": 16601,
+  "stops": 3729,
+  "nextStep": "Convert osm_ways.csv and osm_stops.csv into OMSI spline and scenery files."
 }
