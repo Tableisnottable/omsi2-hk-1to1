@@ -88,6 +88,18 @@ The script reads the key only from `LANDSD_3D_API_KEY`, writes downloaded
 metadata under the ignored `src\landsd3d\` directory, and does not convert
 the remote 3D Tiles into OMSI assets.
 
+For a local Cesium preview with the Lands Department imagery basemap plus
+building and infrastructure tiles:
+
+```powershell
+$env:LANDSD_3D_API_KEY = "your-new-key"
+pwsh -File .\src\scripts\Serve-CesiumPreview.ps1
+```
+
+Open `http://localhost:8080/`. The preview is temporary and the generated
+key-bearing HTML is removed when the server stops; it is not an OMSI asset
+generator.
+
 Official links and attribution requirements are recorded in
 `ATTRIBUTION.md`.
 

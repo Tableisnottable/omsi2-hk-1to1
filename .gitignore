@@ -5,3 +5,4 @@
 *.obj
 release/*.zip
 src/landsd3d/*.zip
+preview/cesium/.runtime/*.zip
