@@ -5,15 +5,15 @@
 operators present in that source, including KMB, Citybus, NLB, MTR bus, and
 other public-transport services.
 
-`nr_routes.csv` is intentionally separate. Hong Kong NR (Residents' Service)
-routes are approved and published by the Transport Department through
-non-franchised-bus approval information rather than the same complete route
-API. HKeMobility's public route-search page is useful for manual verification,
-but its `getrouteinfo7` backend is an interactive service and rejected direct
-bulk requests during validation. The file is ready for NR records, and
-`sources.json` records both the HKeMobility page and the official Transport
-Department source boundary. No NR route is invented when an authoritative
-machine-readable record is unavailable.
+`nr_routes.csv` is intentionally separate. It contains the approved
+Residents' Service routes published by the Transport Department for Hong Kong
+Island, Kowloon, and the New Territories. The importer reads the official
+HTML route tables and records the source page for every row. The linked PDF
+schedule remains the authoritative detailed timetable for each route.
+
+HKeMobility's public route-search page is useful for manual verification, but
+its `getrouteinfo7` backend is an interactive service and rejected direct bulk
+requests during validation.
 
 Regenerate the snapshots with:
 

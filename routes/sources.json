@@ -1,6 +1,7 @@
 {
-  "generated_utc": "2026-10-06T08:51:43.411050+00:00",
+  "generated_utc": "2026-10-06T08:56:12.067308+00:00",
   "route_count": 3777,
+  "nr_route_count": 256,
   "operators": [
     "ctb",
     "fortuneferry",
@@ -18,9 +19,9 @@
   "hkemobility_api": "https://www.hkemobility.gov.hk/api/em",
   "hkemobility_api_status": "Interactive route-search backend; direct bulk requests require a browser session and returned Forbidden during validation.",
   "nr_route_source": {
-    "hong_kong_island": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
-    "kowloon": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
-    "new_territories": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html"
+    "hong_kong_island": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_hk/index.html",
+    "kowloon": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_kln/index.html",
+    "new_territories": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_nt/index.html"
   },
-  "nr_status": "NR route lists require separate Transport Department approval-list ingestion; no NR rows are fabricated."
+  "nr_status": "Imported from the Transport Department approved Residents' Service HTML route lists."
 }
