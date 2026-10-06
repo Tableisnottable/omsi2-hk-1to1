@@ -1,6 +1,8 @@
 {
-  "generated_utc": "2026-10-06T08:45:15.209873+00:00",
+  "generated_utc": "2026-10-06T09:04:17.158202+00:00",
   "route_count": 3777,
+  "nr_route_count": 256,
+  "other_route_count": 60,
   "operators": [
     "ctb",
     "fortuneferry",
@@ -14,10 +16,18 @@
     "sunferry"
   ],
   "route_source": "https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json",
+  "hkemobility_route_search": "https://www.hkemobility.gov.hk/en/route-search/pt",
+  "hkemobility_api": "https://www.hkemobility.gov.hk/api/em",
+  "hkemobility_api_status": "Interactive route-search backend; direct bulk requests require a browser session and returned Forbidden during validation.",
   "nr_route_source": {
-    "hong_kong_island": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
-    "kowloon": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
-    "new_territories": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html"
+    "hong_kong_island": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_hk/index.html",
+    "kowloon": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_kln/index.html",
+    "new_territories": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_nt/index.html"
   },
-  "nr_status": "NR route lists require separate Transport Department approval-list ingestion; no NR rows are fabricated."
+  "nr_status": "Imported from the Transport Department approved Residents' Service HTML route lists.",
+  "other_route_sources": {
+    "contract_hire": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/contract_hire_service_a08/index.html",
+    "hotel_service": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/public_bus_hotel_a02/index.html"
+  },
+  "other_route_status": "Imported approved contract-hire and regular hotel-service listings; detailed stop schedules remain in linked official PDFs."
 }

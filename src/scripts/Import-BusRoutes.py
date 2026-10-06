@@ -4,16 +4,24 @@ from __future__ import annotations
 
 import argparse
 import csv
+from html.parser import HTMLParser
+from html import unescape
 import json
+import re
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
 SOURCE_URL = "https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json"
+HKEMOBILITY_URL = "https://www.hkemobility.gov.hk/en/route-search/pt"
 NR_SOURCES = {
-    "hong_kong_island": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
-    "kowloon": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
-    "new_territories": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/index.html",
+    "hong_kong_island": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_hk/index.html",
+    "kowloon": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_kln/index.html",
+    "new_territories": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/list_of_approved_rs_nt/index.html",
+}
+OTHER_SOURCES = {
+    "contract_hire": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/contract_hire_service_a08/index.html",
+    "hotel_service": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/public_bus_hotel_a02/index.html",
 }
 
 
@@ -29,6 +37,96 @@ def download(url: str, path: Path) -> None:
     request = urllib.request.Request(url, headers={"User-Agent": "omsi2-hk-1to1 route importer"})
     with urllib.request.urlopen(request, timeout=120) as response:
         path.write_bytes(response.read())
+
+
+class ResidentsServiceTableParser(HTMLParser):
+    """Extract route number and origin/destination cells from a TD HTML table."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.rows: list[list[str]] = []
+        self._row: list[str] | None = None
+        self._cell: list[str] | None = None
+        self._link_depth = 0
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "tr":
+            self._row = []
+        elif tag == "td" and self._row is not None:
+            self._cell = []
+        elif tag == "a" and self._cell is not None:
+            self._link_depth += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "a" and self._link_depth:
+            self._link_depth -= 1
+        elif tag == "td" and self._row is not None and self._cell is not None:
+            self._row.append(" ".join("".join(self._cell).split()))
+            self._cell = None
+        elif tag == "tr" and self._row is not None:
+            if len(self._row) >= 2:
+                self.rows.append(self._row[:2])
+            self._row = None
+
+    def handle_data(self, data: str) -> None:
+        if self._cell is not None:
+            self._cell.append(data)
+
+
+def import_nr_routes() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    route_pattern = re.compile(r"^(?:HR|KR|DB|NR)\d+[A-Z]*", re.IGNORECASE)
+    for region, url in NR_SOURCES.items():
+        request = urllib.request.Request(url, headers={"User-Agent": "omsi2-hk-1to1 route importer"})
+        with urllib.request.urlopen(request, timeout=120) as response:
+            html = response.read().decode("utf-8", errors="replace")
+        parser = ResidentsServiceTableParser()
+        parser.feed(html)
+        for route_label, destination in parser.rows:
+            match = route_pattern.match(route_label.strip())
+            if not match:
+                continue
+            route_number = match.group(0).upper()
+            rows.append(
+                {
+                    "route_id": route_number,
+                    "region": region,
+                    "origin": "",
+                    "destination": destination,
+                    "operator": "Residents' Service",
+                    "status": "approved",
+                    "source": url,
+                }
+            )
+    rows.sort(key=lambda row: (row["region"], row["route_id"]))
+    return rows
+
+
+def import_other_services() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for service_type, url in OTHER_SOURCES.items():
+        request = urllib.request.Request(url, headers={"User-Agent": "omsi2-hk-1to1 route importer"})
+        with urllib.request.urlopen(request, timeout=120) as response:
+            html = response.read().decode("utf-8", errors="replace")
+        for index, item in enumerate(re.findall(r"<li\b[^>]*>(.*?)</li>", html, re.IGNORECASE | re.DOTALL), 1):
+            if "filemanager" not in item.lower() or ".pdf" not in item.lower():
+                continue
+            label = unescape(re.sub(r"<[^>]+>", " ", item))
+            label = re.sub(r"\s+", " ", label).strip()
+            label = re.sub(r"\bPDF\b", "", label, flags=re.IGNORECASE)
+            label = re.sub(r"\s+", " ", label).strip(" -/")
+            if not label:
+                continue
+            rows.append({
+                "route_id": f"{service_type.upper()}-{index:03d}",
+                "service_type": service_type,
+                "origin": label,
+                "destination": "",
+                "operator": "Non-franchised public bus",
+                "status": "approved",
+                "source": url,
+            })
+    return rows
 
 
 def main() -> None:
@@ -78,26 +176,45 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(rows)
 
+    nr_rows = import_nr_routes()
     with (routes_dir / "nr_routes.csv").open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(
             handle,
             fieldnames=["route_id", "region", "origin", "destination", "operator", "status", "source"],
         )
         writer.writeheader()
+        writer.writerows(nr_rows)
+
+    other_rows = import_other_services()
+    with (routes_dir / "other_routes.csv").open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=["route_id", "service_type", "origin", "destination", "operator", "status", "source"],
+        )
+        writer.writeheader()
+        writer.writerows(other_rows)
 
     metadata = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "route_count": len(rows),
+        "nr_route_count": len(nr_rows),
+        "other_route_count": len(other_rows),
         "operators": sorted({operator for row in rows for operator in row["operator"].split("|")}),
         "route_source": args.source,
+        "hkemobility_route_search": HKEMOBILITY_URL,
+        "hkemobility_api": "https://www.hkemobility.gov.hk/api/em",
+        "hkemobility_api_status": "Interactive route-search backend; direct bulk requests require a browser session and returned Forbidden during validation.",
         "nr_route_source": NR_SOURCES,
-        "nr_status": "NR route lists require separate Transport Department approval-list ingestion; no NR rows are fabricated.",
+        "nr_status": "Imported from the Transport Department approved Residents' Service HTML route lists.",
+        "other_route_sources": OTHER_SOURCES,
+        "other_route_status": "Imported approved contract-hire and regular hotel-service listings; detailed stop schedules remain in linked official PDFs.",
     }
     (routes_dir / "sources.json").write_text(
         json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     print(f"Wrote {len(rows)} franchised/public-transport route records to {routes_dir / 'hk_bus_routes.csv'}")
-    print("Created routes/nr_routes.csv with the authoritative NR ingestion boundary documented in routes/sources.json")
+    print(f"Wrote {len(nr_rows)} approved Residents' Service route records to {routes_dir / 'nr_routes.csv'}")
+    print(f"Wrote {len(other_rows)} approved non-franchised service records to {routes_dir / 'other_routes.csv'}")
 
 
 if __name__ == "__main__":

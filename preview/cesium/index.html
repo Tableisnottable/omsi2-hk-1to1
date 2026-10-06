@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hong Kong 3D reference preview</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.122/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.122/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <style>
+    html, body, #cesiumContainer { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    #controls { position: absolute; z-index: 2; top: 12px; left: 12px; padding: 8px; background: rgba(0,0,0,.72); color: white; font: 14px sans-serif; }
+    #fly { cursor: pointer; }
+    #credit { position: absolute; z-index: 2; right: 8px; bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <div id="controls"><button id="fly" type="button" class="stopped">Start fly-through</button></div>
+  <div id="credit"></div>
+  <script>
+    const landsdKey = "__LANDSD_3D_API_KEY__";
+    const basemapProvider = new Cesium.UrlTemplateImageryProvider({
+      url: "https://mapapi.geodata.gov.hk/gs/api/v1.0.0/xyz/imagery/WGS84/{z}/{x}/{y}.png",
+      credit: "© Map from Lands Department"
+    });
+    const viewer = new Cesium.Viewer("cesiumContainer", {
+      baseLayer: new Cesium.ImageryLayer(basemapProvider),
+      baseLayerPicker: false,
+      timeline: false,
+      animation: false,
+      vrButton: false,
+      fullscreenButton: false,
+      homeButton: false,
+      navigationHelpButton: false,
+      geocoder: false,
+      sceneModePicker: false,
+      requestRenderMode: true,
+      creditContainer: "credit"
+    });
+
+    async function addLayer(dataset) {
+      const url = `https://data.map.gov.hk/api/3d-data/3dsd/WGS84/${dataset}/tileset.json?key=${encodeURIComponent(landsdKey)}`;
+      const tileset = await Cesium.Cesium3DTileset.fromUrl(url);
+      viewer.scene.primitives.add(tileset);
+    }
+
+    async function addLayers() {
+      if (landsdKey === "__LANDSD_3D_API_KEY__") {
+        throw new Error("No local Lands Department API key was supplied.");
+      }
+      await Promise.all([addLayer("infrastructure"), addLayer("building")]);
+    }
+
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(114.09086884578214, 22.044338206507053, 35339.14068737606),
+      orientation: { heading: 6.280194717481077, pitch: -0.7921019105734031, roll: 6.283182074536001 },
+      duration: 0
+    });
+
+    let flyListener;
+    function flyThrough() {
+      const button = document.getElementById("fly");
+      const playing = button.className !== "playing";
+      button.className = playing ? "playing" : "stopped";
+      button.textContent = playing ? "Stop fly-through" : "Start fly-through";
+      viewer.scene.screenSpaceCameraController.enableInputs = !playing;
+      viewer.clock.shouldAnimate = false;
+      if (!playing) {
+        if (flyListener) viewer.scene.postUpdate.removeEventListener(flyListener);
+        viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+        return;
+      }
+
+      const start = Cesium.Cartesian3.fromDegrees(114.22428750237164, 22.304629162175697, 132.02238802935133);
+      const end = Cesium.Cartesian3.fromDegrees(114.214374, 22.315202, 132.02238802935133);
+      const distance = Cesium.Cartesian3.distance(start, end);
+      const startTime = Cesium.JulianDate.now();
+      const stopTime = Cesium.JulianDate.addSeconds(startTime, distance, new Cesium.JulianDate());
+      const position = new Cesium.SampledPositionProperty();
+      position.addSample(startTime, start);
+      position.addSample(stopTime, end);
+      position.setInterpolationOptions({
+        interpolationDegree: 2,
+        interpolationAlgorithm: Cesium.HermitePolynomialApproximation
+      });
+      viewer.clock.startTime = startTime.clone();
+      viewer.clock.stopTime = stopTime.clone();
+      viewer.clock.currentTime = startTime.clone();
+      viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
+      viewer.clock.multiplier = 50;
+      viewer.clock.shouldAnimate = true;
+      flyListener = function(scene, time) {
+        const current = position.getValue(time);
+        if (!Cesium.defined(current)) return;
+        const transform = Cesium.Transforms.eastNorthUpToFixedFrame(current);
+        viewer.camera.lookAtTransform(transform, new Cesium.Cartesian3(0.25, 0, 5));
+      };
+      viewer.scene.postUpdate.addEventListener(flyListener);
+    }
+
+    document.getElementById("fly").addEventListener("click", flyThrough);
+    addLayers().catch(error => {
+      document.getElementById("controls").append(`  3D layers failed: ${error.message}`);
+      console.error(error);
+    });
+  </script>
+</body>
+</html>

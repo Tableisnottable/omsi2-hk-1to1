@@ -48,7 +48,7 @@ foreach ($map in $maps) {
     }
 }
 
-foreach ($requiredRouteFile in @("hk_bus_routes.csv", "nr_routes.csv", "sources.json")) {
+foreach ($requiredRouteFile in @("hk_bus_routes.csv", "nr_routes.csv", "other_routes.csv", "sources.json")) {
     if (-not (Test-Path (Join-Path $routeRoot $requiredRouteFile) -PathType Leaf)) {
         $errors.Add("Missing route file: routes\$requiredRouteFile")
     }
@@ -63,6 +63,12 @@ if (Test-Path (Join-Path $routeRoot "nr_routes.csv") -PathType Leaf) {
     $nrHeaders = (Get-Content (Join-Path $routeRoot "nr_routes.csv") -TotalCount 1)
     if ($nrHeaders -notmatch "route_id" -or $nrHeaders -notmatch "region") {
         $errors.Add("routes\nr_routes.csv has an invalid header")
+    }
+    if (Test-Path (Join-Path $routeRoot "other_routes.csv") -PathType Leaf) {
+        $otherRows = @(Import-Csv (Join-Path $routeRoot "other_routes.csv"))
+        if ($otherRows.Count -lt 1) {
+            $errors.Add("routes\other_routes.csv contains no approved non-franchised service rows")
+        }
     }
 }
 if (Test-Path (Join-Path $routeRoot "sources.json") -PathType Leaf) {
