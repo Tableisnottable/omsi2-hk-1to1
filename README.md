@@ -39,6 +39,8 @@ The validator is offline and does not require OMSI. The release script writes
 the default OpenOMSI installation package
 `release\omsi2-hk-1to1-openomsi.zip`; generated archives are ignored by Git.
 This is the default zip to download and install.
+It is one combined download: the archive contains all 19 `maps\HP1C_*`
+directories, not 19 separate downloads.
 
 ## Open the project web page
 

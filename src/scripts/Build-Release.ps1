@@ -26,5 +26,9 @@ $content = @(
     (Join-Path $repoRoot "Sceneryobjects")
     (Join-Path $repoRoot "Vehicles")
 )
+$mapDirectories = @(Get-ChildItem -Path (Join-Path $repoRoot "maps") -Directory -Filter "HP1C_*")
+if ($mapDirectories.Count -ne 19) {
+    throw "Expected one combined package containing 19 HP1C maps; found $($mapDirectories.Count)."
+}
 Compress-Archive -Path $content -DestinationPath $output
-Write-Host "Release written to $output"
+Write-Host "Release written to $output (all $($mapDirectories.Count) HP1C maps included in one ZIP)"
