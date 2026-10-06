@@ -1,117 +1,113 @@
 # Hong Kong 1:1 OpenOMSI Map
 
-## Project process
+香港 1:1 巴士模擬地圖，適用於 OpenOMSI／OMSI 2。
 
-This project is developed as a Hong Kong 1:1 OpenOMSI map in progressive
-stages:
+## 下載
 
-1. **Collect** Hong Kong road, building, bus-stop and public-transport data
-   from permitted open-data sources.
-2. **Organise** the territory into 19 HP1C map areas while keeping the
-   regional structure stable for OpenOMSI installation.
-3. **Build** the combined map package with roads, stops, building footprints,
-   scenery folders, vehicle data and route information.
-4. **Publish** one downloadable installation ZIP containing all 19 map areas.
-5. **Preview** the imported data through the project website and interactive
-   browser map.
-6. **Verify** map files, route files and package structure before each release.
-7. **Improve** the project with authored terrain, road splines, scenery,
-   collisions, textures, timetables and higher-detail buildings.
+請下載唯一的完整地圖包：
 
-The current release is a data-driven development scaffold. It is not yet a
-finished Assetto Corsa-quality map: the high-detail scenery, complete
-drivable spline network, full timetable system and final vehicle assets are
-still being developed.
+`omsi2-hk-1to1-openomsi.zip`
 
-## Download process
+這一個 ZIP 已經包含全部 19 個香港地圖區域，不需要逐個下載：
 
-The complete map is distributed as **one ZIP**, not 19 separate downloads:
+- Central and Western
+- Wan Chai
+- Eastern
+- Southern
+- Yau Tsim Mong
+- Sham Shui Po
+- Kowloon City
+- Wong Tai Sin
+- Kwun Tong
+- Kwai Tsing
+- Tsuen Wan
+- Tuen Mun
+- Yuen Long
+- North District
+- Tai Po
+- Sha Tin
+- Sai Kung
+- Islands
+- Hong Kong–Zhuhai–Macao Bridge
 
-`release\omsi2-hk-1to1-openomsi.zip`
+## 安裝
 
-The ZIP contains:
+1. 下載 `omsi2-hk-1to1-openomsi.zip`。
+2. 開啟你的 OpenOMSI／OMSI 2 安裝資料夾。
+3. 將 ZIP 內的 `maps`、`Sceneryobjects` 和 `Vehicles` 資料夾解壓到遊戲資料夾。
+4. 如果 Windows 詢問是否合併資料夾，選擇合併。
+5. 啟動 OpenOMSI／OMSI 2。
+6. 在地圖選單選擇香港的 `HP1C_*` 地圖。
 
-- all 19 `maps\HP1C_*` areas;
-- `Sceneryobjects` for Hong Kong scenery;
-- `Vehicles` and the current Hong Kong route HOF;
-- the package structure required for OpenOMSI installation.
+常見的 Steam 安裝位置：
 
-## Installation process
+`C:\Program Files (x86)\Steam\steamapps\common\OMSI 2\`
 
-1. Download the single combined ZIP.
-2. Extract it into the OpenOMSI or OMSI 2 game directory.
-3. Allow the `maps`, `Sceneryobjects` and `Vehicles` folders to merge.
-4. Start OpenOMSI.
-5. Select one of the installed HP1C Hong Kong map areas.
-6. Check the road layout, bus stops, buildings and route display.
+## 開始遊戲
 
-The package is an installation release, not a copy of the development
-repository. Source data, development tools, API keys and the game executable
-are not included.
+安裝完成後：
 
-## Website and map preview process
+1. 選擇一個 `HP1C_*` 香港地圖。
+2. 選擇已安裝的巴士。
+3. 選擇香港路線和目的地。
+4. 載入地圖後檢查道路、巴士站、建築和路線顯示。
 
-The project website is the main user-facing preview:
+目前版本的 HOF 路線檔案位於車輛資料夾：
 
-- project overview and release information;
-- one-click access to the complete map ZIP;
-- interactive road, bus-stop and building map;
-- HP1C area selection;
-- public, NR and other service route search;
-- HOF download and preview;
-- current validation and development status;
-- GitHub issue reporting.
+`Vehicles\Annan_HK\HK_Routes.hof`
 
-The browser map is a data preview similar in purpose to a community map
-viewer. It shows the imported road data and does not replace the OpenOMSI
-game engine.
+## 網上地圖預覽
 
-## Route and HOF process
+專案網站可以在瀏覽器查看：
 
-Route information is maintained in separate catalogue groups:
+- 香港道路地圖；
+- 巴士站；
+- 建築輪廓；
+- 不同 HP1C 區域；
+- 專營巴士、NR 居民巴士和其他服務路線；
+- HOF 下載；
+- 目前版本狀態。
 
-- franchised public bus routes;
-- NR Residents' Service routes;
-- approved contract-hire and regular hotel services.
+網站預覽是地圖資料查看工具，不需要安裝遊戲；真正駕駛地圖需要 OpenOMSI／OMSI 2。
 
-The current HOF is a basic shared route file for development and package
-testing. The route catalogue is broader than the current HOF and will be
-converted progressively into complete line, destination, stop, timetable and
-AI traffic data.
+## 目前版本
 
-## Verification process
+目前版本已包含：
 
-Every release is checked for:
+- 19 個香港 HP1C 地圖區域；
+- 香港道路資料；
+- 巴士站資料；
+- 建築輪廓；
+- 公共巴士路線資料；
+- NR 居民巴士資料；
+- 其他非專營服務資料；
+- 基本香港 HOF；
+- 一個包含全部地圖的安裝 ZIP；
+- 瀏覽器地圖預覽。
 
-- all 19 HP1C map directories;
-- required map files and imported data;
-- public, NR and other-service route catalogues;
-- HOF presence;
-- OpenOMSI package folders;
-- successful creation of the single combined ZIP;
-- website, map-data and download links.
+目前仍在製作中的內容：
 
-The repository status page distinguishes between data/package checks that are
-complete and game-driving checks that require OpenOMSI installed on a local
-computer.
+- 更完整的可駕駛道路網絡；
+- 高精度香港建築和街景；
+- 地形、碰撞和交通細節；
+- 完整逐站 HOF；
+- 完整時刻表和 AI 巴士交通；
+- 更高品質的車輛和物件。
 
-## Data and attribution process
+因此，現時版本適合預覽、安裝測試和回報問題；不應視為已完成的全港最終版本。
 
-OpenStreetMap and Hong Kong official data are used according to their current
-licences and attribution requirements. Google Maps and Google Earth imagery
-are not packaged as OMSI assets. Official 3D reference data is used only
-where its access terms and redistribution rights permit it.
+## 發現問題
 
-See `ATTRIBUTION.md` for source credits and `QUALITY_TARGET.md` for the
-planned high-fidelity asset stages.
+如果地圖出現錯誤，請在 GitHub Issues 回報，並提供：
 
-## Reporting process
+- 地圖區域名稱；
+- 路線或巴士站名稱；
+- 問題描述；
+- 截圖，若有的話。
 
-When an error is found, report:
+## 資料及版權
 
-1. the HP1C area or route name;
-2. what was expected;
-3. what happened;
-4. a screenshot or relevant log, if available.
+地圖資料和香港官方資料必須按照各自的授權及來源要求使用。Google Maps
+及 Google Earth 圖像不包含在安裝包內。
 
-Issues can be reported through the repository's GitHub Issues page.
+此專案不是 OpenOMSI／OMSI 2 官方產品。
