@@ -40,6 +40,20 @@ the default OpenOMSI installation package
 `release\omsi2-hk-1to1-openomsi.zip`; generated archives are ignored by Git.
 This is the default zip to download and install.
 
+## Open the project web page
+
+The repository includes a static project website under `web\`. It provides
+project information, release/install instructions, route search, validation
+status, and links to the Cesium preview:
+
+```powershell
+python -m http.server 8080 --directory .
+```
+
+Then open `http://localhost:8080/web/`. Use an HTTP server rather than
+double-clicking `web\index.html`, because browsers block the CSV route files
+when they are loaded from `file://`.
+
 ## Install the map from the zip
 
 1. Run `powershell.exe -File .\src\scripts\Build-Release.ps1`.
