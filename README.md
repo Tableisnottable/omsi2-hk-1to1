@@ -58,7 +58,12 @@
 
 ## 網上地圖預覽
 
-專案網站可以在瀏覽器查看：
+專案網站：
+
+- [開啟 HK 1:1 地圖網站](web/index.html)
+- [開啟互動道路地圖](web/index.html#map)
+- [開啟路線詳細資料搜尋](web/routes.html)
+- [下載完整路線資料 CSV](routes/route_details.csv)
 
 - 香港道路地圖；
 - 巴士站；
