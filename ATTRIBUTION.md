@@ -12,7 +12,7 @@ Map geometry and stop locations are imported from OpenStreetMap contributors.
 - Attribution: `© OpenStreetMap contributors`
 
 The generated OSM source and import manifests are kept under `src\osm` and
-`maps\HK_HP1C_*\osm_import.json`.
+`maps\HP1C_*\osm_import.json`.
 
 ## Hong Kong Lands Department
 
