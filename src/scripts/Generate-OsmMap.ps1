@@ -9,6 +9,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$source = $OsmPath
 
 if ($Download) {
     $uri = [Uri]$OsmPath
@@ -25,7 +26,8 @@ $root = (Resolve-Path $OutputRoot).Path
 $mapDirectory = Join-Path $root "maps\HK_HP1C_$MapCode"
 New-Item -Path $mapDirectory -ItemType Directory -Force | Out-Null
 
-[xml]$osm = Get-Content -Path $OsmPath -Raw
+$osm = New-Object System.Xml.XmlDocument
+$osm.Load((Resolve-Path $OsmPath).Path)
 $nodeById = @{}
 $nodeRows = [System.Collections.Generic.List[object]]::new()
 $stopRows = [System.Collections.Generic.List[object]]::new()
@@ -108,7 +110,7 @@ $wayRows | Export-Csv (Join-Path $mapDirectory "osm_ways.csv") -NoTypeInformatio
 $stopRows | Export-Csv (Join-Path $mapDirectory "osm_stops.csv") -NoTypeInformation -Encoding utf8
 
 $manifest = [ordered]@{
-    source = [System.IO.Path]::GetFullPath($OsmPath)
+    source = $source
     importedUtc = [DateTime]::UtcNow.ToString("o")
     mapCode = $MapCode
     nodes = $nodeRows.Count

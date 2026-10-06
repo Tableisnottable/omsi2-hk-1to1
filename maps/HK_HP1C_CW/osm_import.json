@@ -1,0 +1,9 @@
+﻿{
+    "source":  "https://api.openstreetmap.org/api/0.6/map?bbox=114.17,22.28,114.18,22.29",
+    "importedUtc":  "2026-10-06T08:20:56.9048525Z",
+    "mapCode":  "CW",
+    "nodes":  6995,
+    "highwayWays":  878,
+    "stops":  66,
+    "nextStep":  "Convert osm_ways.csv and osm_stops.csv into OMSI spline and scenery files."
+}
