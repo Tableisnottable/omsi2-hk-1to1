@@ -76,6 +76,18 @@ requires a separate, licence-aware conversion pipeline. The official pages
 do not establish FBX, OBJ, IFC, OSGB, or indoor-map downloads, so those
 formats are not assumed.
 
+The building tileset endpoint can be checked locally without committing the
+key or downloaded metadata:
+
+```powershell
+$env:LANDSD_3D_API_KEY = "your-new-key"
+pwsh -File .\src\scripts\Get-Landsd3dTileset.ps1 -Dataset building
+```
+
+The script reads the key only from `LANDSD_3D_API_KEY`, writes downloaded
+metadata under the ignored `src\landsd3d\` directory, and does not convert
+the remote 3D Tiles into OMSI assets.
+
 Official links and attribution requirements are recorded in
 `ATTRIBUTION.md`.
 

@@ -4,3 +4,4 @@
 *.fbx
 *.obj
 release/*.zip
+src/landsd3d/*.zip
