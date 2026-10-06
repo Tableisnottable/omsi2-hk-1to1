@@ -36,7 +36,28 @@ powershell.exe -File .\src\scripts\Build-Release.ps1
 ```
 
 The validator is offline and does not require OMSI. The release script writes
-`release\omsi2-hk-1to1-full.zip`; generated archives are ignored by Git.
+the default OpenOMSI installation package
+`release\omsi2-hk-1to1-openomsi.zip`; generated archives are ignored by Git.
+This is the default zip to download and install.
+
+## Install the map from the zip
+
+1. Run `powershell.exe -File .\src\scripts\Build-Release.ps1`.
+2. Open `release\omsi2-hk-1to1-openomsi.zip`.
+3. Extract the `maps`, `Sceneryobjects`, and `Vehicles` folders into the
+   OpenOMSI game root, for example
+   `C:\Program Files (x86)\Steam\steamapps\common\OMSI 2\`.
+4. Allow Windows to merge the folders, then start OpenOMSI and select an
+   installed HP1C map.
+
+The archive is an install package, not a backup of the repository. It does not
+include scripts, source OSM files, API keys, or the OpenOMSI executable.
+To keep the previous development-package name, pass an explicit output path:
+
+```powershell
+powershell.exe -File .\src\scripts\Build-Release.ps1 `
+  -OutputPath .\release\omsi2-hk-1to1-full.zip
+```
 
 ## Generate from OpenStreetMap
 

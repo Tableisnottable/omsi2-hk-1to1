@@ -6,7 +6,7 @@ param(
 $ErrorActionPreference = "Stop"
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
-    $OutputPath = Join-Path $scriptRoot "..\..\release\omsi2-hk-1to1-full.zip"
+    $OutputPath = Join-Path $scriptRoot "..\..\release\omsi2-hk-1to1-openomsi.zip"
 }
 $repoRoot = (Resolve-Path (Join-Path $scriptRoot "..\..")).Path
 $output = if ([System.IO.Path]::IsPathRooted($OutputPath)) {
