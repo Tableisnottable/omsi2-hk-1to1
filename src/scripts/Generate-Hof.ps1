@@ -1,1 +1,26 @@
-﻿$HofPath = Join-Path $PSScriptRoot "..\..\Vehicles\Annan_HK\HK_Routes.hof"; [System.IO.File]::WriteAllText($HofPath, "[name]`r`nHK_Routes`r`n`r`n[servicetrip]`r`nOut of Service`r`n`r`n[line]`r`n101`r`n10100`r`n00`r`n`r`n[stop]`r`nCross Harbour Tunnel`r`n蝝ㄐ瘚瑕??折?`n10101", [System.Text.Encoding]::UTF8)
+[CmdletBinding()]
+param(
+    [string]$OutputPath = (Join-Path $PSScriptRoot "..\..\Vehicles\Annan_HK\HK_Routes.hof")
+)
+
+$ErrorActionPreference = "Stop"
+New-Item -Path (Split-Path -Parent $OutputPath) -ItemType Directory -Force | Out-Null
+$hof = @(
+    "[name]"
+    "HK_Routes"
+    ""
+    "[servicetrip]"
+    "Out of Service"
+    ""
+    "[line]"
+    "101"
+    "10100"
+    "00"
+    ""
+    "[stop]"
+    "Cross Harbour Tunnel"
+    "Cross Harbour Tunnel"
+    "10101"
+) -join [Environment]::NewLine
+Set-Content -Path $OutputPath -Value $hof -Encoding utf8
+Write-Host "Route file written to $OutputPath"
