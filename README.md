@@ -131,6 +131,25 @@
 - [香港地政總署 3D Spatial Data API](https://portal.csdi.gov.hk/csdi-webpage/apidoc/3d-spatial-data-api)
   — 3D 建築、基礎設施和地形資料服務。
 
+### API 來源網址
+
+以下只列出 API 的公開來源和網址格式，不包含任何 API key：
+
+- **香港地政總署 3D 建築資料：**
+  `https://data.map.gov.hk/api/3d-data/3dsd/WGS84/building/tileset.json?key=<YOUR_KEY>`
+- **香港地政總署 3D 基礎設施資料：**
+  `https://data.map.gov.hk/api/3d-data/3dsd/WGS84/infrastructure/tileset.json?key=<YOUR_KEY>`
+- **香港地政總署 3D 地形資料：**
+  `https://data.map.gov.hk/api/3d-data/3dsd/WGS84/terrain/tileset.json?key=<YOUR_KEY>`
+- **香港地政總署影像底圖：**
+  `https://mapapi.geodata.gov.hk/gs/api/v1.0.0/xyz/imagery/WGS84/{z}/{x}/{y}.png`
+- **HK Bus Crawling 路線資料：**
+  `https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json`
+- **HKeMobility 公共交通路線搜尋：**
+  `https://www.hkemobility.gov.hk/en/route-search/pt`
+- **HKeMobility API 入口：**
+  `https://www.hkemobility.gov.hk/api/em`
+
 使用官方 API 或需要 key 的資料服務時，key 只應由使用者在自己的本機設定；
 API key 不會放入 GitHub、網站或地圖 ZIP。各資料集仍按照其提供者的
 attribution 和授權條件使用。
