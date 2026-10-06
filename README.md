@@ -16,7 +16,7 @@ meshes, textures, and timetable data are added incrementally.
   OMSI textures.
 - `Vehicles/Annan_HK/` contains the route `.hof` placeholder.
 - `routes/` contains the normalized public-transport route catalogue and
-  separate NR route ingestion file.
+  separate NR and other non-franchised service files.
 - `src/scripts/` contains setup, validation, generation, packaging, and launch
   helpers.
 
@@ -52,8 +52,10 @@ pwsh -File .\src\scripts\Generate-OsmMap.ps1 `
   -MapCode CW -Download
 ```
 
-The importer creates `osm_nodes.csv`, `osm_ways.csv`, `osm_stops.csv`, and
-`osm_import.json` under `maps\HP1C_<code>`. These are source/import files;
+The importer creates `osm_nodes.csv`, `osm_ways.csv`, `osm_stops.csv`,
+`osm_buildings.csv`, and `osm_import.json` under `maps\HP1C_<code>`.
+Building footprints include available OSM building tags, levels, heights, and
+polygon coordinates. These are source/import files;
 the OMSI tile still needs a scenery/spline conversion step before it becomes a
 fully drivable map.
 
@@ -86,7 +88,8 @@ Service) routes are kept in `routes\nr_routes.csv`; their official approval
 lists are published separately by the Transport Department and are not mixed
 with the franchised-route feed. HKeMobility is recorded as the manual route
 search reference, but its interactive backend does not expose a permitted
-bulk download for this generator. See `routes\README.md` and
+bulk download for this generator. Approved contract-hire and regular hotel
+services are in `routes\other_routes.csv`. See `routes\README.md` and
 `routes\sources.json` for source and coverage details.
 
 ## Texture and imagery policy

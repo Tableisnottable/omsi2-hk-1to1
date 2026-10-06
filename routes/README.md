@@ -15,6 +15,11 @@ HKeMobility's public route-search page is useful for manual verification, but
 its `getrouteinfo7` backend is an interactive service and rejected direct bulk
 requests during validation.
 
+`other_routes.csv` records the Transport Department's approved contract-hire
+services and regular hotel services. These listings are not fixed route
+catalogues in the same sense as franchised buses; the linked official PDF
+contains the detailed schedule and stops.
+
 Regenerate the snapshots with:
 
 ```powershell

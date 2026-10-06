@@ -31,6 +31,7 @@ $osm.Load((Resolve-Path $OsmPath).Path)
 $nodeById = @{}
 $nodeRows = [System.Collections.Generic.List[object]]::new()
 $stopRows = [System.Collections.Generic.List[object]]::new()
+$buildingRows = [System.Collections.Generic.List[object]]::new()
 
 function Get-OsmTag {
     param([System.Xml.XmlElement]$Element, [string]$Key)
@@ -66,7 +67,8 @@ foreach ($node in $osm.osm.node) {
 $wayRows = [System.Collections.Generic.List[object]]::new()
 foreach ($way in $osm.osm.way) {
     $highway = Get-OsmTag $way "highway"
-    if ([string]::IsNullOrWhiteSpace($highway)) { continue }
+    $building = Get-OsmTag $way "building"
+    if ([string]::IsNullOrWhiteSpace($highway) -and [string]::IsNullOrWhiteSpace($building)) { continue }
     $refs = @($way.nd | ForEach-Object { [string]$_.ref })
     $coordinates = @($refs | ForEach-Object {
         if ($nodeById.ContainsKey($_)) {
@@ -75,14 +77,27 @@ foreach ($way in $osm.osm.way) {
         }
     })
     if ($coordinates.Count -lt 2) { continue }
-    $wayRows.Add([pscustomobject]@{
-        id = [string]$way.id
-        highway = $highway
-        name = (Get-OsmTag $way "name")
-        oneway = (Get-OsmTag $way "oneway")
-        nodes = ($refs -join " ")
-        coordinates = ($coordinates -join " ")
-    })
+    if (-not [string]::IsNullOrWhiteSpace($highway)) {
+        $wayRows.Add([pscustomobject]@{
+            id = [string]$way.id
+            highway = $highway
+            name = (Get-OsmTag $way "name")
+            oneway = (Get-OsmTag $way "oneway")
+            nodes = ($refs -join " ")
+            coordinates = ($coordinates -join " ")
+        })
+    }
+    if (-not [string]::IsNullOrWhiteSpace($building)) {
+        $buildingRows.Add([pscustomobject]@{
+            id = [string]$way.id
+            building = $building
+            name = (Get-OsmTag $way "name")
+            levels = (Get-OsmTag $way "building:levels")
+            height = (Get-OsmTag $way "height")
+            nodes = ($refs -join " ")
+            coordinates = ($coordinates -join " ")
+        })
+    }
 }
 
 @(
@@ -108,6 +123,7 @@ if (-not (Test-Path (Join-Path $mapDirectory "ailists.cfg"))) {
 $nodeRows | Export-Csv (Join-Path $mapDirectory "osm_nodes.csv") -NoTypeInformation -Encoding utf8
 $wayRows | Export-Csv (Join-Path $mapDirectory "osm_ways.csv") -NoTypeInformation -Encoding utf8
 $stopRows | Export-Csv (Join-Path $mapDirectory "osm_stops.csv") -NoTypeInformation -Encoding utf8
+$buildingRows | Export-Csv (Join-Path $mapDirectory "osm_buildings.csv") -NoTypeInformation -Encoding utf8
 
 $manifest = [ordered]@{
     source = $source
@@ -115,6 +131,7 @@ $manifest = [ordered]@{
     mapCode = $MapCode
     nodes = $nodeRows.Count
     highwayWays = $wayRows.Count
+    buildings = $buildingRows.Count
     stops = $stopRows.Count
     nextStep = "Convert osm_ways.csv and osm_stops.csv into OMSI spline and scenery files."
 }
