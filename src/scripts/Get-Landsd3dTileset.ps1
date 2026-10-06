@@ -1,12 +1,16 @@
 [CmdletBinding()]
 param(
-    [string]$OutputRoot = (Join-Path $PSScriptRoot "..\.."),
+    [string]$OutputRoot = "",
     [ValidateSet("building", "infrastructure", "terrain")]
     [string]$Dataset = "building",
     [string]$ApiKey = $env:LANDSD_3D_API_KEY
 )
 
 $ErrorActionPreference = "Stop"
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
+    $OutputRoot = Join-Path $scriptRoot "..\.."
+}
 
 if ([string]::IsNullOrWhiteSpace($ApiKey)) {
     throw "Set LANDSD_3D_API_KEY in the local environment before requesting Lands Department 3D data."

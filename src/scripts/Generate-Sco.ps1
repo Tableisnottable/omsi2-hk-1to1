@@ -1,10 +1,19 @@
 [CmdletBinding()]
 param(
-    [string]$ModelDirectory = (Join-Path $PSScriptRoot "..\..\Sceneryobjects\HK_Objects\model"),
-    [string]$OutputDirectory = (Join-Path $PSScriptRoot "..\..\Sceneryobjects\HK_Objects")
+    [string]$ModelDirectory = "",
+    [string]$OutputDirectory = ""
 )
 
 $ErrorActionPreference = "Stop"
+if ([string]::IsNullOrWhiteSpace($ModelDirectory) -or [string]::IsNullOrWhiteSpace($OutputDirectory)) {
+    $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+    if ([string]::IsNullOrWhiteSpace($ModelDirectory)) {
+        $ModelDirectory = Join-Path $scriptRoot "..\..\Sceneryobjects\HK_Objects\model"
+    }
+    if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
+        $OutputDirectory = Join-Path $scriptRoot "..\..\Sceneryobjects\HK_Objects"
+    }
+}
 if (-not (Test-Path $ModelDirectory -PathType Container)) {
     throw "Model directory does not exist: $ModelDirectory"
 }

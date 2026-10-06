@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hong Kong 1:1 OpenOMSI map project">
+  <title>Hong Kong 1:1 | OpenOMSI Map</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav shell">
+      <a class="brand" href="./">HK 1:1 <span>OpenOMSI</span></a>
+      <div class="nav-links">
+        <a href="#download">下載</a>
+        <a href="./routes.html">路線詳細</a>
+        <a href="#routes">快速搜尋</a>
+        <a href="#status">驗證狀態</a>
+        <a href="https://github.com/Tableisnottable/omsi2-hk-1to1" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </div>
+    </nav>
+    <div class="shell hero-grid">
+      <div>
+        <p class="eyebrow">香港 · 1:1 scale · OpenOMSI</p>
+        <h1>把香港帶進你的巴士模擬器。</h1>
+        <p class="lead">一個可重現生成、驗證和安裝的香港地圖 scaffold。先由 OSM 道路、建築輪廓、巴士站和路線資料建立基礎，再逐步加入高品質 OMSI 資產。</p>
+        <div class="actions">
+          <a class="button primary" href="#download">取得地圖</a>
+          <a class="button ghost" href="../preview/cesium/index.html">開啟 3D 預覽</a>
+        </div>
+        <p class="notice">目前版本是可安裝的開發版 scaffold，不是已完成的 Assetto Corsa 級全港成品。</p>
+      </div>
+      <div class="hero-card">
+        <div class="map-glow"></div>
+        <div class="route-line"></div>
+        <div class="route-line second"></div>
+        <span class="pin pin-a">中環</span>
+        <span class="pin pin-b">九龍</span>
+        <span class="pin pin-c">新界</span>
+        <div class="card-label">HK 1:1 / 19 areas</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell stats" aria-label="Project statistics">
+      <div><strong id="map-count">19</strong><span>HP1C areas</span></div>
+      <div><strong id="route-count">—</strong><span>public route records</span></div>
+      <div><strong id="nr-count">—</strong><span>NR services</span></div>
+      <div><strong id="road-count">—</strong><span>OSM road ways</span></div>
+    </section>
+
+    <section class="shell section" id="download">
+      <div class="section-heading">
+        <p class="eyebrow">Download & install</p>
+        <h2>一個 ZIP，全部 19 個地圖</h2>
+        <p>不用逐個下載。這個單一 Release ZIP 一次包含全部 19 個 HP1C 地圖，以及可安裝的 <code>Sceneryobjects</code> 和 <code>Vehicles</code> 資料夾。</p>
+      </div>
+      <div class="download-card">
+        <div>
+          <span class="tag">DEFAULT PACKAGE</span>
+          <h3>omsi2-hk-1to1-openomsi.zip</h3>
+          <p>由 <code>Build-Release.ps1</code> 產生的完整合併安裝包：19 maps in one download。</p>
+        </div>
+        <a class="button primary" href="../release/omsi2-hk-1to1-openomsi.zip">下載 ZIP</a>
+      </div>
+      <div class="steps">
+        <div><b>01</b><span>只下載這一個 ZIP</span></div>
+        <div><b>02</b><span>解壓至 OMSI 2 / OpenOMSI 遊戲根目錄</span></div>
+        <div><b>03</b><span>一次合併全部 maps、Sceneryobjects、Vehicles</span></div>
+        <div><b>04</b><span>啟動遊戲並選擇 19 個 HP1C 地圖之一</span></div>
+      </div>
+    </section>
+
+    <section class="shell section split" id="routes">
+      <div class="section-heading">
+        <p class="eyebrow">Route catalogue</p>
+        <h2>香港巴士路線資料</h2>
+        <p>資料分開保留來源和服務類型，方便日後建立 HOF、時刻表和 AI traffic。</p>
+        <label class="search-label" for="route-search">搜尋路線或目的地</label>
+        <input id="route-search" type="search" placeholder="例如：1、Central、ctb" autocomplete="off">
+      </div>
+      <div class="route-panel">
+        <div class="route-tabs" role="tablist">
+          <button class="active" data-file="../routes/hk_bus_routes.csv">專營巴士</button>
+          <button data-file="../routes/nr_routes.csv">NR 居民巴士</button>
+          <button data-file="../routes/other_routes.csv">其他服務</button>
+        </div>
+        <p id="route-status" class="muted">正在載入路線資料…</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Route</th><th>Operator / type</th><th>Origin</th><th>Destination</th></tr></thead>
+            <tbody id="route-table"><tr><td colspan="4">—</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell section" id="map">
+      <div class="section-heading">
+        <p class="eyebrow">Live map data</p>
+        <h2>道路和巴士站地圖</h2>
+        <p>這是 TruckersMP-style 的資料預覽：道路來自 OSM 匯入檔，巴士站和建築輪廓可切換顯示。它不是遊戲引擎本身。</p>
+      </div>
+      <div class="map-toolbar">
+        <label for="map-area">區域</label>
+        <select id="map-area">
+          <option value="CW">Central & Wan Chai (CW)</option>
+          <option value="WCH">Western & Central (WCH)</option>
+          <option value="EAS">Eastern (EAS)</option>
+          <option value="KWT">Kwai Tsing (KWT)</option>
+          <option value="YTM">Yau Tsim Mong (YTM)</option>
+        </select>
+        <label><input id="show-roads" type="checkbox" checked> 道路</label>
+        <label><input id="show-stops" type="checkbox" checked> 巴士站</label>
+        <label><input id="show-buildings" type="checkbox"> 建築輪廓</label>
+        <span id="map-status" class="muted">正在載入地圖資料…</span>
+      </div>
+      <div id="map-view" class="map-view" aria-label="Interactive Hong Kong road map"></div>
+    </section>
+
+    <section class="shell section hof-section" id="hof">
+      <div class="section-heading">
+        <p class="eyebrow">OMSI route data</p>
+        <h2>HOF 路線檔案</h2>
+        <p>目前提供可放入車輛資料夾的基礎 HOF。完整逐站路線、時刻表和 AI traffic 仍要按每條路線逐步製作。</p>
+      </div>
+      <div class="hof-card">
+        <code>Vehicles/Annan_HK/HK_Routes.hof</code>
+        <div class="hof-actions">
+          <a class="button primary" href="../Vehicles/Annan_HK/HK_Routes.hof" download>下載 HOF</a>
+          <a class="button light" href="../Vehicles/Annan_HK/HK_Routes.hof" target="_blank" rel="noreferrer">查看原始檔</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell section" id="status">
+      <div class="section-heading">
+        <p class="eyebrow">Quality & verification</p>
+        <h2>目前狀態，清楚可見</h2>
+        <p>自動驗證會檢查地圖資料、路線檔案和套件結構；遊戲內測試仍需要本機安裝 OpenOMSI。</p>
+      </div>
+      <div class="status-grid">
+        <article class="status-card pass"><span>✓</span><div><b>Map validation</b><p>19 個 HP1C 地圖通過離線驗證</p></div></article>
+        <article class="status-card pass"><span>✓</span><div><b>Release package</b><p>可建立 OpenOMSI 安裝 ZIP</p></div></article>
+        <article class="status-card pass"><span>✓</span><div><b>Route imports</b><p>專營、NR、其他服務資料已匯入</p></div></article>
+        <article class="status-card warn"><span>!</span><div><b>In-game driving</b><p>需要使用者本機 OpenOMSI 執行檔測試</p></div></article>
+        <article class="status-card warn"><span>!</span><div><b>High-detail assets</b><p>目前是 OSM 輪廓和 scaffold，尚未完成高模資產</p></div></article>
+      </div>
+      <div class="report">
+        <b>發現錯漏？</b>
+        <span>請在 GitHub Issues 提供地圖名稱、重現步驟和截圖。</span>
+        <a href="https://github.com/Tableisnottable/omsi2-hk-1to1/issues/new" target="_blank" rel="noreferrer">回報問題 ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell"><span>HK 1:1 OpenOMSI Map</span><span>OSM and Hong Kong official data attribution applies.</span></div>
+  </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="./app.js"></script>
+</body>
+</html>

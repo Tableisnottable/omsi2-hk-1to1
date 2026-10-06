@@ -1,153 +1,122 @@
-# OMSI 2 - Hong Kong 1:1 Scale Map Project
+# Hong Kong 1:1 OpenOMSI Map
 
-This repository is an **OpenOMSI-compatible scaffold** for a 1:1 Hong Kong map
-using the HP1C tile naming scheme. It deliberately contains the package
-structure and route/map metadata needed to begin authoring; terrain, scenery
-meshes, textures, and timetable data are added incrementally.
+香港 1:1 巴士模擬地圖，適用於 OpenOMSI／OMSI 2。
 
-The visual target is modern high-fidelity simulator quality. OpenOMSI's 64-bit
-engine gives the project more memory headroom than the original 32-bit OMSI,
-but it does not automatically create Assetto Corsa-level assets. See
-`QUALITY_TARGET.md` for the required terrain, meshes, PBR materials, LOD,
-collision, and profiling stages.
+## 下載
 
-## Layout
+請下載唯一的完整地圖包：
 
-- `maps/HP1C_<code>/` contains one map tile scaffold for each of the 19
-  planned areas (`CW`, `WCH`, `EAS`, `SOU`, `YTM`, `SSP`, `KCT`, `WTS`, `KTN`,
-  `KWT`, `TWW`, `TMM`, `YLN`, `NTH`, `TPO`, `STN`, `SKG`, `ISL`, `HZMB`).
-- `Sceneryobjects/HK_Objects/` is reserved for Hong Kong scenery and generated
-  `.sco` definitions.
-- `Sceneryobjects/HK_Objects/texture/` is reserved for authored, redistributable
-  OMSI textures.
-- `Vehicles/Annan_HK/` contains the route `.hof` placeholder.
-- `routes/` contains the normalized public-transport route catalogue and
-  separate NR and other non-franchised service files.
-- `src/scripts/` contains setup, validation, generation, packaging, and launch
-  helpers.
+`omsi2-hk-1to1-openomsi.zip`
 
-## Validate and package
+這一個 ZIP 已經包含全部 19 個香港地圖區域，不需要逐個下載：
 
-Run from the repository root in PowerShell:
+- Central and Western
+- Wan Chai
+- Eastern
+- Southern
+- Yau Tsim Mong
+- Sham Shui Po
+- Kowloon City
+- Wong Tai Sin
+- Kwun Tong
+- Kwai Tsing
+- Tsuen Wan
+- Tuen Mun
+- Yuen Long
+- North District
+- Tai Po
+- Sha Tin
+- Sai Kung
+- Islands
+- Hong Kong–Zhuhai–Macao Bridge
 
-```powershell
-powershell.exe -File .\src\scripts\Test-Map.ps1
-powershell.exe -File .\src\scripts\Build-Release.ps1
-```
+## 安裝
 
-The validator is offline and does not require OMSI. The release script writes
-`release\omsi2-hk-1to1-full.zip`; generated archives are ignored by Git.
+1. 下載 `omsi2-hk-1to1-openomsi.zip`。
+2. 開啟你的 OpenOMSI／OMSI 2 安裝資料夾。
+3. 將 ZIP 內的 `maps`、`Sceneryobjects` 和 `Vehicles` 資料夾解壓到遊戲資料夾。
+4. 如果 Windows 詢問是否合併資料夾，選擇合併。
+5. 啟動 OpenOMSI／OMSI 2。
+6. 在地圖選單選擇香港的 `HP1C_*` 地圖。
 
-## Generate from OpenStreetMap
+常見的 Steam 安裝位置：
 
-The repository can import an `.osm` export into the matching map folder. This
-keeps the local save files inside the same repository path and creates
-deterministic CSV source data for roads, nodes, and bus stops:
+`C:\Program Files (x86)\Steam\steamapps\common\OMSI 2\`
 
-```powershell
-powershell.exe -File .\src\scripts\Generate-OsmMap.ps1 `
-  -OsmPath .\src\osm\hong-kong.osm `
-  -MapCode CW
-```
+## 開始遊戲
 
-For a small permitted OSM API/Overpass export URL, use `-Download`:
+安裝完成後：
 
-```powershell
-powershell.exe -File .\src\scripts\Generate-OsmMap.ps1 `
-  -OsmPath "https://overpass-api.de/api/map?bbox=114.10,22.25,114.20,22.35" `
-  -MapCode CW -Download
-```
+1. 選擇一個 `HP1C_*` 香港地圖。
+2. 選擇已安裝的巴士。
+3. 選擇香港路線和目的地。
+4. 載入地圖後檢查道路、巴士站、建築和路線顯示。
 
-The importer creates `osm_nodes.csv`, `osm_ways.csv`, `osm_stops.csv`,
-`osm_buildings.csv`, and `osm_import.json` under `maps\HP1C_<code>`.
-Building footprints include available OSM building tags, levels, heights, and
-polygon coordinates. These are source/import files;
-the OMSI tile still needs a scenery/spline conversion step before it becomes a
-fully drivable map.
+目前版本的 HOF 路線檔案位於車輛資料夾：
 
-## Optional Hong Kong 3D reference data
+`Vehicles\Annan_HK\HK_Routes.hof`
 
-The Lands Department publishes territory-wide 3D Visualisation Map datasets
-through CSDI. The documented machine-readable access format is Cesium 3D
-Tiles in WGS84; the 3D Spatial Data API requires a free API key requested
-from `3dmap@landsd.gov.hk` and is subject to fair-use limits. The
-individualised-model dataset includes geometry and texture data, while the
-non-textured dataset provides geometry without texture.
+## 網上地圖預覽
 
-These datasets are useful for authoring reference and for a future
-coordinate-based scenery conversion step. They are not currently downloaded
-or copied into this repository: the current generator remains reproducible
-from OSM, and converting a full-territory 3D Tiles service into OMSI meshes
-requires a separate, licence-aware conversion pipeline. The official pages
-do not establish FBX, OBJ, IFC, OSGB, or indoor-map downloads, so those
-formats are not assumed.
+專案網站：
 
-The building tileset endpoint can be checked locally without committing the
-key or downloaded metadata:
+- [開啟 HK 1:1 地圖網站](web/index.html)
+- [開啟互動道路地圖](web/index.html#map)
+- [開啟路線詳細資料搜尋](web/routes.html)
+- [下載完整路線資料 CSV](routes/route_details.csv)
 
-```powershell
-$env:LANDSD_3D_API_KEY = "your-new-key"
-powershell.exe -File .\src\scripts\Get-Landsd3dTileset.ps1 -Dataset building
-```
+- 香港道路地圖；
+- 巴士站；
+- 建築輪廓；
+- 不同 HP1C 區域；
+- 專營巴士、NR 居民巴士和其他服務路線；
+- HOF 下載；
+- 目前版本狀態。
 
-The script reads the key only from `LANDSD_3D_API_KEY`, writes downloaded
-metadata under the ignored `src\landsd3d\` directory, and does not convert
-the remote 3D Tiles into OMSI assets.
+網站預覽是地圖資料查看工具，不需要安裝遊戲；真正駕駛地圖需要 OpenOMSI／OMSI 2。
 
-For a local Cesium preview with the Lands Department imagery basemap plus
-building and infrastructure tiles:
+## 目前版本
 
-```powershell
-$env:LANDSD_3D_API_KEY = "your-new-key"
-powershell.exe -File .\src\scripts\Serve-CesiumPreview.ps1
-```
+目前版本已包含：
 
-Open `http://localhost:8080/`. The preview is temporary and the generated
-key-bearing HTML is removed when the server stops; it is not an OMSI asset
-generator.
+- 19 個香港 HP1C 地圖區域；
+- 香港道路資料；
+- 巴士站資料；
+- 建築輪廓；
+- 公共巴士路線資料；
+- NR 居民巴士資料；
+- 其他非專營服務資料；
+- 可搜尋的完整路線資料表（路線圖、時刻表、車型、票價、車廠欄位）；
+- 基本香港 HOF；
+- 一個包含全部地圖的安裝 ZIP；
+- 瀏覽器地圖預覽。
 
-Official links and attribution requirements are recorded in
-`ATTRIBUTION.md`.
+目前仍在製作中的內容：
 
-## Bus routes
+- 更完整的可駕駛道路網絡；
+- 高精度香港建築和街景；
+- 地形、碰撞和交通細節；
+- 完整逐站 HOF；
+- 完整時刻表和 AI 巴士交通；
+- 更高品質的車輛和物件。
 
-Run `python .\src\scripts\Import-BusRoutes.py` to refresh
-`routes\hk_bus_routes.csv` from the HK Bus Crawling public snapshot. The
-snapshot currently contains 3,777 route-direction records. NR (Residents'
-Service) routes are kept in `routes\nr_routes.csv`; their official approval
-lists are published separately by the Transport Department and are not mixed
-with the franchised-route feed. HKeMobility is recorded as the manual route
-search reference, but its interactive backend does not expose a permitted
-bulk download for this generator. Approved contract-hire and regular hotel
-services are in `routes\other_routes.csv`. See `routes\README.md` and
-`routes\sources.json` for source and coverage details.
+路線詳細資料可在網站的「路線詳細」頁搜尋，或下載
+`routes\route_details.csv`。來源沒有提供的欄位會標示為待補或未公開。
 
-## Texture and imagery policy
+因此，現時版本適合預覽、安裝測試和回報問題；不應視為已完成的全港最終版本。
 
-Do **not** package Google Maps or Google Earth screenshots, tiles, or extracted
-imagery in this project. Use them only as private visual reference if needed.
-Google Maps Platform is also not an offline map-export source for this
-generator: live API use requires the user's own Google Cloud credentials,
-billing, and attribution, and standard terms do not permit turning rendered
-Google content into redistributable OMSI map assets.
+## 發現問題
 
-The preferred workflow is:
+如果地圖出現錯誤，請在 GitHub Issues 回報，並提供：
 
-1. Use OpenStreetMap for roads, buildings, and stop locations.
-2. Use Hong Kong Lands Department open orthophotos or HK Map Service data for
-   local reference imagery, following their current attribution and licence
-   terms.
-3. Author simplified road, terrain, building, and signage textures in
-   `Sceneryobjects\HK_Objects\texture\` rather than redistributing raw aerial
-   imagery.
-4. Record the exact source and attribution in `ATTRIBUTION.md` before adding
-   generated textures to a release.
+- 地圖區域名稱；
+- 路線或巴士站名稱；
+- 問題描述；
+- 截圖，若有的話。
 
-See `ATTRIBUTION.md` for the project attribution template and source links.
+## 資料及版權
 
-## Authoring notes
+地圖資料和香港官方資料必須按照各自的授權及來源要求使用。Google Maps
+及 Google Earth 圖像不包含在安裝包內。
 
-Keep map folder names stable because OMSI references them directly. Add
-terrain and objects to the relevant tile, then run the validator before
-testing in OpenOMSI. `Run-OpenOmsi.ps1` accepts `-OmsiPath` when the game is
-installed somewhere other than the default Steam location.
+此專案不是 OpenOMSI／OMSI 2 官方產品。

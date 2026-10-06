@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Route details | HK 1:1 OpenOMSI</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="sub-header">
+    <div class="shell sub-nav"><a class="brand" href="./">HK 1:1 <span>OpenOMSI</span></a><a href="./">返回首頁</a></div>
+    <div class="shell sub-hero"><p class="eyebrow">Route information</p><h1>路線詳細資料</h1><p>搜尋全部匯入路線資料。未由來源提供的地圖、時刻表、車型、票價和車廠資訊會標示為待補，不會以猜測代替。</p></div>
+  </header>
+  <main class="shell route-details">
+    <div class="detail-tools">
+      <input id="detail-search" type="search" placeholder="搜尋路線、營辦商、起點、終點…" autocomplete="off">
+      <select id="detail-group"><option value="">全部服務</option><option>Franchised public bus</option><option>NR Residents service</option><option>Other non-franchised service</option></select>
+      <span id="detail-status" class="muted">正在載入…</span>
+    </div>
+    <div class="table-wrap detail-table"><table><thead><tr>
+      <th>路線</th><th>服務 / 營辦商</th><th>起點 → 終點</th><th>路線圖</th><th>時刻表</th><th>車型</th><th>票價</th><th>車廠</th>
+    </tr></thead><tbody id="detail-table"><tr><td colspan="8">—</td></tr></tbody></table></div>
+    <p class="detail-note">資料來源和完整欄位可下載：<a href="../routes/route_details.csv" download>route_details.csv</a></p>
+  </main>
+  <script src="./route-data.js"></script>
+</body>
+</html>

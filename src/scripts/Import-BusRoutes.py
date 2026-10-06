@@ -129,6 +129,41 @@ def import_other_services() -> list[dict[str, str]]:
     return rows
 
 
+def write_route_details(routes_dir: Path, rows: list[dict[str, str]], nr_rows: list[dict[str, str]], other_rows: list[dict[str, str]]) -> None:
+    fields = [
+        "route_id", "route_number", "service_group", "service_type", "operator",
+        "origin", "destination", "route_map", "timetable", "vehicle_type",
+        "fare", "depot", "source", "data_status",
+    ]
+    detail_rows = []
+    for group, source_rows in (
+        ("Franchised public bus", rows),
+        ("NR Residents service", nr_rows),
+        ("Other non-franchised service", other_rows),
+    ):
+        for row in source_rows:
+            detail_rows.append({
+                "route_id": row.get("route_id", ""),
+                "route_number": row.get("route_number") or row.get("route_id", ""),
+                "service_group": group,
+                "service_type": row.get("service_type", ""),
+                "operator": row.get("operator", ""),
+                "origin": row.get("origin", ""),
+                "destination": row.get("destination", ""),
+                "route_map": "Map geometry pending",
+                "timetable": "Timetable not published in imported catalogue",
+                "vehicle_type": "Not specified",
+                "fare": "Not specified",
+                "depot": "Not specified",
+                "source": row.get("source", ""),
+                "data_status": "Catalogue record; detailed fields pending",
+            })
+    with (routes_dir / "route_details.csv").open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(detail_rows)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", default=SOURCE_URL)
@@ -193,6 +228,7 @@ def main() -> None:
         )
         writer.writeheader()
         writer.writerows(other_rows)
+    write_route_details(routes_dir, rows, nr_rows, other_rows)
 
     metadata = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),

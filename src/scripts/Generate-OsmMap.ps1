@@ -4,11 +4,15 @@ param(
     [string]$OsmPath,
     [ValidatePattern("^[A-Z0-9]{2,8}$")]
     [string]$MapCode = "CW",
-    [string]$OutputRoot = (Join-Path $PSScriptRoot "..\.."),
+    [string]$OutputRoot = "",
     [switch]$Download
 )
 
 $ErrorActionPreference = "Stop"
+$scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
+    $OutputRoot = Join-Path $scriptRoot "..\.."
+}
 $source = $OsmPath
 
 if ($Download) {

@@ -1,0 +1,15 @@
+﻿[name]
+HK_Routes
+
+[servicetrip]
+Out of Service
+
+[line]
+101
+10100
+00
+
+[stop]
+Cross Harbour Tunnel
+Cross Harbour Tunnel
+10101

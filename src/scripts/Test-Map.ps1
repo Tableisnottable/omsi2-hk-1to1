@@ -1,9 +1,12 @@
 [CmdletBinding()]
 param(
-    [string]$RepositoryRoot = (Join-Path $PSScriptRoot "..\..")
+    [string]$RepositoryRoot = ""
 )
 
 $ErrorActionPreference = "Stop"
+if ([string]::IsNullOrWhiteSpace($RepositoryRoot)) {
+    $RepositoryRoot = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) "..\.."
+}
 $root = (Resolve-Path $RepositoryRoot).Path
 $mapRoot = Join-Path $root "maps"
 $routeRoot = Join-Path $root "routes"
@@ -48,7 +51,7 @@ foreach ($map in $maps) {
     }
 }
 
-foreach ($requiredRouteFile in @("hk_bus_routes.csv", "nr_routes.csv", "other_routes.csv", "sources.json")) {
+foreach ($requiredRouteFile in @("hk_bus_routes.csv", "nr_routes.csv", "other_routes.csv", "route_details.csv", "sources.json")) {
     if (-not (Test-Path (Join-Path $routeRoot $requiredRouteFile) -PathType Leaf)) {
         $errors.Add("Missing route file: routes\$requiredRouteFile")
     }
@@ -76,6 +79,18 @@ if (Test-Path (Join-Path $routeRoot "sources.json") -PathType Leaf) {
         Get-Content (Join-Path $routeRoot "sources.json") -Raw | ConvertFrom-Json | Out-Null
     } catch {
         $errors.Add("routes\sources.json is not valid JSON: $($_.Exception.Message)")
+    }
+    if (Test-Path (Join-Path $routeRoot "route_details.csv") -PathType Leaf) {
+        $detailRows = @(Import-Csv (Join-Path $routeRoot "route_details.csv"))
+        $requiredDetailHeaders = @("route_id", "route_map", "timetable", "vehicle_type", "fare", "depot")
+        foreach ($header in $requiredDetailHeaders) {
+            if ($detailRows.Count -eq 0 -or -not ($detailRows[0].PSObject.Properties.Name -contains $header)) {
+                $errors.Add("routes\route_details.csv is missing the $header column")
+            }
+        }
+        if ($detailRows.Count -lt 1) {
+            $errors.Add("routes\route_details.csv contains no route rows")
+        }
     }
 }
 
