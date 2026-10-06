@@ -57,6 +57,26 @@ The importer creates `osm_nodes.csv`, `osm_ways.csv`, `osm_stops.csv`, and
 the OMSI tile still needs a scenery/spline conversion step before it becomes a
 fully drivable map.
 
+## Optional Hong Kong 3D reference data
+
+The Lands Department publishes territory-wide 3D Visualisation Map datasets
+through CSDI. The documented machine-readable access format is Cesium 3D
+Tiles in WGS84; the 3D Spatial Data API requires a free API key requested
+from `3dmap@landsd.gov.hk` and is subject to fair-use limits. The
+individualised-model dataset includes geometry and texture data, while the
+non-textured dataset provides geometry without texture.
+
+These datasets are useful for authoring reference and for a future
+coordinate-based scenery conversion step. They are not currently downloaded
+or copied into this repository: the current generator remains reproducible
+from OSM, and converting a full-territory 3D Tiles service into OMSI meshes
+requires a separate, licence-aware conversion pipeline. The official pages
+do not establish FBX, OBJ, IFC, OSGB, or indoor-map downloads, so those
+formats are not assumed.
+
+Official links and attribution requirements are recorded in
+`ATTRIBUTION.md`.
+
 ## Bus routes
 
 Run `python .\src\scripts\Import-BusRoutes.py` to refresh
