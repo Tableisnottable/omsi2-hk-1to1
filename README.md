@@ -5,6 +5,12 @@ using the HP1C tile naming scheme. It deliberately contains the package
 structure and route/map metadata needed to begin authoring; terrain, scenery
 meshes, textures, and timetable data are added incrementally.
 
+The visual target is modern high-fidelity simulator quality. OpenOMSI's 64-bit
+engine gives the project more memory headroom than the original 32-bit OMSI,
+but it does not automatically create Assetto Corsa-level assets. See
+`QUALITY_TARGET.md` for the required terrain, meshes, PBR materials, LOD,
+collision, and profiling stages.
+
 ## Layout
 
 - `maps/HP1C_<code>/` contains one map tile scaffold for each of the 19
