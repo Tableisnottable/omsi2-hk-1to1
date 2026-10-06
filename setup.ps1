@@ -21,9 +21,9 @@ foreach ($d in $Dirs) {
 
 $Codes = @("CW","WCH","EAS","SOU","YTM","SSP","KCT","WTS","KTN","KWT","TWW","TMM","YLN","NTH","TPO","STN","SKG","ISL","HZMB")
 
-foreach ($c in $Codes) {$mp = Join-Path $RepoPath "maps\HK_HP1C_$c"
+foreach ($c in $Codes) {$mp = Join-Path $RepoPath "maps\HP1C_$c"
     New-Item -Path "$mp\texture" -ItemType Directory -Force | Out-Null
-    [System.IO.File]::WriteAllText("$mp\global.cfg", "[name]`r`nHK HP1C $c`r`n`r`n[friendlyname]`r`nHK 1:1 Map ($c)", [System.Text.Encoding]::UTF8)
+    [System.IO.File]::WriteAllText("$mp\global.cfg", "[name]`r`nHP1C $c`r`n`r`n[friendlyname]`r`nHK 1:1 Map ($c)", [System.Text.Encoding]::UTF8)
     [System.IO.File]::WriteAllText("$mp\tile_0_0.map", "[map]`r`n0`r`n0`r`n`r`n[terrain]`r`n0`r`n0`r`n0", [System.Text.Encoding]::UTF8)
     [System.IO.File]::WriteAllText("$mp\drivers.txt", "DefaultDriver", [System.Text.Encoding]::UTF8)
     [System.IO.File]::WriteAllText("$mp\parklist_p.txt", "", [System.Text.Encoding]::UTF8)

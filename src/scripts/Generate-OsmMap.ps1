@@ -23,7 +23,7 @@ if (-not (Test-Path $OsmPath -PathType Leaf)) {
 }
 
 $root = (Resolve-Path $OutputRoot).Path
-$mapDirectory = Join-Path $root "maps\HK_HP1C_$MapCode"
+$mapDirectory = Join-Path $root "maps\HP1C_$MapCode"
 New-Item -Path $mapDirectory -ItemType Directory -Force | Out-Null
 
 $osm = New-Object System.Xml.XmlDocument
@@ -87,7 +87,7 @@ foreach ($way in $osm.osm.way) {
 
 @(
     "[name]"
-    "HK HP1C $MapCode"
+    "HP1C $MapCode"
     ""
     "[friendlyname]"
     "HK 1:1 Map ($MapCode) - OSM import"

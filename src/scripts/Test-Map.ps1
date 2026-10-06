@@ -6,6 +6,7 @@ param(
 $ErrorActionPreference = "Stop"
 $root = (Resolve-Path $RepositoryRoot).Path
 $mapRoot = Join-Path $root "maps"
+$routeRoot = Join-Path $root "routes"
 $requiredDirectories = @("maps", "Sceneryobjects", "Vehicles")
 $errors = [System.Collections.Generic.List[string]]::new()
 
@@ -15,7 +16,7 @@ foreach ($directory in $requiredDirectories) {
     }
 }
 
-$maps = @(Get-ChildItem $mapRoot -Directory -Filter "HK_HP1C_*" -ErrorAction SilentlyContinue)
+$maps = @(Get-ChildItem $mapRoot -Directory -Filter "HP1C_*" -ErrorAction SilentlyContinue)
 if ($maps.Count -ne 19) {
     $errors.Add("Expected 19 HP1C map directories, found $($maps.Count)")
 }
@@ -29,6 +30,46 @@ foreach ($map in $maps) {
     $global = Get-Content (Join-Path $map.FullName "global.cfg") -Raw
     if ($global -notmatch "(?m)^\[name\]\s*$" -or $global -notmatch "(?m)^\[friendlyname\]\s*$") {
         $errors.Add("$($map.Name)\global.cfg is missing [name] or [friendlyname]")
+    }
+    if ($global -notmatch "(?m)^HP1C\s+") {
+        $errors.Add("$($map.Name)\global.cfg does not use HP1C naming")
+    }
+    foreach ($jsonFile in Get-ChildItem $map.FullName -Filter "*.json" -File) {
+        try {
+            Get-Content $jsonFile.FullName -Raw | ConvertFrom-Json | Out-Null
+        } catch {
+            $errors.Add("$($map.Name)\$($jsonFile.Name) is not valid JSON: $($_.Exception.Message)")
+        }
+    }
+    foreach ($csvFile in Get-ChildItem $map.FullName -Filter "*.csv" -File) {
+        if ((Get-Content $csvFile.FullName -TotalCount 1).Count -eq 0) {
+            $errors.Add("$($map.Name)\$($csvFile.Name) is empty")
+        }
+    }
+}
+
+foreach ($requiredRouteFile in @("hk_bus_routes.csv", "nr_routes.csv", "sources.json")) {
+    if (-not (Test-Path (Join-Path $routeRoot $requiredRouteFile) -PathType Leaf)) {
+        $errors.Add("Missing route file: routes\$requiredRouteFile")
+    }
+}
+if (Test-Path (Join-Path $routeRoot "hk_bus_routes.csv") -PathType Leaf) {
+    $routeRows = @(Import-Csv (Join-Path $routeRoot "hk_bus_routes.csv"))
+    if ($routeRows.Count -lt 1) {
+        $errors.Add("routes\hk_bus_routes.csv contains no route rows")
+    }
+}
+if (Test-Path (Join-Path $routeRoot "nr_routes.csv") -PathType Leaf) {
+    $nrHeaders = (Get-Content (Join-Path $routeRoot "nr_routes.csv") -TotalCount 1)
+    if ($nrHeaders -notmatch "route_id" -or $nrHeaders -notmatch "region") {
+        $errors.Add("routes\nr_routes.csv has an invalid header")
+    }
+}
+if (Test-Path (Join-Path $routeRoot "sources.json") -PathType Leaf) {
+    try {
+        Get-Content (Join-Path $routeRoot "sources.json") -Raw | ConvertFrom-Json | Out-Null
+    } catch {
+        $errors.Add("routes\sources.json is not valid JSON: $($_.Exception.Message)")
     }
 }
 
