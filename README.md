@@ -73,6 +73,10 @@ bulk download for this generator. See `routes\README.md` and
 
 Do **not** package Google Maps or Google Earth screenshots, tiles, or extracted
 imagery in this project. Use them only as private visual reference if needed.
+Google Maps Platform is also not an offline map-export source for this
+generator: live API use requires the user's own Google Cloud credentials,
+billing, and attribution, and standard terms do not permit turning rendered
+Google content into redistributable OMSI map assets.
 
 The preferred workflow is:
 

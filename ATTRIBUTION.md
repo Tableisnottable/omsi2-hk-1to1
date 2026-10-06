@@ -38,6 +38,18 @@ release archives. Do not commit screenshots, downloaded tiles, or textures
 derived from Google imagery unless the applicable licence explicitly permits
 the intended use and redistribution.
 
+Google Maps Platform can be used as a private, live authoring/reference
+service only when an appropriately configured Google Cloud project, API key,
+billing account, and attribution are provided. Its map tiles, Street View,
+satellite imagery, and other rendered content must not be downloaded and
+converted into OMSI scenery or texture assets under the standard Maps
+Platform terms. The generator therefore does not depend on Google APIs and
+does not store Google responses.
+
+- Maps Platform: <https://mapsplatform.google.com/>
+- Terms: <https://cloud.google.com/maps-platform/terms/>
+- Map Tiles policies: <https://developers.google.com/maps/documentation/tile/policies>
+
 ## Project-authored textures
 
 Textures created by this project should identify their source in the
