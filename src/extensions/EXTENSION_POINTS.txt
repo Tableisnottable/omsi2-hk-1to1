@@ -1,0 +1,12 @@
+OMSI 2 / OpenOMSI extension points for the HK 1:1 project:
+
+- terrain/: source terrain inputs (e.g. DEM rasters, contour exports), conversion configs, and generated terrain artifacts.
+- splines/: road/rail spline definitions or open-licensed custom spline sources.
+- scenery/: scenery object source assets and object placement source data.
+- tiles/: generated tile manifests, conversion logs, and source-to-tile mapping metadata.
+- ai-traffic/: AI list source tables, spawn rules, and vehicle assignment data.
+- bus-stops/: stop master data, stop cube references, and timetable linkage files.
+- routes/: route definitions, line variants, timetable source sheets, and HOF generation inputs.
+- reference-data/: GIS/raw real-world reference datasets plus attribution metadata.
+
+Do not commit proprietary OMSI 2 assets. Keep only open-licensed source material and metadata here.
