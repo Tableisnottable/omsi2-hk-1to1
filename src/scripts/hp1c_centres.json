@@ -1,0 +1,25 @@
+{
+  "note": "HP1C district sheet centres (WGS84) used to centre each 300 m OMSI tile. Coordinates approximate the Lands Department 1:1000 sheet centre to ~100 m; the importer clips to the exact tile bbox.",
+  "half_deg": 0.006,
+  "centres": {
+    "CW":   { "lat": 22.2825, "lon": 114.1580 },
+    "WCH":  { "lat": 22.2810, "lon": 114.1890 },
+    "EAS":  { "lat": 22.2790, "lon": 114.2260 },
+    "SOU":  { "lat": 22.2470, "lon": 114.1580 },
+    "YTM":  { "lat": 22.3040, "lon": 114.1700 },
+    "SSP":  { "lat": 22.3300, "lon": 114.1620 },
+    "KCT":  { "lat": 22.3370, "lon": 114.1760 },
+    "WTS":  { "lat": 22.3260, "lon": 114.1990 },
+    "KTN":  { "lat": 22.3150, "lon": 114.2220 },
+    "KWT":  { "lat": 22.3540, "lon": 114.1250 },
+    "TWW":  { "lat": 22.3700, "lon": 114.1120 },
+    "TMM":  { "lat": 22.3860, "lon": 114.2040 },
+    "YLN":  { "lat": 22.4440, "lon": 114.0220 },
+    "NTH":  { "lat": 22.5000, "lon": 114.1350 },
+    "TPO":  { "lat": 22.4520, "lon": 114.1670 },
+    "STN":  { "lat": 22.3820, "lon": 114.1920 },
+    "SKG":  { "lat": 22.3260, "lon": 114.2630 },
+    "ISL":  { "lat": 22.2580, "lon": 114.2500 },
+    "HZMB": { "lat": 22.2770, "lon": 113.7600 }
+  }
+}
