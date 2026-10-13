@@ -550,6 +550,7 @@
 "970X+3+Aberdeen+Bute Street, Nathan Road",970X,3,ctb,Aberdeen,"Bute Street, Nathan Road",Aberdeen,"Bute Street, Nathan Road",,8793,HK Bus Crawling
 971+1+Aberdeen (Shek Pai Wan)+Hoi Lai Estate,971,1,ctb,Aberdeen (Shek Pai Wan),Hoi Lai Estate,Aberdeen (Shek Pai Wan),Hoi Lai Estate,,1000687,HK Bus Crawling
 971+1+Hoi Lai Estate+Aberdeen (Shek Pai Wan),971,1,ctb,Hoi Lai Estate,Aberdeen (Shek Pai Wan),Hoi Lai Estate,Aberdeen (Shek Pai Wan),,1000687,HK Bus Crawling
+971R+1+Cyberport  (via Victoria Road)+Mong Kok,971R,1,ctb,Cyberport  (via Victoria Road),Mong Kok,Cyberport  (via Victoria Road),Mong Kok,,,HK Bus Crawling
 973+1+Stanley Village+Tsim Sha Tsui (Mody Road),973,1,ctb,Stanley Village,Tsim Sha Tsui (Mody Road),Stanley Village,Tsim Sha Tsui (Mody Road),,1000236,HK Bus Crawling
 973+1+Tsim Sha Tsui (Mody Road)+Stanley Village,973,1,ctb,Tsim Sha Tsui (Mody Road),Stanley Village,Tsim Sha Tsui (Mody Road),Stanley Village,,1000236,HK Bus Crawling
 973+2+Stanley Village+Tsim Sha Tsui (Mody Road),973,2,ctb,Stanley Village,Tsim Sha Tsui (Mody Road),Stanley Village,Tsim Sha Tsui (Mody Road),,1667,HK Bus Crawling
@@ -557,10 +558,6 @@
 973+3+Stanley Village+Tsim Sha Tsui (Mody Road),973,3,ctb,Stanley Village,Tsim Sha Tsui (Mody Road),Stanley Village,Tsim Sha Tsui (Mody Road),,8477,HK Bus Crawling
 973+3+Tsim Sha Tsui (Mody Road)+Stanley Market,973,3,ctb,Tsim Sha Tsui (Mody Road),Stanley Market,Tsim Sha Tsui (Mody Road),Stanley Market,,8477,HK Bus Crawling
 973+4+Stanley Village+Tsim Sha Tsui (Mody Road),973,4,ctb,Stanley Village,Tsim Sha Tsui (Mody Road),Stanley Village,Tsim Sha Tsui (Mody Road),,8476,HK Bus Crawling
-976+1+Lok Ma Chau (San Tin)+Sai Wan Ho,976,1,ctb,Lok Ma Chau (San Tin),Sai Wan Ho,Lok Ma Chau (San Tin),Sai Wan Ho,,1000014,HK Bus Crawling
-976+1+Sai Wan Ho+Lok Ma Chau (San Tin),976,1,ctb,Sai Wan Ho,Lok Ma Chau (San Tin),Sai Wan Ho,Lok Ma Chau (San Tin),,1000014,HK Bus Crawling
-976A+1+Lok Ma Chau (San Tin)+Siu Sai Wan (Island Resort),976A,1,ctb,Lok Ma Chau (San Tin),Siu Sai Wan (Island Resort),Lok Ma Chau (San Tin),Siu Sai Wan (Island Resort),,1000251,HK Bus Crawling
-976A+1+Siu Sai Wan (Island Resort)+Lok Ma Chau (San Tin),976A,1,ctb,Siu Sai Wan (Island Resort),Lok Ma Chau (San Tin),Siu Sai Wan (Island Resort),Lok Ma Chau (San Tin),,1000251,HK Bus Crawling
 979+1+Central (Hong Kong Station)+Queen's Hill Fanling,979,1,ctb,Central (Hong Kong Station),Queen's Hill Fanling,Central (Hong Kong Station),Queen's Hill Fanling,,1000650,HK Bus Crawling
 979+1+Queen's Hill Fanling+Central (Hong Kong Station),979,1,ctb,Queen's Hill Fanling,Central (Hong Kong Station),Queen's Hill Fanling,Central (Hong Kong Station),,1000217,HK Bus Crawling
 98+1+Aberdeen (Chengtu Road)+Lei Tung Estate,98,1,ctb,Aberdeen (Chengtu Road),Lei Tung Estate,Aberdeen (Chengtu Road),Lei Tung Estate,,1669,HK Bus Crawling
@@ -615,6 +612,12 @@ A29+1+Airport (Ground Transportation Centre)+Po Lam Station,A29,1,ctb,Airport (G
 A29+1+Po Lam Station+Airport (Ground Transportation Centre),A29,1,ctb,Po Lam Station,Airport (Ground Transportation Centre),Po Lam Station,Airport (Ground Transportation Centre),,1680,HK Bus Crawling
 A29+2+Airport (via HZMB Hong Kong Port)+Tseung Kwan O (Po Lam),A29,2,ctb,Airport (via HZMB Hong Kong Port),Tseung Kwan O (Po Lam),Airport (via HZMB Hong Kong Port),Tseung Kwan O (Po Lam),,1000079,HK Bus Crawling
 A29+2+Tseung Kwan O (Po Lam)+Airport (via HZMB Hong Kong Port),A29,2,ctb,Tseung Kwan O (Po Lam),Airport (via HZMB Hong Kong Port),Tseung Kwan O (Po Lam),Airport (via HZMB Hong Kong Port),,1000079,HK Bus Crawling
+B13+1+Huanggang Port+Siu Sai Wan (Island Resort),B13,1,ctb,Huanggang Port,Siu Sai Wan (Island Resort),Huanggang Port,Siu Sai Wan (Island Resort),,,HK Bus Crawling
+B13+1+Siu Sai Wan (Island Resort)+Huanggang Port,B13,1,ctb,Siu Sai Wan (Island Resort),Huanggang Port,Siu Sai Wan (Island Resort),Huanggang Port,,,HK Bus Crawling
+B14+1+Huanggang Port+Kai Tak Olympic Avenue (via Sung Wong Toi Station),B14,1,ctb,Huanggang Port,Kai Tak Olympic Avenue (via Sung Wong Toi Station),Huanggang Port,Kai Tak Olympic Avenue (via Sung Wong Toi Station),,,HK Bus Crawling
+B14+1+Kai Tak Olympic Avenue (via Sung Wong Toi Station)+Huanggang Port,B14,1,ctb,Kai Tak Olympic Avenue (via Sung Wong Toi Station),Huanggang Port,Kai Tak Olympic Avenue (via Sung Wong Toi Station),Huanggang Port,,,HK Bus Crawling
+B15+1+Huanggang Port+Tuen Mun Castle Peak Bay (via Hung Shui Kiu),B15,1,ctb,Huanggang Port,Tuen Mun Castle Peak Bay (via Hung Shui Kiu),Huanggang Port,Tuen Mun Castle Peak Bay (via Hung Shui Kiu),,,HK Bus Crawling
+B15+1+Tuen Mun Castle Peak Bay (via Hung Shui Kiu)+Huanggang Port,B15,1,ctb,Tuen Mun Castle Peak Bay (via Hung Shui Kiu),Huanggang Port,Tuen Mun Castle Peak Bay (via Hung Shui Kiu),Huanggang Port,,,HK Bus Crawling
 B3+1+Shenzhen Bay Port+Tuen Mun Ferry Pier,B3,1,ctb,Shenzhen Bay Port,Tuen Mun Ferry Pier,Shenzhen Bay Port,Tuen Mun Ferry Pier,,1639,HK Bus Crawling
 B3+1+Tuen Mun Ferry Pier+Shenzhen Bay Port,B3,1,ctb,Tuen Mun Ferry Pier,Shenzhen Bay Port,Tuen Mun Ferry Pier,Shenzhen Bay Port,,1639,HK Bus Crawling
 B3+2+Shenzhen Bay Port+Tuen Mun Ferry Pier,B3,2,ctb,Shenzhen Bay Port,Tuen Mun Ferry Pier,Shenzhen Bay Port,Tuen Mun Ferry Pier,,1000419,HK Bus Crawling
@@ -1265,10 +1268,10 @@ X970+1+South Horizons+Cheung Sha Wan (Kom Tsun Street),X970,1,ctb,South Horizons
 "44A+2+King Kwai House, Shan King Estate+Sheung Shui Station",44A,2,gmb,"King Kwai House, Shan King Estate",Sheung Shui Station,"King Kwai House, Shan King Estate",Sheung Shui Station,,2004001,HK Bus Crawling
 44A+3+Hoi Lai Estate+Cheung Sha Wan Plaza,44A,3,gmb,Hoi Lai Estate,Cheung Sha Wan Plaza,Hoi Lai Estate,Cheung Sha Wan Plaza,,2004599,HK Bus Crawling
 44A1+2+Tuen Mun Po Tin Estate+Sheung Shui Station,44A1,2,gmb,Tuen Mun Po Tin Estate,Sheung Shui Station,Tuen Mun Po Tin Estate,Sheung Shui Station,,2004036,HK Bus Crawling
-44B+1+Lok Ma Chau (San Tin) Public Transport Interchange+Tuen Mun Station,44B,1,gmb,Lok Ma Chau (San Tin) Public Transport Interchange,Tuen Mun Station,Lok Ma Chau (San Tin) Public Transport Interchange,Tuen Mun Station,,2004164,HK Bus Crawling
-44B+1+Tuen Mun Station+Lok Ma Chau (San Tin) Public Transport Interchange,44B,1,gmb,Tuen Mun Station,Lok Ma Chau (San Tin) Public Transport Interchange,Tuen Mun Station,Lok Ma Chau (San Tin) Public Transport Interchange,,2004164,HK Bus Crawling
-44B1+1+Lok Ma Chau (San Tin) Public Transport Interchange+Tuen Mun Ferry Pier,44B1,1,gmb,Lok Ma Chau (San Tin) Public Transport Interchange,Tuen Mun Ferry Pier,Lok Ma Chau (San Tin) Public Transport Interchange,Tuen Mun Ferry Pier,,2004197,HK Bus Crawling
-44B1+1+Tuen Mun Ferry Pier+Lok Ma Chau (San Tin) Public Transport Interchange,44B1,1,gmb,Tuen Mun Ferry Pier,Lok Ma Chau (San Tin) Public Transport Interchange,Tuen Mun Ferry Pier,Lok Ma Chau (San Tin) Public Transport Interchange,,2004197,HK Bus Crawling
+44B+1+Huanggang Port+Tuen Mun Station,44B,1,gmb,Huanggang Port,Tuen Mun Station,Huanggang Port,Tuen Mun Station,,2004164,HK Bus Crawling
+44B+1+Tuen Mun Station+Huanggang Port,44B,1,gmb,Tuen Mun Station,Huanggang Port,Tuen Mun Station,Huanggang Port,,2004164,HK Bus Crawling
+44B1+1+Huanggang Port+Tuen Mun Ferry Pier,44B1,1,gmb,Huanggang Port,Tuen Mun Ferry Pier,Huanggang Port,Tuen Mun Ferry Pier,,2004197,HK Bus Crawling
+44B1+1+Tuen Mun Ferry Pier+Huanggang Port,44B1,1,gmb,Tuen Mun Ferry Pier,Huanggang Port,Tuen Mun Ferry Pier,Huanggang Port,,2004197,HK Bus Crawling
 44M+1+Cheung Sha Wan (Cheung Shun Street)+Stonecutters Island,44M,1,gmb,Cheung Sha Wan (Cheung Shun Street),Stonecutters Island,Cheung Sha Wan (Cheung Shun Street),Stonecutters Island,,2004593,HK Bus Crawling
 44M+1+Stonecutters Island+Cheung Sha Wan (Cheung Shun Street),44M,1,gmb,Stonecutters Island,Cheung Sha Wan (Cheung Shun Street),Stonecutters Island,Cheung Sha Wan (Cheung Shun Street),,2004593,HK Bus Crawling
 44M+2+Chai Wan Station+Siu Sai Wan Estate (Circular),44M,2,gmb,Chai Wan Station,Siu Sai Wan Estate (Circular),Chai Wan Station,Siu Sai Wan Estate (Circular),,2002217,HK Bus Crawling
@@ -1524,8 +1527,8 @@ X970+1+South Horizons+Cheung Sha Wan (Kom Tsun Street),X970,1,ctb,South Horizons
 611B+2+Tak Yip Street+Fau Tsoi Street (Circular),611B,2,gmb,Tak Yip Street,Fau Tsoi Street (Circular),Tak Yip Street,Fau Tsoi Street (Circular),,2008599,HK Bus Crawling
 611P+1+Shan Pui Road+安信街(循环线),611P,1,gmb,Shan Pui Road,安信街(循环线),Shan Pui Road,安信街(循环线),,2008603,HK Bus Crawling
 611S+1+United Court (Shan Pui Road)+Yuen Long Station (Circular),611S,1,gmb,United Court (Shan Pui Road),Yuen Long Station (Circular),United Court (Shan Pui Road),Yuen Long Station (Circular),,2008620,HK Bus Crawling
-616S+2+Mong Kok+Lok Ma Chau Control Point,616S,2,gmb,Mong Kok,Lok Ma Chau Control Point,Mong Kok,Lok Ma Chau Control Point,,2004762,HK Bus Crawling
-616S+3+Lok Ma Chau Control Point+Mong Kok,616S,3,gmb,Lok Ma Chau Control Point,Mong Kok,Lok Ma Chau Control Point,Mong Kok,,2004762,HK Bus Crawling
+616S+2+Mong Kok+Huanggang Port,616S,2,gmb,Mong Kok,Huanggang Port,Mong Kok,Huanggang Port,,2004762,HK Bus Crawling
+616S+3+Huanggang Port+Mong Kok,616S,3,gmb,Huanggang Port,Mong Kok,Huanggang Port,Mong Kok,,2004762,HK Bus Crawling
 618+1+Shenzhen Bay Port+Tin Shui Wai (Tin Yan Estate),618,1,gmb,Shenzhen Bay Port,Tin Shui Wai (Tin Yan Estate),Shenzhen Bay Port,Tin Shui Wai (Tin Yan Estate),,2007438,HK Bus Crawling
 618+1+Tin Shui Wai (Tin Yan Estate)+Shenzhen Bay Port,618,1,gmb,Tin Shui Wai (Tin Yan Estate),Shenzhen Bay Port,Tin Shui Wai (Tin Yan Estate),Shenzhen Bay Port,,2007438,HK Bus Crawling
 618A+2+Tin Shui Wai (Tin Yan Estate)+Shenzhen Bay Port,618A,2,gmb,Tin Shui Wai (Tin Yan Estate),Shenzhen Bay Port,Tin Shui Wai (Tin Yan Estate),Shenzhen Bay Port,,2009906,HK Bus Crawling
@@ -1661,8 +1664,8 @@ X970+1+South Horizons+Cheung Sha Wan (Kom Tsun Street),X970,1,ctb,South Horizons
 76B+1+United Christian Hospital+Yau Tong Public Transport Interchange,76B,1,gmb,United Christian Hospital,Yau Tong Public Transport Interchange,United Christian Hospital,Yau Tong Public Transport Interchange,,2007002,HK Bus Crawling
 76B+1+Yau Tong Public Transport Interchange+United Christian Hospital,76B,1,gmb,Yau Tong Public Transport Interchange,United Christian Hospital,Yau Tong Public Transport Interchange,United Christian Hospital,,2007002,HK Bus Crawling
 77M+1+Kowloon Station+East Tsim Sha Tsui(Circular),77M,1,gmb,Kowloon Station,East Tsim Sha Tsui(Circular),Kowloon Station,East Tsim Sha Tsui(Circular),,2003339,HK Bus Crawling
-78+1+Lok Ma Chau (San Tin) Public Transport Interchange+Pat Heung Road (near Tai Lam Bus-Bus Interchange),78,1,gmb,Lok Ma Chau (San Tin) Public Transport Interchange,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Lok Ma Chau (San Tin) Public Transport Interchange,Pat Heung Road (near Tai Lam Bus-Bus Interchange),,2011655,HK Bus Crawling
-78+1+Pat Heung Road (near Tai Lam Bus-Bus Interchange)+Lok Ma Chau (San Tin) Public Transport Interchange,78,1,gmb,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Lok Ma Chau (San Tin) Public Transport Interchange,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Lok Ma Chau (San Tin) Public Transport Interchange,,2011655,HK Bus Crawling
+78+1+Huanggang Port+Pat Heung Road (near Tai Lam Bus-Bus Interchange),78,1,gmb,Huanggang Port,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Huanggang Port,Pat Heung Road (near Tai Lam Bus-Bus Interchange),,2011655,HK Bus Crawling
+78+1+Pat Heung Road (near Tai Lam Bus-Bus Interchange)+Huanggang Port,78,1,gmb,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Huanggang Port,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Huanggang Port,,2011655,HK Bus Crawling
 78+1+Tai Kok Tsui(Island Harbourview) Public Transport Interchange+Tsim Sha Tsui (Peking Road)(Circular),78,1,gmb,Tai Kok Tsui(Island Harbourview) Public Transport Interchange,Tsim Sha Tsui (Peking Road)(Circular),Tai Kok Tsui(Island Harbourview) Public Transport Interchange,Tsim Sha Tsui (Peking Road)(Circular),,2003438,HK Bus Crawling
 78A+1+Kam Sheung Road Station+Pat Heung Road (near Tai Lam Bus-Bus Interchange),78A,1,gmb,Kam Sheung Road Station,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Kam Sheung Road Station,Pat Heung Road (near Tai Lam Bus-Bus Interchange),,2011656,HK Bus Crawling
 78A+1+Pat Heung Road (near Tai Lam Bus-Bus Interchange)+Kam Sheung Road Station,78A,1,gmb,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Kam Sheung Road Station,Pat Heung Road (near Tai Lam Bus-Bus Interchange),Kam Sheung Road Station,,2011656,HK Bus Crawling
@@ -1670,8 +1673,8 @@ X970+1+South Horizons+Cheung Sha Wan (Kom Tsun Street),X970,1,ctb,South Horizons
 79K+1+Mong Kok (Park Avenue)+Mong Kok East Station(Circular),79K,1,gmb,Mong Kok (Park Avenue),Mong Kok East Station(Circular),Mong Kok (Park Avenue),Mong Kok East Station(Circular),,2004725,HK Bus Crawling
 79M+1+King Tung Street+Wong Tai Sin Station,79M,1,gmb,King Tung Street,Wong Tai Sin Station,King Tung Street,Wong Tai Sin Station,,2004759,HK Bus Crawling
 79M+1+Wong Tai Sin Station+King Tung Street,79M,1,gmb,Wong Tai Sin Station,King Tung Street,Wong Tai Sin Station,King Tung Street,,2004759,HK Bus Crawling
-79S+1+Lok Ma Chau Control Point+Tin Shui Wai (Grandeur Terrace),79S,1,gmb,Lok Ma Chau Control Point,Tin Shui Wai (Grandeur Terrace),Lok Ma Chau Control Point,Tin Shui Wai (Grandeur Terrace),,2007630,HK Bus Crawling
-79S+1+Tin Shui Wai (Grandeur Terrace)+Lok Ma Chau Control Point,79S,1,gmb,Tin Shui Wai (Grandeur Terrace),Lok Ma Chau Control Point,Tin Shui Wai (Grandeur Terrace),Lok Ma Chau Control Point,,2007630,HK Bus Crawling
+79S+1+Huanggang Port+Tin Shui Wai (Grandeur Terrace),79S,1,gmb,Huanggang Port,Tin Shui Wai (Grandeur Terrace),Huanggang Port,Tin Shui Wai (Grandeur Terrace),,2007630,HK Bus Crawling
+79S+1+Tin Shui Wai (Grandeur Terrace)+Huanggang Port,79S,1,gmb,Tin Shui Wai (Grandeur Terrace),Huanggang Port,Tin Shui Wai (Grandeur Terrace),Huanggang Port,,2007630,HK Bus Crawling
 79S+2+King Tung Street+Lung Cheung Road (Diamond Hill Station) (Circular),79S,2,gmb,King Tung Street,Lung Cheung Road (Diamond Hill Station) (Circular),King Tung Street,Lung Cheung Road (Diamond Hill Station) (Circular),,2004760,HK Bus Crawling
 8+1+Baguio Villas (Lower)+Central (Exchange Square),8,1,gmb,Baguio Villas (Lower),Central (Exchange Square),Baguio Villas (Lower),Central (Exchange Square),,2004085,HK Bus Crawling
 8+1+Ho Man Tin Estate+Tsim Sha Tsui (Hankow Road),8,1,gmb,Ho Man Tin Estate,Tsim Sha Tsui (Hankow Road),Ho Man Tin Estate,Tsim Sha Tsui (Hankow Road),,2006309,HK Bus Crawling
@@ -1856,10 +1859,10 @@ X970+1+South Horizons+Cheung Sha Wan (Kom Tsun Street),X970,1,ctb,South Horizons
 90A+1+Hong Kong Children's Hospital+Yau Tong (Yau Lai Estate),90A,1,gmb,Hong Kong Children's Hospital,Yau Tong (Yau Lai Estate),Hong Kong Children's Hospital,Yau Tong (Yau Lai Estate),,2008586,HK Bus Crawling
 90A+1+Kwai Chung Hospital+Mei Foo,90A,1,gmb,Kwai Chung Hospital,Mei Foo,Kwai Chung Hospital,Mei Foo,,2005650,HK Bus Crawling
 90A+1+Mei Foo+Kwai Chung Hospital,90A,1,gmb,Mei Foo,Kwai Chung Hospital,Mei Foo,Kwai Chung Hospital,,2005650,HK Bus Crawling
-90A+1+Yau Tong (Yau Lai Estate)+Hong Kong Children's Hospital,90A,1,gmb,Yau Tong (Yau Lai Estate),Hong Kong Children's Hospital,Yau Tong (Yau Lai Estate),Hong Kong Children's Hospital,,2008586,HK Bus Crawling
+90A+1+Yau Tong (Yau Lai Estate)+Kai Tak Hospital,90A,1,gmb,Yau Tong (Yau Lai Estate),Kai Tak Hospital,Yau Tong (Yau Lai Estate),Kai Tak Hospital,,2008586,HK Bus Crawling
 90A+2+Hong Kong Children's Hospital+Yau Tong (Yau Lai Estate) via Ko Chiu Road and Lei Yue Mun Road,90A,2,gmb,Hong Kong Children's Hospital,Yau Tong (Yau Lai Estate) via Ko Chiu Road and Lei Yue Mun Road,Hong Kong Children's Hospital,Yau Tong (Yau Lai Estate) via Ko Chiu Road and Lei Yue Mun Road,,2008590,HK Bus Crawling
 90B+1+Hong Kong Children's Hospital+Sau Mau Ping,90B,1,gmb,Hong Kong Children's Hospital,Sau Mau Ping,Hong Kong Children's Hospital,Sau Mau Ping,,2008592,HK Bus Crawling
-90B+1+Sau Mau Ping+Hong Kong Children's Hospital,90B,1,gmb,Sau Mau Ping,Hong Kong Children's Hospital,Sau Mau Ping,Hong Kong Children's Hospital,,2008592,HK Bus Crawling
+90B+1+Sau Mau Ping+Kai Tak Hospital,90B,1,gmb,Sau Mau Ping,Kai Tak Hospital,Sau Mau Ping,Kai Tak Hospital,,2008592,HK Bus Crawling
 90M+1+Lai Kong Street+Mei Foo Station (Circular),90M,1,gmb,Lai Kong Street,Mei Foo Station (Circular),Lai Kong Street,Mei Foo Station (Circular),,2007770,HK Bus Crawling
 90P+1+Mei Foo+Princess Margaret Hospital,90P,1,gmb,Mei Foo,Princess Margaret Hospital,Mei Foo,Princess Margaret Hospital,,2005649,HK Bus Crawling
 90P+1+Princess Margaret Hospital+Mei Foo,90P,1,gmb,Princess Margaret Hospital,Mei Foo,Princess Margaret Hospital,Mei Foo,,2005649,HK Bus Crawling
@@ -1917,8 +1920,8 @@ N31+2+Tin Wan Estate+Causeway Bay (Jaffe Road),N31,2,gmb,Tin Wan Estate,Causeway
 N31+3+Causeway Bay (Jaffe Road)+Tin Wan Estate,N31,3,gmb,Causeway Bay (Jaffe Road),Tin Wan Estate,Causeway Bay (Jaffe Road),Tin Wan Estate,,2006772,HK Bus Crawling
 N40+2+Stanley Village+Jardine's Bazaar,N40,2,gmb,Stanley Village,Jardine's Bazaar,Stanley Village,Jardine's Bazaar,,2001264,HK Bus Crawling
 N40+3+Jardine's Bazaar+Stanley Village,N40,3,gmb,Jardine's Bazaar,Stanley Village,Jardine's Bazaar,Stanley Village,,2001264,HK Bus Crawling
-N44B+2+Lok Ma Chau Control Point+Tuen Mun Ferry Pier,N44B,2,gmb,Lok Ma Chau Control Point,Tuen Mun Ferry Pier,Lok Ma Chau Control Point,Tuen Mun Ferry Pier,,2004165,HK Bus Crawling
-N44B+3+Tuen Mun Ferry Pier+Lok Ma Chau Control Point,N44B,3,gmb,Tuen Mun Ferry Pier,Lok Ma Chau Control Point,Tuen Mun Ferry Pier,Lok Ma Chau Control Point,,2004165,HK Bus Crawling
+N44B+2+Huanggang Port+Tuen Mun Ferry Pier,N44B,2,gmb,Huanggang Port,Tuen Mun Ferry Pier,Huanggang Port,Tuen Mun Ferry Pier,,2004165,HK Bus Crawling
+N44B+3+Tuen Mun Ferry Pier+Huanggang Port,N44B,3,gmb,Tuen Mun Ferry Pier,Huanggang Port,Tuen Mun Ferry Pier,Huanggang Port,,2004165,HK Bus Crawling
 N4A+2+Aberdeen (Shek Pai Wan)+Causeway Bay (Cannon Street),N4A,2,gmb,Aberdeen (Shek Pai Wan),Causeway Bay (Cannon Street),Aberdeen (Shek Pai Wan),Causeway Bay (Cannon Street),,2004086,HK Bus Crawling
 N4C+2+Aberdeen (Shek Pai Wan)+Causeway Bay (Cannon Street),N4C,2,gmb,Aberdeen (Shek Pai Wan),Causeway Bay (Cannon Street),Aberdeen (Shek Pai Wan),Causeway Bay (Cannon Street),,2004089,HK Bus Crawling
 N4C+3+Causeway Bay (Cannon Street)+Aberdeen (Shek Pai Wan),N4C,3,gmb,Causeway Bay (Cannon Street),Aberdeen (Shek Pai Wan),Causeway Bay (Cannon Street),Aberdeen (Shek Pai Wan),,2004089,HK Bus Crawling
@@ -2147,9 +2150,8 @@ KF4+1+Peng Chau Pier+Hei Ling Chau Public Pier,KF4,1,hkkf,Peng Chau Pier,Hei Lin
 261+1+TUEN MUN (SAM SHING ESTATE)+FANLING (CHEUNG WAH),261,1,kmb,TUEN MUN (SAM SHING ESTATE),FANLING (CHEUNG WAH),TUEN MUN (SAM SHING ESTATE),FANLING (CHEUNG WAH),,1102,HK Bus Crawling
 261B+1+TUEN MUN (SAM SHING ESTATE)+KOWLOON STATION,261B,1,kmb,TUEN MUN (SAM SHING ESTATE),KOWLOON STATION,TUEN MUN (SAM SHING ESTATE),KOWLOON STATION,,1103,HK Bus Crawling
 261B+2+SO KWUN WAT+KOWLOON STATION,261B,2,kmb,SO KWUN WAT,KOWLOON STATION,SO KWUN WAT,KOWLOON STATION,,8548,HK Bus Crawling
-261P+1+SHEUNG SHUI (TIN PING)+TUEN MUN (SIU HONG COURT),261P,1,kmb,SHEUNG SHUI (TIN PING),TUEN MUN (SIU HONG COURT),SHEUNG SHUI (TIN PING),TUEN MUN (SIU HONG COURT),,8608,HK Bus Crawling
 261P+1+TUEN MUN (SIU HONG COURT)+SHEUNG SHUI (TIN PING),261P,1,kmb,TUEN MUN (SIU HONG COURT),SHEUNG SHUI (TIN PING),TUEN MUN (SIU HONG COURT),SHEUNG SHUI (TIN PING),,1104,HK Bus Crawling
-261S+1+TUEN MUN (PO TIN ESTATE)+SHEUNG SHUI (TIN PING),261S,1,kmb,TUEN MUN (PO TIN ESTATE),SHEUNG SHUI (TIN PING),TUEN MUN (PO TIN ESTATE),SHEUNG SHUI (TIN PING),,8717,HK Bus Crawling
+261S+1+YIP WONG ESTATE+SHEUNG SHUI (TIN PING),261S,1,kmb,YIP WONG ESTATE,SHEUNG SHUI (TIN PING),YIP WONG ESTATE,SHEUNG SHUI (TIN PING),,,HK Bus Crawling
 261X+1+FANLING (CHEUNG WAH)+TSING FAT STREET LIGHT PUBLIC HOUSING,261X,1,kmb,FANLING (CHEUNG WAH),TSING FAT STREET LIGHT PUBLIC HOUSING,FANLING (CHEUNG WAH),TSING FAT STREET LIGHT PUBLIC HOUSING,,8677,HK Bus Crawling
 261X+1+TSING FAT STREET LIGHT PUBLIC HOUSING+FANLING (CHEUNG WAH),261X,1,kmb,TSING FAT STREET LIGHT PUBLIC HOUSING,FANLING (CHEUNG WAH),TSING FAT STREET LIGHT PUBLIC HOUSING,FANLING (CHEUNG WAH),,8677,HK Bus Crawling
 263+1+SHATIN STATION+TUEN MUN STATION,263,1,kmb,SHATIN STATION,TUEN MUN STATION,SHATIN STATION,TUEN MUN STATION,,1105,HK Bus Crawling
@@ -2760,6 +2762,7 @@ KF4+1+Peng Chau Pier+Hei Ling Chau Public Pier,KF4,1,hkkf,Peng Chau Pier,Hei Lin
 73B+1+CHUEN ON ROAD (NETHERSOLE HOSPITAL)+SHEUNG SHUI (CIRCULAR),73B,1,kmb,CHUEN ON ROAD (NETHERSOLE HOSPITAL),SHEUNG SHUI (CIRCULAR),CHUEN ON ROAD (NETHERSOLE HOSPITAL),SHEUNG SHUI (CIRCULAR),,8668,HK Bus Crawling
 73B+2+LUEN WO HUI (UNION PLAZA)+CHUEN ON ROAD (NETHERSOLE HOSPITAL),73B,2,kmb,LUEN WO HUI (UNION PLAZA),CHUEN ON ROAD (NETHERSOLE HOSPITAL),LUEN WO HUI (UNION PLAZA),CHUEN ON ROAD (NETHERSOLE HOSPITAL),,1000237,HK Bus Crawling
 73B+3+CHUEN ON ROAD (NETHERSOLE HOSPITAL)+SHEUNG SHUI STATION,73B,3,kmb,CHUEN ON ROAD (NETHERSOLE HOSPITAL),SHEUNG SHUI STATION,CHUEN ON ROAD (NETHERSOLE HOSPITAL),SHEUNG SHUI STATION,,,HK Bus Crawling
+73B+4+EDUCATION UNIVERSITY OF HONG KONG+SHEUNG SHUI STATION,73B,4,kmb,EDUCATION UNIVERSITY OF HONG KONG,SHEUNG SHUI STATION,EDUCATION UNIVERSITY OF HONG KONG,SHEUNG SHUI STATION,,,HK Bus Crawling
 73D+1+KWONG FUK MARKET+TSUEN WAN (NINA TOWER),73D,1,kmb,KWONG FUK MARKET,TSUEN WAN (NINA TOWER),KWONG FUK MARKET,TSUEN WAN (NINA TOWER),,8768,HK Bus Crawling
 73D+1+TSUEN WAN (NINA TOWER)+TAI PO (FU SHIN),73D,1,kmb,TSUEN WAN (NINA TOWER),TAI PO (FU SHIN),TSUEN WAN (NINA TOWER),TAI PO (FU SHIN),,8786,HK Bus Crawling
 73F+1+EDUCATION UNIVERSITY OF HONG KONG+TSUEN WAN (NINA TOWER),73F,1,kmb,EDUCATION UNIVERSITY OF HONG KONG,TSUEN WAN (NINA TOWER),EDUCATION UNIVERSITY OF HONG KONG,TSUEN WAN (NINA TOWER),,1000453,HK Bus Crawling
@@ -2926,7 +2929,7 @@ KF4+1+Peng Chau Pier+Hei Ling Chau Public Pier,KF4,1,hkkf,Peng Chau Pier,Hei Lin
 87D+1+KAM YING COURT+HUNG HOM STATION,87D,1,kmb,KAM YING COURT,HUNG HOM STATION,KAM YING COURT,HUNG HOM STATION,,1371,HK Bus Crawling
 87D+3+MA ON SHAN TOWN CENTRE+HUNG HOM STATION,87D,3,kmb,MA ON SHAN TOWN CENTRE,HUNG HOM STATION,MA ON SHAN TOWN CENTRE,HUNG HOM STATION,,8242,HK Bus Crawling
 87D+4+KAM YING COURT+HUNG HOM STATION,87D,4,kmb,KAM YING COURT,HUNG HOM STATION,KAM YING COURT,HUNG HOM STATION,,8240,HK Bus Crawling
-87E+1+NAI CHUNG+TSIM SHA TSUI,87E,1,kmb,NAI CHUNG,TSIM SHA TSUI,NAI CHUNG,TSIM SHA TSUI,,8318,HK Bus Crawling
+87E+1+NAI CHUNG (SK970)+TSIM SHA TSUI BBI - MIDDLE ROAD (YT563),87E,1,kmb,NAI CHUNG (SK970),TSIM SHA TSUI BBI - MIDDLE ROAD (YT563),NAI CHUNG (SK970),TSIM SHA TSUI BBI - MIDDLE ROAD (YT563),,8318,HK Bus Crawling
 87E+1+TSIM SHA TSUI EAST (MODY ROAD)+NAI CHUNG,87E,1,kmb,TSIM SHA TSUI EAST (MODY ROAD),NAI CHUNG,TSIM SHA TSUI EAST (MODY ROAD),NAI CHUNG,,1000048,HK Bus Crawling
 87K+1+UNIVERSITY STATION+KAM YING COURT (CIRCULAR),87K,1,kmb,UNIVERSITY STATION,KAM YING COURT (CIRCULAR),UNIVERSITY STATION,KAM YING COURT (CIRCULAR),,1372,HK Bus Crawling
 87K+2+UNIVERSITY STATION+KAM YING COURT (CIRCULAR),87K,2,kmb,UNIVERSITY STATION,KAM YING COURT (CIRCULAR),UNIVERSITY STATION,KAM YING COURT (CIRCULAR),,1000104,HK Bus Crawling
@@ -2997,7 +3000,7 @@ KF4+1+Peng Chau Pier+Hei Ling Chau Public Pier,KF4,1,hkkf,Peng Chau Pier,Hei Lin
 "92+2+DIAMOND HILL STATION, PLAZA HOLLYWOOOD (WT962)+SAI KUNG BUS TERMINUS (SK902)",92,2,kmb,"DIAMOND HILL STATION, PLAZA HOLLYWOOOD (WT962)",SAI KUNG BUS TERMINUS (SK902),"DIAMOND HILL STATION, PLAZA HOLLYWOOOD (WT962)",SAI KUNG BUS TERMINUS (SK902),,1000530,HK Bus Crawling
 92+2+SAI KUNG+DIAMOND HILL STATION,92,2,kmb,SAI KUNG,DIAMOND HILL STATION,SAI KUNG,DIAMOND HILL STATION,,1000530,HK Bus Crawling
 92R+1+SAI KUNG+STAR FERRY,92R,1,kmb,SAI KUNG,STAR FERRY,SAI KUNG,STAR FERRY,,8743,HK Bus Crawling
-92R+1+STAR FERRY+SAI KUNG,92R,1,kmb,STAR FERRY,SAI KUNG,STAR FERRY,SAI KUNG,,8743,HK Bus Crawling
+92R+1+STAR FERRY+SAI KUNG,92R,1,kmb,STAR FERRY,SAI KUNG,STAR FERRY,SAI KUNG,,,HK Bus Crawling
 934+1+TSUEN WAN (BAYVIEW GARDEN)+WAN CHAI (FLEMING ROAD),934,1,kmb,TSUEN WAN (BAYVIEW GARDEN),WAN CHAI (FLEMING ROAD),TSUEN WAN (BAYVIEW GARDEN),WAN CHAI (FLEMING ROAD),,1400,HK Bus Crawling
 934+1+WAN CHAI (FLEMING ROAD)+TSUEN WAN (BAYVIEW GARDEN),934,1,kmb,WAN CHAI (FLEMING ROAD),TSUEN WAN (BAYVIEW GARDEN),WAN CHAI (FLEMING ROAD),TSUEN WAN (BAYVIEW GARDEN),,1400,HK Bus Crawling
 934A+1+TSUEN WAN (ALLWAY GARDENS)+WAN CHAI (FLEMING ROAD),934A,1,kmb,TSUEN WAN (ALLWAY GARDENS),WAN CHAI (FLEMING ROAD),TSUEN WAN (ALLWAY GARDENS),WAN CHAI (FLEMING ROAD),,8291,HK Bus Crawling
@@ -3153,6 +3156,12 @@ B1+1+TIN TSZ+LOK MA CHAU STATION ‧ FUTIAN PORT,B1,1,kmb,TIN TSZ,LOK MA CHAU ST
 B1+2+LOK MA CHAU STATION ‧ FUTIAN PORT+MA WANG ROAD (SAN SHUI HOUSE),B1,2,kmb,LOK MA CHAU STATION ‧ FUTIAN PORT,MA WANG ROAD (SAN SHUI HOUSE),LOK MA CHAU STATION ‧ FUTIAN PORT,MA WANG ROAD (SAN SHUI HOUSE),,8469,HK Bus Crawling
 B1+2+MA WANG ROAD (SAN SHUI HOUSE)+LOK MA CHAU STATION ‧ FUTIAN PORT,B1,2,kmb,MA WANG ROAD (SAN SHUI HOUSE),LOK MA CHAU STATION ‧ FUTIAN PORT,MA WANG ROAD (SAN SHUI HOUSE),LOK MA CHAU STATION ‧ FUTIAN PORT,,8469,HK Bus Crawling
 B1+6+TIN TSZ+LOK MA CHAU STATION ‧ FUTIAN PORT,B1,6,kmb,TIN TSZ,LOK MA CHAU STATION ‧ FUTIAN PORT,TIN TSZ,LOK MA CHAU STATION ‧ FUTIAN PORT,,1000667,HK Bus Crawling
+B10+1+HUANGGANG PORT+KWAI FONG (KWAI TSUI ESTATE),B10,1,kmb,HUANGGANG PORT,KWAI FONG (KWAI TSUI ESTATE),HUANGGANG PORT,KWAI FONG (KWAI TSUI ESTATE),,,HK Bus Crawling
+B10+1+KWAI FONG (KWAI TSUI ESTATE)+HUANGGANG PORT,B10,1,kmb,KWAI FONG (KWAI TSUI ESTATE),HUANGGANG PORT,KWAI FONG (KWAI TSUI ESTATE),HUANGGANG PORT,,,HK Bus Crawling
+B11+1+HUANGGANG PORT+TIN FU,B11,1,kmb,HUANGGANG PORT,TIN FU,HUANGGANG PORT,TIN FU,,,HK Bus Crawling
+B11+1+TIN FU+HUANGGANG PORT,B11,1,kmb,TIN FU,HUANGGANG PORT,TIN FU,HUANGGANG PORT,,,HK Bus Crawling
+B11+3+YUEN LONG PLAZA+HUANGGANG PORT,B11,3,kmb,YUEN LONG PLAZA,HUANGGANG PORT,YUEN LONG PLAZA,HUANGGANG PORT,,,HK Bus Crawling
+B11+4+HUANGGANG PORT+YUEN LONG TAI TONG ROAD,B11,4,kmb,HUANGGANG PORT,YUEN LONG TAI TONG ROAD,HUANGGANG PORT,YUEN LONG TAI TONG ROAD,,,HK Bus Crawling
 B9+1+HEUNG YUEN WAI ‧ LIANTANG PORT+TUEN MUN STATION,B9,1,kmb,HEUNG YUEN WAI ‧ LIANTANG PORT,TUEN MUN STATION,HEUNG YUEN WAI ‧ LIANTANG PORT,TUEN MUN STATION,,,HK Bus Crawling
 B9+1+TUEN MUN STATION+HEUNG YUEN WAI ‧ LIANTANG PORT,B9,1,kmb,TUEN MUN STATION,HEUNG YUEN WAI ‧ LIANTANG PORT,TUEN MUN STATION,HEUNG YUEN WAI ‧ LIANTANG PORT,,1000341,HK Bus Crawling
 B9+2+HEUNG YUEN WAI ‧ LIANTANG PORT+YUEN LONG (YOHO MALL),B9,2,kmb,HEUNG YUEN WAI ‧ LIANTANG PORT,YUEN LONG (YOHO MALL),HEUNG YUEN WAI ‧ LIANTANG PORT,YUEN LONG (YOHO MALL),,1000341,HK Bus Crawling
@@ -3252,8 +3261,6 @@ N48+1+TSUEN WAN (BAYVIEW GARDEN)+YU CHUI COURT,N48,1,kmb,TSUEN WAN (BAYVIEW GARD
 N48+1+YU CHUI COURT+TSUEN WAN (BAYVIEW GARDEN),N48,1,kmb,YU CHUI COURT,TSUEN WAN (BAYVIEW GARDEN),YU CHUI COURT,TSUEN WAN (BAYVIEW GARDEN),,,HK Bus Crawling
 N64+1+AIRPORT (GROUND TRANSPORTATION CENTRE)+TUNG CHUNG (YAT TUNG),N64,1,kmb,AIRPORT (GROUND TRANSPORTATION CENTRE),TUNG CHUNG (YAT TUNG),AIRPORT (GROUND TRANSPORTATION CENTRE),TUNG CHUNG (YAT TUNG),,1816,HK Bus Crawling
 N64P+1+TAI PO MARKET STATION+NG TUNG CHAI (PAK NGAU SHEK),N64P,1,kmb,TAI PO MARKET STATION,NG TUNG CHAI (PAK NGAU SHEK),TAI PO MARKET STATION,NG TUNG CHAI (PAK NGAU SHEK),,,HK Bus Crawling
-N73+1+LOK MA CHAU+SHATIN CENTRAL,N73,1,kmb,LOK MA CHAU,SHATIN CENTRAL,LOK MA CHAU,SHATIN CENTRAL,,8183,HK Bus Crawling
-N73+1+SHATIN CENTRAL+LOK MA CHAU,N73,1,kmb,SHATIN CENTRAL,LOK MA CHAU,SHATIN CENTRAL,LOK MA CHAU,,8183,HK Bus Crawling
 N78+1+SHA TAU KOK+SHEUNG SHUI,N78,1,kmb,SHA TAU KOK,SHEUNG SHUI,SHA TAU KOK,SHEUNG SHUI,,1000200,HK Bus Crawling
 N78+1+SHEUNG SHUI+SHA TAU KOK,N78,1,kmb,SHEUNG SHUI,SHA TAU KOK,SHEUNG SHUI,SHA TAU KOK,,1000200,HK Bus Crawling
 N960+1+EXHIBITION CENTRE STATION+TUEN MUN (KIN SANG ESTATE),N960,1,kmb,EXHIBITION CENTRE STATION,TUEN MUN (KIN SANG ESTATE),EXHIBITION CENTRE STATION,TUEN MUN (KIN SANG ESTATE),,1000372,HK Bus Crawling
@@ -3280,6 +3287,8 @@ NA47+1+HZMB Hong Kong Port+TAI PO (TAI WO),NA47,1,kmb,HZMB Hong Kong Port,TAI PO
 NA47+1+TAI PO (TAI WO)+HZMB Hong Kong Port,NA47,1,kmb,TAI PO (TAI WO),HZMB Hong Kong Port,TAI PO (TAI WO),HZMB Hong Kong Port,,8527,HK Bus Crawling
 NA52+1+Cathay City+Tuen Mun Road BBI (Kowloon Bound),NA52,1,kmb,Cathay City,Tuen Mun Road BBI (Kowloon Bound),Cathay City,Tuen Mun Road BBI (Kowloon Bound),,1000643,HK Bus Crawling
 NA52+1+Tuen Mun Road BBI (Kowloon Bound)+Cathay City,NA52,1,kmb,Tuen Mun Road BBI (Kowloon Bound),Cathay City,Tuen Mun Road BBI (Kowloon Bound),Cathay City,,1000643,HK Bus Crawling
+NB73+1+HUANGGANG PORT+SHATIN CENTRAL,NB73,1,kmb,HUANGGANG PORT,SHATIN CENTRAL,HUANGGANG PORT,SHATIN CENTRAL,,,HK Bus Crawling
+NB73+1+SHATIN CENTRAL+HUANGGANG PORT,NB73,1,kmb,SHATIN CENTRAL,HUANGGANG PORT,SHATIN CENTRAL,HUANGGANG PORT,,,HK Bus Crawling
 P960+1+EXHIBITION CENTRE STATION+SIU HONG STATION (NORTH),P960,1,kmb,EXHIBITION CENTRE STATION,SIU HONG STATION (NORTH),EXHIBITION CENTRE STATION,SIU HONG STATION (NORTH),,1000044,HK Bus Crawling
 P960+1+SIU HONG STATION (NORTH)+EXHIBITION CENTRE STATION,P960,1,kmb,SIU HONG STATION (NORTH),EXHIBITION CENTRE STATION,SIU HONG STATION (NORTH),EXHIBITION CENTRE STATION,,1000044,HK Bus Crawling
 P968+1+CAUSEWAY BAY (TIN HAU)+YUEN LONG (WEST),P968,1,kmb,CAUSEWAY BAY (TIN HAU),YUEN LONG (WEST),CAUSEWAY BAY (TIN HAU),YUEN LONG (WEST),,1000045,HK Bus Crawling
@@ -3744,6 +3753,8 @@ A35+2+Mui Wo Ferry Pier+HZMB Hong Kong Port,A35,2,nlb,Mui Wo Ferry Pier,HZMB Hon
 A35+3+HZMB Hong Kong Port+Mui Wo Ferry Pier,A35,3,nlb,HZMB Hong Kong Port,Mui Wo Ferry Pier,HZMB Hong Kong Port,Mui Wo Ferry Pier,,8574,HK Bus Crawling
 A35+3+Mui Wo Ferry Pier+HZMB Hong Kong Port,A35,3,nlb,Mui Wo Ferry Pier,HZMB Hong Kong Port,Mui Wo Ferry Pier,HZMB Hong Kong Port,,8574,HK Bus Crawling
 A35+4+Mui Wo Ferry Pier+HZMB Hong Kong Port,A35,4,nlb,Mui Wo Ferry Pier,HZMB Hong Kong Port,Mui Wo Ferry Pier,HZMB Hong Kong Port,,8575,HK Bus Crawling
+B12+1+Huanggang Port+Wu Kai Sha Station,B12,1,nlb,Huanggang Port,Wu Kai Sha Station,Huanggang Port,Wu Kai Sha Station,,,HK Bus Crawling
+B12+1+Wu Kai Sha Station+Huanggang Port,B12,1,nlb,Wu Kai Sha Station,Huanggang Port,Wu Kai Sha Station,Huanggang Port,,,HK Bus Crawling
 B2+1+Shenzhen Bay Port+Yuen Long MTR Station,B2,1,nlb,Shenzhen Bay Port,Yuen Long MTR Station,Shenzhen Bay Port,Yuen Long MTR Station,,1735,HK Bus Crawling
 B2+1+Yuen Long MTR Station+Shenzhen Bay Port,B2,1,nlb,Yuen Long MTR Station,Shenzhen Bay Port,Yuen Long MTR Station,Shenzhen Bay Port,,1735,HK Bus Crawling
 B2P+1+Shenzhen Bay Port+Tin Shui Wai (Tin Tsz Estate),B2P,1,nlb,Shenzhen Bay Port,Tin Shui Wai (Tin Tsz Estate),Shenzhen Bay Port,Tin Shui Wai (Tin Tsz Estate),,8068,HK Bus Crawling
