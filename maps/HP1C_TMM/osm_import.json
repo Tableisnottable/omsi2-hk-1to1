@@ -1,10 +1,12 @@
-﻿{
-    "source":  ".\\src\\osm\\hong-kong-central.osm",
-    "importedUtc":  "2026-10-06T09:18:47.3124258Z",
-    "mapCode":  "TMM",
-    "nodes":  6995,
-    "highwayWays":  878,
-    "buildings":  88,
-    "stops":  66,
-    "nextStep":  "Convert osm_ways.csv and osm_stops.csv into OMSI spline and scenery files."
+{
+  "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\TMM.osm",
+  "importedUtc": "2026-10-13T03:24:14.261238Z",
+  "mapCode": "TMM",
+  "nodes": 13422,
+  "highwayWays": 42,
+  "buildings": 43,
+  "stops": 28,
+  "splines": 202,
+  "objects": 43,
+  "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

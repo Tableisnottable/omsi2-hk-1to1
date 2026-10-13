@@ -1,0 +1,10 @@
+[friendlyname]
+HK Building 692705278
+
+[groups]
+2
+Hong Kong
+Buildings
+
+[mesh]
+model\bldg_692705278.o3d

@@ -1,10 +1,12 @@
-﻿{
-    "source":  ".\\src\\osm\\hong-kong-central.osm",
-    "importedUtc":  "2026-10-06T09:17:24.6453299Z",
-    "mapCode":  "EAS",
-    "nodes":  6995,
-    "highwayWays":  878,
-    "buildings":  88,
-    "stops":  66,
-    "nextStep":  "Convert osm_ways.csv and osm_stops.csv into OMSI spline and scenery files."
+{
+  "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\EAS.osm",
+  "importedUtc": "2026-10-13T03:24:08.903674Z",
+  "mapCode": "EAS",
+  "nodes": 17287,
+  "highwayWays": 56,
+  "buildings": 92,
+  "stops": 20,
+  "splines": 213,
+  "objects": 92,
+  "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }
