@@ -42,7 +42,7 @@ $centres = @{
     STN  = @{ lat = 22.3820; lon = 114.1920 }   # Sha Tin
     SKG  = @{ lat = 22.3260; lon = 114.2630 }   # Sai Kung
     ISL  = @{ lat = 22.2580; lon = 114.2500 }   # Islands
-    HZMB = @{ lat = 22.2770; lon = 113.7600 }   # Hong Kong-Zhuhai-Macao Bridge
+    HZMB = @{ lat = 22.3171; lon = 113.9544 }   # Hong Kong-Zhuhai-Macao Bridge HK Port
 }
 
 # bbox half-size in degrees.  A 300 m tile is ~0.0027 deg; use a margin so
