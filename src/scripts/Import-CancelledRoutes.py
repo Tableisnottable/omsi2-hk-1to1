@@ -269,7 +269,62 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(unique)
 
+    # Merge cancelled routes into the unified route_details.csv catalogue
+    detail_fields = [
+        "route_id", "route_number", "service_group", "service_type", "operator",
+        "origin", "destination", "route_map", "timetable", "vehicle_type",
+        "fare", "depot", "source", "data_status", "category", "region",
+    ]
+    detail_path = routes_dir / "route_details.csv"
+    existing = []
+    if detail_path.exists():
+        with detail_path.open(encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            existing = list(reader)
+    cancelled_detail = []
+    for r in unique:
+        route_text = r["route"]
+        # split 'A↔B' / 'A→B' into origin/destination where possible
+        origin, destination = "", ""
+        for sep in ("↔", "→", "⇄"):
+            if sep in route_text:
+                origin, destination = route_text.split(sep, 1)
+                break
+        cancelled_detail.append({
+            "route_id": r["route_number"],
+            "route_number": r["route_number"],
+            "service_group": "Cancelled route 已取消",
+            "service_type": r["company"],
+            "operator": r["operator"],
+            "origin": origin.strip(),
+            "destination": destination.strip(),
+            "route_map": "Historical",
+            "timetable": "Cancelled",
+            "vehicle_type": "Not specified",
+            "fare": "Not specified",
+            "depot": "Not specified",
+            "source": SOURCE_URL,
+            "data_status": f"Cancelled {r['cancelled_date']}; {r['reason'][:60]}" if r["reason"] else f"Cancelled {r['cancelled_date']}".strip(),
+            "category": r["category"],
+            "region": "",
+        })
+    # dedupe against existing rows by (route_number, service_group)
+    existing_keys = {(row.get("route_number"), row.get("service_group")) for row in existing}
+    merged = list(existing)
+    added = 0
+    for row in cancelled_detail:
+        key = (row["route_number"], row["service_group"])
+        if key not in existing_keys:
+            merged.append(row)
+            existing_keys.add(key)
+            added += 1
+    with detail_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=detail_fields)
+        writer.writeheader()
+        writer.writerows(merged)
+
     print(f"Wrote {len(unique)} cancelled route records to {routes_dir / 'cancelled_routes.csv'}")
+    print(f"Merged {added} cancelled records into {detail_path.name} (total {len(merged)})")
     from collections import Counter
     print("by company:", dict(Counter(r["company"] for r in unique)))
 

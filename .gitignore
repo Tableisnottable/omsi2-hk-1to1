@@ -6,3 +6,5 @@
 release/*.zip
 src/landsd3d/*.zip
 preview/cesium/.runtime/*.zip
+__pycache__/
+*.pyc

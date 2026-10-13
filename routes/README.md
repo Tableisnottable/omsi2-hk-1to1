@@ -38,6 +38,8 @@ from the Chinese Wikipedia list of cancelled bus routes. Regenerate with:
 python .\src\scripts\Import-CancelledRoutes.py
 ```
 
+Cancelled routes are also merged into `route_details.csv` under the `Cancelled route 已取消` service group.
+
 Every route CSV carries a `category` column, assigned by
 `src\scripts\RouteCategories.py` following the official Hong Kong bus
 route numbering method documented by the [Hong Kong Bus Wiki](https://hkbus.fandom.com/wiki/%E5%B7%B4%E5%A3%AB%E8%B7%AF%E7%B7%9A%E7%B7%A8%E8%99%9F%E6%96%B9%E6%B3%95):

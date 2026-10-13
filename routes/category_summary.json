@@ -26,18 +26,18 @@
     }
   },
   "route_details.csv": {
-    "total": 4104,
+    "total": 4883,
     "categories": {
-      "Regular 常規": 2460,
-      "Cross-harbour 過海": 485,
-      "Residents 居民": 256,
-      "MTR feeder 港鐵接駁": 238,
-      "Airport / Lantau 機場": 206,
-      "Recreational 康樂": 175,
-      "Overnight 通宵": 164,
-      "Border 口岸": 58,
-      "Express 特快": 53,
-      "Hospital 醫院": 9
+      "Regular 常規": 2810,
+      "Cross-harbour 過海": 560,
+      "Residents 居民": 405,
+      "MTR feeder 港鐵接駁": 313,
+      "Airport / Lantau 機場": 250,
+      "Recreational 康樂": 224,
+      "Overnight 通宵": 182,
+      "Express 特快": 70,
+      "Border 口岸": 59,
+      "Hospital 醫院": 10
     }
   },
   "cancelled_routes.csv": {
