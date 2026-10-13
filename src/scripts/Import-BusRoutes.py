@@ -244,9 +244,13 @@ def main() -> None:
         "nr_status": "Imported from the Transport Department approved Residents' Service HTML route lists.",
         "other_route_sources": OTHER_SOURCES,
         "other_route_status": "Imported approved contract-hire and regular hotel-service listings; detailed stop schedules remain in linked official PDFs.",
+        "cancelled_route_source": "https://zh.wikipedia.org/wiki/香港已取消巴士路線列表",
+        "cancelled_route_status": "Imported from the Chinese Wikipedia list of cancelled Hong Kong bus routes; merged into route_details.csv under the 'Cancelled route 已取消' service group.",
+        "route_numbering_method": "https://hkbus.fandom.com/wiki/巴士路線編號方法",
+        "route_numbering_status": "Route category and region columns follow the Hong Kong Bus Wiki numbering method (letter prefixes/suffixes and regional number ranges).",
     }
     (routes_dir / "sources.json").write_text(
-        json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8-sig"
     )
     print(f"Wrote {len(rows)} franchised/public-transport route records to {routes_dir / 'hk_bus_routes.csv'}")
     print(f"Wrote {len(nr_rows)} approved Residents' Service route records to {routes_dir / 'nr_routes.csv'}")

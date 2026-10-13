@@ -1,4 +1,4 @@
-{
+﻿{
   "generated_utc": "2026-10-13T03:44:45.981150+00:00",
   "route_count": 3788,
   "nr_route_count": 256,
@@ -29,5 +29,9 @@
     "contract_hire": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/contract_hire_service_a08/index.html",
     "hotel_service": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/non_franchised/public_bus_hotel_a02/index.html"
   },
-  "other_route_status": "Imported approved contract-hire and regular hotel-service listings; detailed stop schedules remain in linked official PDFs."
+  "other_route_status": "Imported approved contract-hire and regular hotel-service listings; detailed stop schedules remain in linked official PDFs.",
+  "cancelled_route_source": "https://zh.wikipedia.org/wiki/香港已取消巴士路線列表",
+  "cancelled_route_status": "Imported from the Chinese Wikipedia list of cancelled Hong Kong bus routes; merged into route_details.csv under the 'Cancelled route 已取消' service group.",
+  "route_numbering_method": "https://hkbus.fandom.com/wiki/巴士路線編號方法",
+  "route_numbering_status": "Route category and region columns follow the Hong Kong Bus Wiki numbering method (letter prefixes/suffixes and regional number ranges)."
 }
