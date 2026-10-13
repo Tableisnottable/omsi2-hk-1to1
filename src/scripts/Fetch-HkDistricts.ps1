@@ -6,7 +6,11 @@
 # the tile with a margin; the actual clipping happens in Convert-OsmToMap.ps1.
 [CmdletBinding()]
 param(
-    [string]$Overpass = "https://overpass-api.de/api/interpreter",
+    [string[]]$OverpassEndpoints = @(
+        "https://overpass.kumi.systems/api/interpreter",
+        "https://overpass.private.coffee/api/interpreter",
+        "https://overpass-api.de/api/interpreter"
+    ),
     [switch]$Force
 )
 
@@ -67,15 +71,24 @@ foreach ($code in ($centres.Keys | Sort-Object)) {
 out body;
 "@
     Write-Host "Fetching $code ($($c.lat), $($c.lon)) ..." -ForegroundColor Cyan
-    try {
-        $body = @{ data = $query }
-        $resp = Invoke-WebRequest -Uri $Overpass -Method Post -Body $body -UseBasicParsing -TimeoutSec 180
-        [System.IO.File]::WriteAllBytes($out, $resp.Content)
-        Write-Host "  wrote $out ($($resp.RawContentLength) bytes)" -ForegroundColor Green
-        Start-Sleep -Seconds 2
-    } catch {
-        Write-Host "  FAILED: $_" -ForegroundColor Red
+    $fetched = $false
+    foreach ($endpoint in $OverpassEndpoints) {
+        try {
+            $body = @{ data = $query }
+            $resp = Invoke-WebRequest -Uri $endpoint -Method Post -Body $body -UseBasicParsing -TimeoutSec 180 -OutFile $out
+            $size = (Get-Item $out).Length
+            Write-Host "  wrote $out ($size bytes) via $endpoint" -ForegroundColor Green
+            $fetched = $true
+            break
+        } catch {
+            Write-Host "  $endpoint failed: $($_.Exception.Message)" -ForegroundColor DarkYellow
+        }
+    }
+    if (-not $fetched) {
+        Write-Host "  FAILED: all endpoints failed for $code" -ForegroundColor Red
         $failed += $code
+    } else {
+        Start-Sleep -Seconds 2
     }
 }
 

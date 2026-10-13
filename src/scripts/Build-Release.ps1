@@ -24,6 +24,7 @@ if (Test-Path $output) {
 $content = @(
     (Join-Path $repoRoot "maps")
     (Join-Path $repoRoot "Sceneryobjects")
+    (Join-Path $repoRoot "Splines")
     (Join-Path $repoRoot "Vehicles")
 )
 $mapDirectories = @(Get-ChildItem -Path (Join-Path $repoRoot "maps") -Directory -Filter "HP1C_*")

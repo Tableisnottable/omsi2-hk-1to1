@@ -122,7 +122,35 @@ https://www.hkemobility.gov.hk/api/em
 
 API keys 必須留在 local environment variable `LANDSD_3D_API_KEY` / API keys must stay local in that environment variable。
 
-Keys 絕不會放入 GitHub、website、CSV 或 release ZIP / Keys are never committed to GitHub or included in the website, CSV files or release ZIP。
+Keys 絕不會放入 GitHub、website、CSV 或 release ZIP / 
+## Generate the 1:1 OMSI map
+
+Per-district OSM extracts are fetched for each of the 19 HP1C areas, then
+converted into loadable OMSI tiles:
+
+`powershell
+# 1. Fetch a real OSM extract per district (src\osm\<code>.osm)
+powershell.exe -File .\src\scripts\Fetch-HkDistricts.ps1
+
+# 2. Convert every district into OMSI tiles, splines, buildings, terrain
+python .\src\scripts\Convert-OsmToMap.py --osm .\src\osm\CW.osm --mapcode CW --centre 22.2825,114.1580 --root .
+`
+
+Convert-OsmToMap.py writes:
+
+- maps\HP1C_<code>\tile_0_0.map (UTF-16LE) with [spline] and [object] records, version 14
+- maps\HP1C_<code>\tile_0_0.map.terrain (61x61 height grid)
+- Splines\HK_Roads\*.sli road splines + 	exture\asphalt.bmp
+- Sceneryobjects\HK_Objects\bldg_*.sco + model\bldg_*.o3d building meshes, and a HK_BusStop.sco per stop
+- maps\HP1C_<code>\osm_*.csv source data and osm_import.json manifest
+
+The tile is centred on the district's HP1C sheet centre; each tile is
+300 m x 300 m and uses plain (non-world-coordinate) local coordinates. The
+converter is deterministic and offline once the OSM extracts are present.
+
+OSM data is used under the applicable attribution and licence requirements.
+
+Keys are never committed to GitHub or included in the website, CSV files or release ZIP。
 
 Google Maps／Google Earth imagery 不會 packaged as distributable map assets / Google imagery is not included as distributable map assets。
 
