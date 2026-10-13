@@ -1,0 +1,57 @@
+{
+  "hk_bus_routes.csv": {
+    "total": 3788,
+    "categories": {
+      "Regular 常規": 2422,
+      "Cross-harbour 過海": 481,
+      "Express 特快": 299,
+      "Airport / Lantau 機場": 260,
+      "Overnight 通宵": 174,
+      "Border 口岸": 84,
+      "Recreational 康樂": 62,
+      "School 學校": 6
+    }
+  },
+  "nr_routes.csv": {
+    "total": 256,
+    "categories": {
+      "Residents 居民": 256
+    }
+  },
+  "other_routes.csv": {
+    "total": 60,
+    "categories": {
+      "Regular 常規": 55,
+      "Border 口岸": 2,
+      "Recreational 康樂": 2,
+      "Airport / Lantau 機場": 1
+    }
+  },
+  "route_details.csv": {
+    "total": 4104,
+    "categories": {
+      "Regular 常規": 2477,
+      "Cross-harbour 過海": 481,
+      "Express 特快": 299,
+      "Airport / Lantau 機場": 261,
+      "Residents 居民": 256,
+      "Overnight 通宵": 174,
+      "Border 口岸": 86,
+      "Recreational 康樂": 64,
+      "School 學校": 6
+    }
+  },
+  "cancelled_routes.csv": {
+    "total": 909,
+    "categories": {
+      "Regular 常規": 508,
+      "Residents 居民": 149,
+      "Cross-harbour 過海": 76,
+      "Airport / Lantau 機場": 67,
+      "Recreational 康樂": 49,
+      "Express 特快": 35,
+      "Overnight 通宵": 21,
+      "Border 口岸": 4
+    }
+  }
+}

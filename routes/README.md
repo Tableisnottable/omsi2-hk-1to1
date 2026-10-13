@@ -28,3 +28,22 @@ python .\src\scripts\Import-BusRoutes.py
 
 The route data is time-sensitive; check `routes\sources.json` for the source
 URL and generation timestamp.
+
+`cancelled_routes.csv` lists 909 cancelled Hong Kong bus routes (Citybus,
+NWFB, CMB, KMB, Long Win, NLB, KCR/MTR buses, cross-harbour, joint and
+residents' services) with their cancellation dates and reasons, imported
+from the Chinese Wikipedia list of cancelled bus routes. Regenerate with:
+
+```powershell
+python .\src\scripts\Import-CancelledRoutes.py
+```
+
+Every route CSV carries a `category` column (regular, cross-harbour,
+airport/Lantau, overnight, border, express, recreational, school or
+residents), assigned by `src\scripts\RouteCategories.py`. Recompute with:
+
+```powershell
+python .\src\scripts\Classify-BusRoutes.py
+```
+
+`category_summary.json` records the category counts per dataset.
