@@ -38,9 +38,16 @@ from the Chinese Wikipedia list of cancelled bus routes. Regenerate with:
 python .\src\scripts\Import-CancelledRoutes.py
 ```
 
-Every route CSV carries a `category` column (regular, cross-harbour,
-airport/Lantau, overnight, border, express, recreational, school or
-residents), assigned by `src\scripts\RouteCategories.py`. Recompute with:
+Every route CSV carries a `category` column, assigned by
+`src\scripts\RouteCategories.py` following the official Hong Kong bus
+route numbering method documented by the [Hong Kong Bus Wiki](https://hkbus.fandom.com/wiki/%E5%B7%B4%E5%A3%AB%E8%B7%AF%E7%B7%9A%E7%B7%A8%E8%99%9F%E6%96%B9%E6%B3%95):
+letter prefixes (A airport, B border, E Lantau, N overnight, R recreational,
+X express, K/M MTR feeder), letter suffixes (P peak, R recreational,
+X express, H hospital, N deep-night) and regional number ranges (1-99 Hong
+Kong Island, 100-199/600s/900s cross-harbour, Lantau A/E/S/X).
+`hk_bus_routes.csv`, `route_details.csv` and `other_routes.csv` also carry a
+`region` column (Hong Kong Island, Kowloon/NT, cross-harbour, Lantau) inferred
+from the origin/destination place names. Recompute with:
 
 ```powershell
 python .\src\scripts\Classify-BusRoutes.py

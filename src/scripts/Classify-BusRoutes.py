@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Add a route `category` column to the HK route CSVs.
+"""Add route `category` and `region` columns to the HK route CSVs.
 
-Reads routes/hk_bus_routes.csv, routes/nr_routes.csv, routes/other_routes.csv
-and routes/route_details.csv, classifies each row with RouteCategories.classify
-and rewrites the files with the extra column.
+Reads routes/hk_bus_routes.csv, routes/nr_routes.csv, routes/other_routes.csv,
+routes/route_details.csv and routes/cancelled_routes.csv, classifies each row
+with RouteCategories (HK Bus Wiki numbering method) and rewrites the files
+with the extra columns.
 
 Also writes routes/category_summary.json with per-dataset counts.
 """
@@ -18,16 +19,24 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from RouteCategories import CATEGORY_LABELS, classify  # noqa: E402
+from RouteCategories import CATEGORY_LABELS, REGION_LABELS, classify, infer_region  # noqa: E402
 
 
-def rewrite_csv(path: Path, number_key: str, text_keys: tuple[str, ...], operator_keys: tuple[str, ...]) -> Counter:
+def rewrite_csv(
+    path: Path,
+    number_key: str,
+    text_keys: tuple[str, ...],
+    operator_keys: tuple[str, ...],
+    region_keys: tuple[str, ...],
+) -> Counter:
     with path.open(encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
         rows = list(reader)
         fields = list(reader.fieldnames or [])
     if "category" not in fields:
         fields.append("category")
+    if "region" not in fields:
+        fields.append("region")
     counts: Counter = Counter()
     for row in rows:
         number = row.get(number_key, "")
@@ -36,6 +45,10 @@ def rewrite_csv(path: Path, number_key: str, text_keys: tuple[str, ...], operato
         cat = classify(number, text, operator)
         row["category"] = cat
         counts[cat] += 1
+        if region_keys:
+            origin = row.get(region_keys[0], "")
+            destination = row.get(region_keys[1], "") if len(region_keys) > 1 else ""
+            row["region"] = infer_region(origin, destination)
     with path.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
@@ -53,17 +66,17 @@ def main() -> None:
 
     summary = {}
     targets = [
-        ("hk_bus_routes.csv", "route_number", ("origin", "destination"), ("operator",)),
-        ("nr_routes.csv", "route_id", ("destination",), ("operator",)),
-        ("other_routes.csv", "route_id", ("origin", "destination"), ("operator",)),
-        ("route_details.csv", "route_number", ("origin", "destination"), ("operator",)),
-        ("cancelled_routes.csv", "route_number", ("route",), ("operator",)),
+        ("hk_bus_routes.csv", "route_number", ("origin", "destination"), ("operator",), ("origin", "destination")),
+        ("nr_routes.csv", "route_id", ("destination",), ("operator",), ("destination",)),
+        ("other_routes.csv", "route_id", ("origin", "destination"), ("operator",), ("origin", "destination")),
+        ("route_details.csv", "route_number", ("origin", "destination"), ("operator",), ("origin", "destination")),
+        ("cancelled_routes.csv", "route_number", ("route",), ("operator",), ()),
     ]
-    for name, number_key, text_keys, operator_keys in targets:
+    for name, number_key, text_keys, operator_keys, region_keys in targets:
         path = routes_dir / name
         if not path.exists():
             continue
-        counts = rewrite_csv(path, number_key, text_keys, operator_keys)
+        counts = rewrite_csv(path, number_key, text_keys, operator_keys, region_keys)
         summary[name] = {
             "total": sum(counts.values()),
             "categories": {CATEGORY_LABELS.get(k, k): v for k, v in counts.most_common()},
@@ -78,3 +91,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
