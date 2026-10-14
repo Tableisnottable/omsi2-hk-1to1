@@ -512,11 +512,12 @@ def main():
             "[groups]", "2", "Hong Kong", "Buildings", "",
             "[mesh]", f"model\\{mesh_name}",
         ])
-        # place at the footprint centroid, base at z=0
+        # place at the footprint centroid, base on the terrain
+        base_z = terrain_sampler.height_at(cx, cy)
         obj_records.append({
             "file": f"Sceneryobjects\\HK_Objects\\{sco_name}",
             "id": next_oid,
-            "pos": (cx, cy, 0.0),
+            "pos": (cx, cy, base_z),
             "heading": 0.0,
             "labels": [],
         })
@@ -570,7 +571,7 @@ def main():
         stop_records.append({
             "file": "Sceneryobjects\\HK_Objects\\HK_BusStop.sco",
             "id": next_oid,
-            "pos": (x, y, 0.0),
+            "pos": (x, y, terrain_sampler.height_at(x, y)),
             "heading": 0.0,
             "labels": [name] if name else [],
         })
