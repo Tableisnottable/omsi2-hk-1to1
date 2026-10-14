@@ -30,11 +30,14 @@ assets, materials, lighting, and level-of-detail strategy.
 5. Validate geometry, materials, route stops, and tile boundaries.
 6. Profile loading and frame time in OpenOMSI before expanding the detail area.
 
-The repository currently implements stages 1-2 and the route catalogue.
+The repository currently implements stages 1-3 and the route catalogue.
 Stage 2 terrain: every HP1C tile now carries real elevation from the ASTER
 30 m DEM (fetched via OpenTopoData, no key) interpolated onto the 61x61
 OMSI terrain grid; HZMB is the sea-level artificial island it is.
-Stages 3-6 require authored meshes, texture production, and OpenOMSI
+Stage 3 geometry: buildings are extruded from their real OSM footprint
+polygons (ear-clipped roofs, wall quads) instead of bounding boxes, and
+the converter preserves existing elevation terrain on re-runs.
+Stages 4-6 require PBR texture production, LOD variants, and OpenOMSI
 runtime profiling; they cannot be replaced by a route CSV or a single
 API call.
 

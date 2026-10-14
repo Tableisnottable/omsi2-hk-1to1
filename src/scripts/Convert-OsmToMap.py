@@ -167,6 +167,120 @@ def building_box_mesh(w, d, h):
     return verts, tris, n
 
 
+def polygon_centroid(pts):
+    """Centroid of a polygon (2D, x/y)."""
+    cx = sum(p[0] for p in pts) / len(pts)
+    cy = sum(p[1] for p in pts) / len(pts)
+    return cx, cy
+
+
+def ear_clip_triangulate(pts):
+    """Triangulate a simple (non-self-intersecting) 2D polygon by ear clipping.
+    Returns a list of (i, j, k) index triples into pts (CCW winding)."""
+    n = len(pts)
+    if n < 3:
+        return []
+    # ensure CCW
+    area = 0.0
+    for i in range(n):
+        x1, y1 = pts[i]
+        x2, y2 = pts[(i + 1) % n]
+        area += x1 * y2 - x2 * y1
+    idx = list(range(n))
+    if area < 0:
+        idx.reverse()
+
+    def is_ear(i):
+        a, b, c = idx[i - 1], idx[i], idx[(i + 1) % len(idx)]
+        pa, pb, pc = pts[a], pts[b], pts[c]
+        # convex check (cross product sign for CCW polygon)
+        cross = (pb[0] - pa[0]) * (pc[1] - pa[1]) - (pb[1] - pa[1]) * (pc[0] - pa[0])
+        if cross <= 1e-9:
+            return False
+        # no other vertex inside triangle
+        for k in idx:
+            if k in (a, b, c):
+                continue
+            p = pts[k]
+            if point_in_triangle(p, pa, pb, pc):
+                return False
+        return True
+
+    def point_in_triangle(p, a, b, c):
+        def sign(p1, p2, p3):
+            return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p1[1] - p3[1]) * (p2[0] - p3[0])
+        d1 = sign(p, a, b)
+        d2 = sign(p, b, c)
+        d3 = sign(p, c, a)
+        has_neg = d1 < -1e-9 or d2 < -1e-9 or d3 < -1e-9
+        has_pos = d1 > 1e-9 or d2 > 1e-9 or d3 > 1e-9
+        return not (has_neg and has_pos)
+
+    tris = []
+    guard = 0
+    while len(idx) > 3 and guard < n * n:
+        guard += 1
+        clipped = False
+        for i in range(len(idx)):
+            if is_ear(i):
+                a, b, c = idx[i - 1], idx[i], idx[(i + 1) % len(idx)]
+                tris.append((a, b, c))
+                del idx[i]
+                clipped = True
+                break
+        if not clipped:
+            # degenerate polygon; fall back to fan
+            break
+    if len(idx) == 3:
+        tris.append((idx[0], idx[1], idx[2]))
+    return tris
+
+
+def building_footprint_mesh(pts, h):
+    """Extrude an OSM building footprint polygon to height h.
+
+    pts: list of (x, y) tile-local metres, closed ring (first == last optional).
+    Returns (vertices, triangles) with z=0 base and z=h roof, wall quads
+    triangulated around the ring.
+    """
+    poly = pts[:]
+    if poly[0] == poly[-1]:
+        poly = poly[:-1]
+    if len(poly) < 3:
+        return [], []
+    # simplify collinear points
+    simp = []
+    for i, p in enumerate(poly):
+        prev = poly[i - 1]
+        nxt = poly[(i + 1) % len(poly)]
+        cross = (p[0] - prev[0]) * (nxt[1] - p[1]) - (p[1] - prev[1]) * (nxt[0] - p[0])
+        if abs(cross) > 1e-6:
+            simp.append(p)
+    poly = simp
+    if len(poly) < 3:
+        return [], []
+
+    verts = []
+    for p in poly:
+        verts.append((p[0], p[1], 0.0))
+    for p in poly:
+        verts.append((p[0], p[1], h))
+
+    tris = []
+    n = len(poly)
+    # walls: quad per edge, outward winding (CCW ring)
+    for i in range(n):
+        j = (i + 1) % n
+        # base i, base j, top j, top i
+        b0, b1, t0, t1 = i, j, n + i, n + j
+        tris.append((b0, b1, t1))
+        tris.append((b0, t1, t0))
+    # roof: ear-clipped fan of the top ring
+    for tri in ear_clip_triangulate(poly):
+        tris.append((n + tri[0], n + tri[1], n + tri[2]))
+    return verts, tris
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--osm", required=True, help="Path to the .osm extract")
@@ -339,8 +453,12 @@ def main():
     for cx, cy, w, d, h, wid, tags, pts in bbox_list:
         if w < 1.5 or d < 1.5:
             continue
+        # centre the footprint on the origin so the tile record can rotate it
+        local_pts = [(p[0] - cx, p[1] - cy) for p in pts]
         mesh_name = f"bldg_{wid}.o3d"
-        verts, tris, nrm = building_box_mesh(w, d, h)
+        verts, tris = building_footprint_mesh(local_pts, h)
+        if not verts:
+            continue
         write_o3d(os.path.join(model_dir, mesh_name), verts, tris, b"")
         sco_name = f"bldg_{wid}.sco"
         write_ascii(os.path.join(sco_dir, sco_name), [
@@ -348,7 +466,7 @@ def main():
             "[groups]", "2", "Hong Kong", "Buildings", "",
             "[mesh]", f"model\\{mesh_name}",
         ])
-        # place the box: centre offset from tile origin, base at z=0
+        # place at the footprint centroid, base at z=0
         obj_records.append({
             "file": f"Sceneryobjects\\HK_Objects\\{sco_name}",
             "id": next_oid,
@@ -435,12 +553,15 @@ def main():
 
     write_utf16(os.path.join(map_dir, "tile_0_0.map"), tile_lines)
 
-    # ---- terrain (flat) ----
+    # ---- terrain ----
+    # Preserve an existing elevation terrain (added by Add-TerrainElevation.py);
+    # only write flat terrain when none exists yet.
     terrain_path = os.path.join(map_dir, "tile_0_0.map.terrain")
-    with open(terrain_path, "wb") as f:
-        f.write(struct.pack("<I", 60))
-        for _ in range(61 * 61):
-            f.write(struct.pack("<f", 0.0))
+    if not os.path.exists(terrain_path):
+        with open(terrain_path, "wb") as f:
+            f.write(struct.pack("<I", 60))
+            for _ in range(61 * 61):
+                f.write(struct.pack("<f", 0.0))
 
     # ---- global.cfg ----
     write_utf16(os.path.join(map_dir, "global.cfg"), [
