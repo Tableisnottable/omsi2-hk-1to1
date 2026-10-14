@@ -24,6 +24,45 @@ from collections import defaultdict
 TILE_SIZE = 300.0
 VERSION = 14
 
+
+class TerrainSampler:
+    """Reads a tile_0_0.map.terrain file and samples heights at tile-local (x, y)."""
+
+    def __init__(self, terrain_path):
+        self.heights = None
+        self.cells = 60
+        try:
+            with open(terrain_path, "rb") as f:
+                data = f.read()
+            self.cells = struct.unpack("<I", data[:4])[0]
+            n = self.cells + 1
+            self.heights = struct.unpack(f"<{n * n}f", data[4 : 4 + n * n * 4])
+            self.n = n
+        except Exception:
+            self.heights = None
+
+    def has_data(self):
+        return self.heights is not None
+
+    def height_at(self, x, y):
+        """Bilinear height at tile-local (x, y) in metres 0..300."""
+        if self.heights is None:
+            return 0.0
+        n = self.n - 1
+        fx = max(0.0, min(n - 1e-6, x / TILE_SIZE * n))
+        fy = max(0.0, min(n - 1e-6, y / TILE_SIZE * n))
+        ix, iy = int(fx), int(fy)
+        tx, ty = fx - ix, fy - iy
+        h00 = self.heights[iy * self.n + ix]
+        h10 = self.heights[iy * self.n + ix + 1]
+        h01 = self.heights[(iy + 1) * self.n + ix]
+        h11 = self.heights[(iy + 1) * self.n + ix + 1]
+        return (h00 * (1 - tx) + h10 * tx) * (1 - ty) + (h01 * (1 - tx) + h11 * tx) * ty
+
+    def height_at_local(self, x, y):
+        """Height at local (x, y) where local origin is the tile centre."""
+        return self.height_at(x + TILE_SIZE / 2.0, y + TILE_SIZE / 2.0)
+
 # Road categories -> (.sli name, carriageway width in metres)
 ROAD_CATS = {
     "motorway":      ("motorway.sli", 14.0),
@@ -168,7 +207,6 @@ def building_box_mesh(w, d, h):
 
 
 def polygon_centroid(pts):
-    """Centroid of a polygon (2D, x/y)."""
     cx = sum(p[0] for p in pts) / len(pts)
     cy = sum(p[1] for p in pts) / len(pts)
     return cx, cy
@@ -335,6 +373,7 @@ def main():
     spline_records = []
     next_sid = 1
     way_rows = []
+    terrain_sampler = TerrainSampler(os.path.join(map_dir, "tile_0_0.map.terrain"))
     for wid, tags, refs in highways:
         hw = tags.get("highway")
         if hw not in DRIVABLE:
@@ -361,22 +400,29 @@ def main():
             length = math.hypot(b[0] - a[0], b[1] - a[1])
             if length < 0.15:
                 continue
-            emitted.append((a, b, length))
+            # height from terrain at the start point
+            z0 = terrain_sampler.height_at(a[0], a[1])
+            z1 = terrain_sampler.height_at(b[0], b[1])
+            emitted.append((a, b, length, z0, z1))
         if not emitted:
             continue
         ids = []
-        for a, b, length in emitted:
+        for a, b, length, z0, z1 in emitted:
             heading = math.degrees(math.atan2(b[0] - a[0], b[1] - a[1]))
             sid = next_sid
             next_sid += 1
             ids.append(sid)
+            # gradient in percent: rise per 100 m
+            grad = (z1 - z0) / length * 100.0 if length > 0 else 0.0
             spline_records.append({
                 "file": f"Splines\\HK_Roads\\{sli}",
                 "id": sid,
-                "pos": (a[0], a[1], 0.0),  # x east, y north, z up
+                "pos": (a[0], a[1], z0),  # x east, y north, z up (terrain height)
                 "heading": heading,
                 "length": length,
                 "radius": 0.0,
+                "grad_start": grad,
+                "grad_end": grad,
             })
         by_id = {r["id"]: r for r in spline_records}
         for j, sid in enumerate(ids):
@@ -537,7 +583,8 @@ def main():
             "[spline]", "0", r["file"], str(r["id"]), str(r["prev"]), str(r["next"]),
             f"{r['pos'][0]:.4f}", f"{r['pos'][2]:.4f}", f"{r['pos'][1]:.4f}",
             f"{r['heading']:.4f}", f"{r['length']:.4f}", f"{r['radius']:.4f}",
-            "0", "0", "0", "0", "0", "0", "0",
+            f"{r.get('grad_start', 0.0):.4f}", f"{r.get('grad_end', 0.0):.4f}",
+            "0", "0", "0", "0", "0",
         ]
         tile_lines.append("[spline_terrain_align]")
         tile_lines.append("")
