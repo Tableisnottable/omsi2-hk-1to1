@@ -510,6 +510,8 @@ def main():
         write_ascii(os.path.join(sco_dir, sco_name), [
             "[friendlyname]", f"HK Building {wid}", "",
             "[groups]", "2", "Hong Kong", "Buildings", "",
+            "[collision_mesh]", f"model\\{mesh_name}",
+            "",
             "[mesh]", f"model\\{mesh_name}",
         ])
         # place at the footprint centroid, base on the terrain

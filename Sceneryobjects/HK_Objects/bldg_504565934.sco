@@ -6,5 +6,8 @@ HK Building 504565934
 Hong Kong
 Buildings
 
+[collision_mesh]
+model\bldg_504565934.o3d
+
 [mesh]
 model\bldg_504565934.o3d
