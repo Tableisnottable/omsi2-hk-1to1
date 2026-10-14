@@ -134,6 +134,9 @@ powershell.exe -File .\src\scripts\Fetch-HkDistricts.ps1
 
 # 2. Convert every district into OMSI tiles, splines, buildings, terrain
 python .\src\scripts\Convert-OsmToMap.py --osm .\src\osm\CW.osm --mapcode CW --centre 22.2825,114.1580 --root .
+
+# 3. Add real elevation from the Copernicus DEM (Open-Meteo, free)
+python .\src\scripts\Add-TerrainElevation.py --all --root .
 `
 
 Convert-OsmToMap.py writes:
