@@ -157,9 +157,9 @@ def write_bmp(path, width, height, pixel_fn):
         f.write(header + info + bytes(data))
 
 
-def write_o3d(path, vertices, triangles, material_name=b""):
+def write_o3d(path, vertices, triangles, material_name=b"", diffuse=(0.62, 0.62, 0.62, 1.0)):
     """Minimal .o3d mesh, version 3 (u32 counts, 16-bit indices, no scramble).
-    Vertices may be 3-tuples (x, y, z); normals/UVs are then zeroed."""
+    Vertices may be 3-tuples (x, y, z) or 8-tuples (x,y,z,nx,ny,nz,u,v)."""
     out = bytearray(b"\x84\x19\x03\x00")  # magic, version 3, flags 0
     out += b"\x17" + struct.pack("<I", len(vertices))
     for v in vertices:
@@ -170,15 +170,79 @@ def write_o3d(path, vertices, triangles, material_name=b""):
     for tri in triangles:
         out += struct.pack("<3H", *tri) + struct.pack("<H", 0)
     out += b"\x26" + struct.pack("<H", 1)
-    out += struct.pack("<4f", 0.62, 0.62, 0.62, 1.0)   # diffuse
+    out += struct.pack("<4f", *diffuse)                # diffuse
     out += struct.pack("<3f", 0.0, 0.0, 0.0)           # specular
     out += struct.pack("<3f", 0.0, 0.0, 0.0)           # emissive
     out += struct.pack("<f", 1.0)                      # power
     out += struct.pack("<B", len(material_name)) + material_name
+    # pad the material name to a 4-byte boundary (OMSI reads the matrix after it)
+    while len(out) % 4:
+        out += b"\x00"
     ident = [1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0]
     out += b"\x79" + struct.pack("<16f", *ident)
     with open(path, "wb") as f:
         f.write(bytes(out))
+
+
+# Building material palettes by OSM building type: (diffuse rgba, texture name)
+BUILDING_MATERIALS = {
+    "residential": ((0.78, 0.74, 0.68, 1.0), "facade_residential.bmp"),
+    "apartments": ((0.80, 0.76, 0.70, 1.0), "facade_residential.bmp"),
+    "house": ((0.82, 0.78, 0.72, 1.0), "facade_residential.bmp"),
+    "commercial": ((0.55, 0.60, 0.66, 1.0), "facade_glass.bmp"),
+    "office": ((0.50, 0.56, 0.64, 1.0), "facade_glass.bmp"),
+    "retail": ((0.70, 0.66, 0.60, 1.0), "facade_retail.bmp"),
+    "industrial": ((0.66, 0.66, 0.64, 1.0), "facade_concrete.bmp"),
+    "warehouse": ((0.68, 0.68, 0.66, 1.0), "facade_concrete.bmp"),
+    "school": ((0.74, 0.70, 0.62, 1.0), "facade_concrete.bmp"),
+    "hospital": ((0.86, 0.86, 0.84, 1.0), "facade_concrete.bmp"),
+    "hotel": ((0.62, 0.60, 0.58, 1.0), "facade_glass.bmp"),
+    "church": ((0.80, 0.76, 0.70, 1.0), "facade_concrete.bmp"),
+    "garage": ((0.60, 0.60, 0.60, 1.0), "facade_concrete.bmp"),
+    "garages": ((0.60, 0.60, 0.60, 1.0), "facade_concrete.bmp"),
+    "roof": ((0.55, 0.55, 0.55, 1.0), "facade_concrete.bmp"),
+    "construction": ((0.72, 0.68, 0.60, 1.0), "facade_concrete.bmp"),
+    "yes": ((0.76, 0.72, 0.66, 1.0), "facade_residential.bmp"),
+}
+DEFAULT_BUILDING_MATERIAL = ((0.76, 0.72, 0.66, 1.0), "facade_residential.bmp")
+
+
+def building_material(tags):
+    """Return (diffuse rgba, texture filename) for an OSM building's tags."""
+    btype = (tags.get("building") or "yes").lower()
+    return BUILDING_MATERIALS.get(btype, DEFAULT_BUILDING_MATERIAL)
+
+
+def write_facade_texture(path, tex_name, size=128):
+    """Generate a simple procedural facade texture (BMP) for a building kind."""
+    import random as _r
+
+    kind = tex_name.replace("facade_", "").replace(".bmp", "")
+    rng = _r.Random(hash(tex_name) & 0xFFFF)
+
+    def px(x, y):
+        if kind == "glass":
+            # horizontal window bands with mullions
+            band = (y // 16) % 2
+            if band == 0:
+                return (70 + rng.randint(-6, 6), 90 + rng.randint(-6, 6), 110 + rng.randint(-6, 6))
+            return (150, 155, 160)
+        if kind == "residential":
+            # window grid on a plaster wall
+            wx, wy = x % 32, y % 32
+            if 8 <= wx <= 24 and 8 <= wy <= 24:
+                return (60 + rng.randint(-8, 8), 70 + rng.randint(-8, 8), 85 + rng.randint(-8, 8))
+            return (200 + rng.randint(-10, 10), 192 + rng.randint(-10, 10), 180 + rng.randint(-10, 10))
+        if kind == "retail":
+            # shopfront glazing with awnings
+            if (y // 24) % 2 == 0:
+                return (90 + rng.randint(-8, 8), 100 + rng.randint(-8, 8), 110 + rng.randint(-8, 8))
+            return (170 + rng.randint(-10, 10), 150 + rng.randint(-10, 10), 130 + rng.randint(-10, 10))
+        # concrete
+        v = 150 + rng.randint(-12, 12)
+        return (v, v, v - 4)
+
+    write_bmp(path, size, size, px)
 
 
 def building_box_mesh(w, d, h):
@@ -274,12 +338,13 @@ def ear_clip_triangulate(pts):
     return tris
 
 
-def building_footprint_mesh(pts, h):
+def building_footprint_mesh(pts, h, uv_scale=1.0):
     """Extrude an OSM building footprint polygon to height h.
 
     pts: list of (x, y) tile-local metres, closed ring (first == last optional).
     Returns (vertices, triangles) with z=0 base and z=h roof, wall quads
-    triangulated around the ring.
+    triangulated around the ring. Vertices carry UVs: walls tile by height
+    and edge length; the roof uses a planar projection.
     """
     poly = pts[:]
     if poly[0] == poly[-1]:
@@ -298,11 +363,21 @@ def building_footprint_mesh(pts, h):
     if len(poly) < 3:
         return [], []
 
+    # cumulative edge lengths for wall U
+    edge_len = [0.0]
+    for i in range(len(poly)):
+        j = (i + 1) % len(poly)
+        edge_len.append(edge_len[-1] + math.hypot(poly[j][0] - poly[i][0], poly[j][1] - poly[i][1]))
+
     verts = []
-    for p in poly:
-        verts.append((p[0], p[1], 0.0))
-    for p in poly:
-        verts.append((p[0], p[1], h))
+    # base ring
+    for i, p in enumerate(poly):
+        u = edge_len[i] / 2.0 * uv_scale
+        verts.append((p[0], p[1], 0.0, 0.0, 0.0, 1.0, u, 0.0))
+    # top ring
+    for i, p in enumerate(poly):
+        u = edge_len[i] / 2.0 * uv_scale
+        verts.append((p[0], p[1], h, 0.0, 0.0, 1.0, u, h / 2.0 * uv_scale))
 
     tris = []
     n = len(poly)
@@ -313,7 +388,7 @@ def building_footprint_mesh(pts, h):
         b0, b1, t0, t1 = i, j, n + i, n + j
         tris.append((b0, b1, t1))
         tris.append((b0, t1, t0))
-    # roof: ear-clipped fan of the top ring
+    # roof: ear-clipped fan of the top ring with planar UVs
     for tri in ear_clip_triangulate(poly):
         tris.append((n + tri[0], n + tri[1], n + tri[2]))
     return verts, tris
@@ -335,7 +410,8 @@ def main():
     splines_dir = os.path.join(root, "Splines", "HK_Roads")
     sco_dir = os.path.join(root, "Sceneryobjects", "HK_Objects")
     model_dir = os.path.join(sco_dir, "model")
-    for d in (map_dir, splines_dir, os.path.join(splines_dir, "texture"), sco_dir, model_dir):
+    texture_dir = os.path.join(sco_dir, "texture")
+    for d in (map_dir, splines_dir, os.path.join(splines_dir, "texture"), sco_dir, model_dir, texture_dir):
         os.makedirs(d, exist_ok=True)
 
     print(f"[{args.mapcode}] parsing {args.osm} ...")
@@ -496,16 +572,21 @@ def main():
 
     obj_records = []
     next_oid = 1_000_000
+    # generate facade textures once per kind
+    facade_kinds = {tex for _, tex in BUILDING_MATERIALS.values()}
+    for kind in facade_kinds:
+        write_facade_texture(os.path.join(texture_dir, kind), kind)
     for cx, cy, w, d, h, wid, tags, pts in bbox_list:
         if w < 1.5 or d < 1.5:
             continue
         # centre the footprint on the origin so the tile record can rotate it
         local_pts = [(p[0] - cx, p[1] - cy) for p in pts]
         mesh_name = f"bldg_{wid}.o3d"
+        diffuse, tex_name = building_material(tags)
         verts, tris = building_footprint_mesh(local_pts, h)
         if not verts:
             continue
-        write_o3d(os.path.join(model_dir, mesh_name), verts, tris, b"")
+        write_o3d(os.path.join(model_dir, mesh_name), verts, tris, tex_name.encode("ascii", "replace"), diffuse)
         sco_name = f"bldg_{wid}.sco"
         write_ascii(os.path.join(sco_dir, sco_name), [
             "[friendlyname]", f"HK Building {wid}", "",
