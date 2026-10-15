@@ -587,6 +587,10 @@ def main():
         if not verts:
             continue
         write_o3d(os.path.join(model_dir, mesh_name), verts, tris, tex_name.encode("ascii", "replace"), diffuse)
+        # LOD: simplified box for far range
+        lod_name = f"bldg_{wid}_lod.o3d"
+        lod_verts, lod_tris, _ = building_box_mesh(w, d, h)
+        write_o3d(os.path.join(model_dir, lod_name), lod_verts, lod_tris, tex_name.encode("ascii", "replace"), diffuse)
         sco_name = f"bldg_{wid}.sco"
         write_ascii(os.path.join(sco_dir, sco_name), [
             "[friendlyname]", f"HK Building {wid}", "",
@@ -594,6 +598,10 @@ def main():
             "[collision_mesh]", f"model\\{mesh_name}",
             "",
             "[mesh]", f"model\\{mesh_name}",
+            "",
+            "[LOD]", "50",
+            "",
+            "[mesh]", f"model\\{lod_name}",
         ])
         # place at the footprint centroid, base on the terrain
         base_z = terrain_sampler.height_at(cx, cy)

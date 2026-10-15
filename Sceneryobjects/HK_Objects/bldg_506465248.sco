@@ -11,3 +11,9 @@ model\bldg_506465248.o3d
 
 [mesh]
 model\bldg_506465248.o3d
+
+[LOD]
+50
+
+[mesh]
+model\bldg_506465248_lod.o3d
