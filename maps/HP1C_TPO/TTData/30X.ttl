@@ -1,0 +1,7 @@
+[userallowed]
+[priority]
+1
+[newtour]
+1 0 0
+[addtrip]
+30X_1 30X 360

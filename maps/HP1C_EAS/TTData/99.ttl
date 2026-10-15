@@ -1,0 +1,7 @@
+[userallowed]
+[priority]
+1
+[newtour]
+1 0 0
+[addtrip]
+99_1 99 360

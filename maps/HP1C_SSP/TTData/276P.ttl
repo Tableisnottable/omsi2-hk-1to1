@@ -1,0 +1,7 @@
+[userallowed]
+[priority]
+1
+[newtour]
+1 0 0
+[addtrip]
+276P_1 276P 360

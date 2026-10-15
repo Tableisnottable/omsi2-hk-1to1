@@ -1,0 +1,7 @@
+[userallowed]
+[priority]
+1
+[newtour]
+1 0 0
+[addtrip]
+K51_1 K51 360

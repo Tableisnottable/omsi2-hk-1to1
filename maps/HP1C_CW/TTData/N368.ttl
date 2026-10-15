@@ -1,0 +1,7 @@
+[userallowed]
+[priority]
+1
+[newtour]
+1 0 0
+[addtrip]
+N368_1 N368 360
