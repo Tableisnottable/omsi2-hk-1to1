@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\WTS.osm",
-  "importedUtc": "2026-10-15T02:59:48.251575Z",
+  "importedUtc": "2026-10-15T03:50:13.495328Z",
   "mapCode": "WTS",
   "nodes": 19749,
   "highwayWays": 55,
   "buildings": 40,
   "stops": 1,
   "splines": 267,
-  "objects": 40,
+  "objects": 41,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

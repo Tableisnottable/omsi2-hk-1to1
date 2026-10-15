@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\SSP.osm",
-  "importedUtc": "2026-10-15T02:59:41.191403Z",
+  "importedUtc": "2026-10-15T03:50:03.847291Z",
   "mapCode": "SSP",
   "nodes": 30306,
   "highwayWays": 31,
   "buildings": 378,
   "stops": 58,
   "splines": 102,
-  "objects": 378,
+  "objects": 379,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\YTM.osm",
-  "importedUtc": "2026-10-15T02:59:52.787197Z",
+  "importedUtc": "2026-10-15T03:50:17.042191Z",
   "mapCode": "YTM",
   "nodes": 24010,
   "highwayWays": 33,
   "buildings": 229,
   "stops": 7,
   "splines": 121,
-  "objects": 229,
+  "objects": 230,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

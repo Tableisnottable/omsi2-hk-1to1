@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\NTH.osm",
-  "importedUtc": "2026-10-15T02:59:36.811529Z",
+  "importedUtc": "2026-10-15T03:49:58.866216Z",
   "mapCode": "NTH",
   "nodes": 28071,
   "highwayWays": 23,
   "buildings": 61,
   "stops": 3,
   "splines": 88,
-  "objects": 61,
+  "objects": 62,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

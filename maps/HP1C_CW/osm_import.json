@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\CW.osm",
-  "importedUtc": "2026-10-15T02:59:28.571100Z",
+  "importedUtc": "2026-10-15T03:49:48.768047Z",
   "mapCode": "CW",
   "nodes": 23326,
   "highwayWays": 135,
   "buildings": 60,
   "stops": 65,
   "splines": 351,
-  "objects": 60,
+  "objects": 61,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

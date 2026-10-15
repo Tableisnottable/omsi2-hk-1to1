@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\STN.osm",
-  "importedUtc": "2026-10-15T02:59:42.288515Z",
+  "importedUtc": "2026-10-15T03:50:05.335164Z",
   "mapCode": "STN",
   "nodes": 13415,
   "highwayWays": 42,
   "buildings": 21,
   "stops": 5,
   "splines": 88,
-  "objects": 21,
+  "objects": 22,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

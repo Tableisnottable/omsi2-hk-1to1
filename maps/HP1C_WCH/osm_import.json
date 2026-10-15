@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\WCH.osm",
-  "importedUtc": "2026-10-15T02:59:47.037962Z",
+  "importedUtc": "2026-10-15T03:50:11.755865Z",
   "mapCode": "WCH",
   "nodes": 20884,
   "highwayWays": 16,
   "buildings": 8,
   "stops": 22,
   "splines": 90,
-  "objects": 8,
+  "objects": 9,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

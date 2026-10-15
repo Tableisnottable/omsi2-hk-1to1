@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\HZMB.osm",
-  "importedUtc": "2026-10-15T02:59:30.571937Z",
+  "importedUtc": "2026-10-15T03:49:51.436192Z",
   "mapCode": "HZMB",
   "nodes": 4071,
   "highwayWays": 35,
   "buildings": 5,
   "stops": 0,
   "splines": 137,
-  "objects": 5,
+  "objects": 6,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

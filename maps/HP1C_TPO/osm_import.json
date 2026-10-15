@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\TPO.osm",
-  "importedUtc": "2026-10-15T02:59:44.538020Z",
+  "importedUtc": "2026-10-15T03:50:08.486378Z",
   "mapCode": "TPO",
   "nodes": 26301,
   "highwayWays": 47,
   "buildings": 33,
   "stops": 24,
   "splines": 123,
-  "objects": 33,
+  "objects": 34,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

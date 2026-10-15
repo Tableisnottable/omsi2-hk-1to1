@@ -668,6 +668,30 @@ def main():
         })
         next_oid += 1
 
+    # ---- spawn point (entrypoint) ----
+    spawn_o3d = os.path.join(model_dir, "HK_Spawn.o3d")
+    spawn_sco = os.path.join(sco_dir, "HK_Spawn.sco")
+    spv, spt, _ = building_box_mesh(0.5, 0.5, 0.1)
+    write_o3d(spawn_o3d, spv, spt, b"")
+    write_ascii(spawn_sco, [
+        "[friendlyname]", "HK Spawn Point", "",
+        "[groups]", "2", "Hong Kong", "Spawn", "",
+        "[entrypoint]",
+        "[mesh]", "model\\HK_Spawn.o3d",
+    ])
+    spawn_x, spawn_y = TILE_SIZE / 2.0, TILE_SIZE / 2.0
+    spawn_z = terrain_sampler.height_at(spawn_x, spawn_y)
+    spawn_id = next_oid
+    spawn_record = {
+        "file": "Sceneryobjects\\HK_Objects\\HK_Spawn.sco",
+        "id": spawn_id,
+        "pos": (spawn_x, spawn_y, spawn_z),
+        "heading": 0.0,
+        "labels": [],
+    }
+    obj_records.append(spawn_record)
+    next_oid += 1
+
     # ---- write tile file ----
     tile_lines = ["[version]", str(VERSION), "", "[terrain]", ""]
     for r in spline_records:
@@ -703,9 +727,18 @@ def main():
                 f.write(struct.pack("<f", 0.0))
 
     # ---- global.cfg ----
+    # entrypoint: quaternion (0, 0, 0, 1) = facing +y (north), heading 0
     write_utf16(os.path.join(map_dir, "global.cfg"), [
         "[name]", f"HP1C {args.mapcode}", "",
         "[friendlyname]", f"HK 1:1 Map ({args.mapcode}) - OSM import", "",
+        "[entrypoints]",
+        "1",
+        "0", str(spawn_id), "0",
+        f"{spawn_x:.4f}", f"{spawn_z:.4f}", f"{spawn_y:.4f}",
+        "0", "0", "0", "1",
+        "0",
+        "Spawn",
+        "",
         "[map]", "0", "0", "tile_0_0.map",
     ])
 

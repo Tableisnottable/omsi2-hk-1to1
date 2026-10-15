@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\KCT.osm",
-  "importedUtc": "2026-10-15T02:59:32.560009Z",
+  "importedUtc": "2026-10-15T03:49:54.020776Z",
   "mapCode": "KCT",
   "nodes": 19781,
   "highwayWays": 72,
   "buildings": 41,
   "stops": 14,
   "splines": 244,
-  "objects": 41,
+  "objects": 42,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

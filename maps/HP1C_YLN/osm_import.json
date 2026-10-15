@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\YLN.osm",
-  "importedUtc": "2026-10-15T02:59:49.639529Z",
+  "importedUtc": "2026-10-15T03:50:14.982194Z",
   "mapCode": "YLN",
   "nodes": 17149,
   "highwayWays": 59,
   "buildings": 25,
   "stops": 10,
   "splines": 157,
-  "objects": 25,
+  "objects": 26,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

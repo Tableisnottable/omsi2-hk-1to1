@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\ISL.osm",
-  "importedUtc": "2026-10-15T02:59:31.404175Z",
+  "importedUtc": "2026-10-15T03:49:52.482870Z",
   "mapCode": "ISL",
   "nodes": 4678,
   "highwayWays": 3,
   "buildings": 2,
   "stops": 0,
   "splines": 46,
-  "objects": 2,
+  "objects": 3,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }

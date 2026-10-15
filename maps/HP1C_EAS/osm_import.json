@@ -1,12 +1,12 @@
 {
   "source": "C:\\Users\\Table\\Documents\\GitHub\\omsi2-hk-1to1\\src\\osm\\EAS.osm",
-  "importedUtc": "2026-10-15T02:59:29.719511Z",
+  "importedUtc": "2026-10-15T03:49:50.392492Z",
   "mapCode": "EAS",
   "nodes": 17287,
   "highwayWays": 56,
   "buildings": 92,
   "stops": 20,
   "splines": 213,
-  "objects": 92,
+  "objects": 93,
   "nextStep": "Run in OpenOMSI; terrain heights and authored meshes come later."
 }
