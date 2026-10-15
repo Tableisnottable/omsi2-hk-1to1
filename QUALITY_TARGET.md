@@ -30,16 +30,21 @@ assets, materials, lighting, and level-of-detail strategy.
 5. Validate geometry, materials, route stops, and tile boundaries.
 6. Profile loading and frame time in OpenOMSI before expanding the detail area.
 
-The repository currently implements stages 1-3 and the route catalogue.
+The repository currently implements stages 1-5 and the route catalogue.
 Stage 2 terrain: every HP1C tile now carries real elevation from the ASTER
 30 m DEM (fetched via OpenTopoData, no key) interpolated onto the 61x61
 OMSI terrain grid; HZMB is the sea-level artificial island it is.
 Stage 3 geometry: buildings are extruded from their real OSM footprint
 polygons (ear-clipped roofs, wall quads) instead of bounding boxes, and
 the converter preserves existing elevation terrain on re-runs.
-Stages 4-6 require PBR texture production, LOD variants, and OpenOMSI
-runtime profiling; they cannot be replaced by a route CSV or a single
-API call.
+Stage 4 materials: procedural facade textures (glass, residential,
+retail, concrete) with UV mapping and per-type diffuse colours, plus
+[LOD] 50 box variants for every building.
+Stage 5 validation: Validate-Stage5.py checks the quality gate per area
+(terrain, roads, meshes, materials, collision, LOD, stops, routes) and
+all 19 HP1C areas pass.
+Stage 6 requires an OpenOMSI runtime profiling run; it cannot be replaced
+by a route CSV or a single API call.
 
 ## Quality gate
 
