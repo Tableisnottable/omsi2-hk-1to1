@@ -731,6 +731,7 @@ def main():
     write_utf16(os.path.join(map_dir, "global.cfg"), [
         "[name]", f"HP1C {args.mapcode}", "",
         "[friendlyname]", f"HK 1:1 Map ({args.mapcode}) - OSM import", "",
+        "[version]", str(VERSION), "",
         "[entrypoints]",
         "1",
         "0", str(spawn_id), "0",
