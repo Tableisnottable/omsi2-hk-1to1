@@ -34,7 +34,7 @@ foreach ($map in $maps) {
     if ($global -notmatch "(?m)^\[name\]\s*$" -or $global -notmatch "(?m)^\[friendlyname\]\s*$") {
         $errors.Add("$($map.Name)\global.cfg is missing [name] or [friendlyname]")
     }
-    if ($global -notmatch "(?m)^HP1C\s+") {
+    if ($global -notmatch "(?m)^HP1C[_\s]+") {
         $errors.Add("$($map.Name)\global.cfg does not use HP1C naming")
     }
     foreach ($jsonFile in Get-ChildItem $map.FullName -Filter "*.json" -File) {

@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$OmsiPath = ""
+    [string]$OmsiPath = "",
+    [string]$MapName = ""
 )
 
 # Auto-detect: OpenOMSI first, then stock OMSI 2 (Steam / alternate libraries)
@@ -21,5 +22,24 @@ if ([string]::IsNullOrWhiteSpace($OmsiPath)) {
 if (-not (Test-Path $OmsiPath -PathType Leaf)) {
     throw "OMSI executable was not found at '$OmsiPath'. Pass -OmsiPath to use another installation."
 }
-Write-Host "Launching: $OmsiPath" -ForegroundColor Green
-Start-Process -FilePath $OmsiPath -WorkingDirectory (Split-Path -Parent $OmsiPath)
+
+# Stock OMSI 2 requires Steam DRM: launching Omsi.exe directly exits with
+# code 53. Use the Steam URL protocol instead when running the stock game.
+$isStock = (Split-Path -Leaf $OmsiPath) -eq "Omsi.exe"
+if ($isStock) {
+    $steamUrl = "steam://rungameid/252530"
+    if (-not [string]::IsNullOrWhiteSpace($MapName)) {
+        # Steam does not forward -map; launch via Steam then the map must be
+        # selected in-game, or use OpenOMSI which accepts -map directly.
+        Write-Host "Note: Steam launch cannot pass -map; select '$MapName' in the OMSI menu." -ForegroundColor Yellow
+    }
+    Write-Host "Launching via Steam: $steamUrl" -ForegroundColor Green
+    Start-Process $steamUrl
+} else {
+    $args = @()
+    if (-not [string]::IsNullOrWhiteSpace($MapName)) {
+        $args += @("-map", $MapName)
+    }
+    Write-Host "Launching: $OmsiPath $($args -join ' ')" -ForegroundColor Green
+    Start-Process -FilePath $OmsiPath -ArgumentList $args -WorkingDirectory (Split-Path -Parent $OmsiPath)
+}

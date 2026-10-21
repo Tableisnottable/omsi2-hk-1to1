@@ -729,7 +729,7 @@ def main():
     # ---- global.cfg ----
     # entrypoint: quaternion (0, 0, 0, 1) = facing +y (north), heading 0
     write_utf16(os.path.join(map_dir, "global.cfg"), [
-        "[name]", f"HP1C {args.mapcode}", "",
+        "[name]", f"HP1C_{args.mapcode}", "",
         "[friendlyname]", f"HK 1:1 Map ({args.mapcode}) - OSM import", "",
         "[version]", str(VERSION), "",
         "[entrypoints]",
