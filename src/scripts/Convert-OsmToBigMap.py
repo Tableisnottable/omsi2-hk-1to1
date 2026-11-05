@@ -85,8 +85,20 @@ def to_latlon(gx, gy):
     return LAT0 + (gy - OFFSET_Y) / MPDLAT, LON0 + (gx - OFFSET_X) / MPDLON
 
 
-def fetch_elevation_grid(lat_min, lon_min, lat_max, lon_max, n=10):
-    """n x n ASTER elevations over the bbox, row-major south-to-north; None on failure."""
+def fetch_elevation_grid(lat_min, lon_min, lat_max, lon_max, n=None):
+    """ASTER elevations over the bbox, row-major south-to-north; None on failure.
+
+    The grid is sized to the extract: a fixed 10x10 lattice over a 12 km extract
+    puts samples 1.2 km apart, so interpolation dragged a 500 m peak down onto
+    the harbour. ~250 m spacing keeps the relief local.
+    """
+    if n is None:
+        height_m = (lat_max - lat_min) * MPDLAT
+        width_m = (lon_max - lon_min) * MPDLON
+        n = max(4, min(16, int(math.ceil(max(height_m, width_m) / 250.0)) + 1))
+    # OpenTopoData accepts 100 locations per request
+    if n * n > 100:
+        n = 10
     locs = [
         f"{lat_min + (lat_max - lat_min) * (j / (n - 1)):.6f},"
         f"{lon_min + (lon_max - lon_min) * (i / (n - 1)):.6f}"
@@ -102,7 +114,7 @@ def fetch_elevation_grid(lat_min, lon_min, lat_max, lon_max, n=10):
                 payload = json.loads(resp.read().decode())
             out = [r.get("elevation") for r in payload.get("results", [])]
             if len(out) == n * n and all(v is not None for v in out):
-                return [float(v) for v in out]
+                return [float(v) for v in out], n
             return None
         except Exception as exc:  # noqa: BLE001  (the network is best-effort)
             print(f"    elevation attempt {attempt + 1} failed: {exc}")
@@ -118,6 +130,12 @@ class ElevationGrid:
         self.n, self.v = n, values
 
     def at(self, lat, lon):
+        # Clamp to the grid rather than extrapolating: a bilinear formula run
+        # outside the bbox produces wild heights (hundreds of metres off).
+        if not (self.lat_min - 1e-9 <= lat <= self.lat_max + 1e-9
+                and self.lon_min - 1e-9 <= lon <= self.lon_max + 1e-9):
+            lat = min(max(lat, self.lat_min), self.lat_max)
+            lon = min(max(lon, self.lon_min), self.lon_max)
         fx = (lon - self.lon_min) / (self.lon_max - self.lon_min) * (self.n - 1)
         fy = (lat - self.lat_min) / (self.lat_max - self.lat_min) * (self.n - 1)
         fx = max(0.0, min(self.n - 1 - 1e-9, fx))
@@ -128,6 +146,10 @@ class ElevationGrid:
         h00, h10 = g[iy * w + ix], g[iy * w + ix + 1]
         h01, h11 = g[(iy + 1) * w + ix], g[(iy + 1) * w + ix + 1]
         return (h00 * (1 - tx) + h10 * tx) * (1 - ty) + (h01 * (1 - tx) + h11 * tx) * ty
+
+    def covers(self, lat, lon):
+        return (self.lat_min - 1e-9 <= lat <= self.lat_max + 1e-9
+                and self.lon_min - 1e-9 <= lon <= self.lon_max + 1e-9)
 
 
 class TileBuilder:
@@ -230,6 +252,7 @@ def main():
     stop_cfg = []
     spline_total = building_total = stop_total = 0
     building_verts = {}          # object id -> (verts, tris, material key)
+    footprint_xy = {}            # object id -> (tx, ty, [(x, y) ...] tile-local)
     MATERIAL_LOOKUP = dict(BUILDING_MATERIALS)
     grids = []                   # every district's ElevationGrid, for terrain writing
 
@@ -259,16 +282,32 @@ def main():
 
         grid = None
         if not args.no_elevation:
-            values = fetch_elevation_grid(lat_min, lon_min, lat_max, lon_max)
-            if values:
-                grid = ElevationGrid(lat_min, lon_min, lat_max, lon_max, values)
+            fetched = fetch_elevation_grid(lat_min, lon_min, lat_max, lon_max)
+            if fetched:
+                values, grid_n = fetched
+                grid = ElevationGrid(lat_min, lon_min, lat_max, lon_max, values, grid_n)
                 grids.append(grid)
-                print(f"    ASTER {min(values):.0f}-{max(values):.0f} m")
+                print(f"    ASTER {min(values):.0f}-{max(values):.0f} m on a {grid_n}x{grid_n} grid")
             else:
                 print("    ASTER unavailable -> flat")
 
         def elev(lat, lon, _g=grid):
-            return _g.at(lat, lon) if _g else 0.0
+            if _g is None:
+                return 0.0
+            return _g.at(lat, lon)   # at() clamps to the bbox instead of extrapolating
+
+        # Roads and stops must match the terrain, and the terrain takes the
+        # highest of every covering grid (see the tile writer), so they do too.
+        def ground(lat, lon):
+            best = None
+            for g_ in grids:
+                if g_.covers(lat, lon):
+                    hv = g_.at(lat, lon)
+                    if best is None or hv > best:
+                        best = hv
+            if best is None:
+                return elev(lat, lon)
+            return best
 
         # ---- bus stops ----
         for n in osm.findall("node"):
@@ -324,6 +363,8 @@ def main():
                             "grad": (z1 - z0) / length * 100.0,
                             # [spline_h]: the height gained across the spline
                             "delta_h": z1 - z0,
+                            "ends": (to_latlon(ox + x0, oy + y0), to_latlon(ox + x1, oy + y1)),
+                            "tile": (tx, ty),
                         })
                         next_spline_id += 1
                         spline_total += 1
@@ -354,12 +395,18 @@ def main():
             # a footprint crossing a tile edge would be cut; drop it instead
             if any(px < 0.0 or px > TILE or py < 0.0 or py > TILE for px, py in local):
                 continue
+            # A footprint's base follows the lowest ground under it. The ground is
+            # resolved later, once every district's elevation grid is known, with
+            # the same "highest covering grid" rule the tile terrain uses.
+            ground_z = elev(*to_latlon(cx, cy))
             verts, tris = building_footprint_mesh(local, height)
             if not tris:
                 continue
+            verts = [(v[0], v[1], v[2] + ground_z) + tuple(v[3:]) for v in verts]
             material_key = (tags.get("building") or "yes").lower()
             bldg_id = next_object_id
             building_verts[bldg_id] = (verts, tris, material_key)
+            footprint_xy[bldg_id] = (tx, ty, local)
             tile = tiles.setdefault((tx, ty), TileBuilder(tx, ty))
             tile.objects.append({
                 "file": f"Sceneryobjects\\HK_Objects\\HK_Placeholder_{bldg_id}.sco",
@@ -391,6 +438,40 @@ def main():
         next_object_id += 1
         print(f"    entrypoint {code} at tile ({tx},{ty}) local ({lx:.0f},{ly:.0f})")
 
+    # ---- resolve building bases against the complete terrain ----
+    # Every district grid is known now, so a footprint's base can use the same
+    # "highest covering grid" rule the tile terrain used. Without this a building
+    # sinks when a neighbouring district's grid is higher at the same spot.
+    def ground_at(lat, lon):
+        best = None
+        for g_ in grids:
+            if g_.covers(lat, lon):
+                hv = g_.at(lat, lon)
+                if best is None or hv > best:
+                    best = hv
+        return best if best is not None else 0.0
+
+    for bid, (btx, bty, blocal) in footprint_xy.items():
+        want = min(ground_at(*to_latlon(btx * TILE + px, bty * TILE + py)) for px, py in blocal)
+        verts, tris, material = building_verts[bid]
+        # the stored verts already carry the provisional ground; shift by the delta
+        have = verts[0][2] if verts else 0.0
+        delta = want - have
+        if abs(delta) > 1e-6:
+            building_verts[bid] = (
+                [(v[0], v[1], v[2] + delta) + tuple(v[3:]) for v in verts], tris, material)
+
+    # Spline ends ride the final ground too, so a road never sinks below the
+    # terrain or floats above it.
+    for tile in tiles.values():
+        for s in tile.splines:
+            (lat0, lon0), (lat1, lon1) = s["ends"]
+            z0 = ground_at(lat0, lon0)
+            z1 = ground_at(lat1, lon1)
+            s["pos"] = (s["pos"][0], s["pos"][1], z0)
+            s["grad"] = (z1 - z0) / s["length"] * 100.0 if s["length"] else 0.0
+            s["delta_h"] = z1 - z0
+
     # ---- one merged building mesh per tile ----
     # 12k separate .sco files made OMSI crawl on startup, so each tile's
     # buildings are baked into a single mesh/SCO pair instead.
@@ -419,20 +500,12 @@ def main():
             sco_lines += ["[collision_mesh]", f"model\\{part}.o3d", ""]
         write_ascii(os.path.join(sco_dir, mesh_name + ".sco"), sco_lines)
         tile.objects = [o for o in tile.objects if o["id"] not in building_verts]
-        # the merged mesh is modelled in tile-local coordinates, so the object sits
-        # at the tile origin at that corner's terrain height
-        lat, lon = to_latlon(tx * TILE, ty * TILE)
-        base_z = 0.0
-        if grids:
-            for grid in grids:
-                if (grid.lat_min - 1e-9 <= lat <= grid.lat_max + 1e-9
-                        and grid.lon_min - 1e-9 <= lon <= grid.lon_max + 1e-9):
-                    base_z = grid.at(lat, lon)
-                    break
+        # Every vertex already carries its own absolute terrain height, so the
+        # object sits at z = 0 and the buildings follow the ground exactly.
         tile.objects.append({
             "file": f"Sceneryobjects\\HK_Objects\\{mesh_name}.sco",
             "id": next_object_id,
-            "pos": (0.0, 0.0, base_z),
+            "pos": (0.0, 0.0, 0.0),
             "heading": 0.0,
             "labels": [],
         })
@@ -484,9 +557,7 @@ def main():
                 lat, lon = to_latlon(gx, gy)
                 best = None
                 for grid in grids:
-                    if not (grid.lat_min - 1e-9 <= lat <= grid.lat_max + 1e-9):
-                        continue
-                    if not (grid.lon_min - 1e-9 <= lon <= grid.lon_max + 1e-9):
+                    if not grid.covers(lat, lon):
                         continue
                     h = grid.at(lat, lon)
                     if best is None or h > best:

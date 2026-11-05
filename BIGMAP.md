@@ -36,11 +36,26 @@ Every tile's `.map.terrain` holds a real 61×61 ASTER 30 m height lattice
   column *i* is `x = i/60 · 300 m`.
 - Each tile samples every district grid whose bbox covers it; where grids overlap the
   **highest** wins, so a hill is not flattened by a coastal neighbour.
-- Verified: **46,665 border sample pairs across all tiles differ by 0.000 m**, so the
+- Verified: **46,665 border sample pairs across all 483 tiles differ by 0.000 m**, so the
   terrain is seamless — a single continuous surface, not 483 separate plates.
-- Spline heights and building bases are taken from the same grids, so roads sit ~1.1 m
-  above the ground they were sampled from (0 of 161 splines in a spot-check deviate by
-  more than 3 m).
+
+Everything that sits on the ground uses that same "highest covering grid" rule, so the
+three layers agree:
+
+| layer | rule | verified |
+|---|---|---|
+| terrain lattice | highest of every covering grid | 46,665 border pairs, 0.000 m |
+| road splines | ground at both ends, `[spline_h]` = the difference | spot check of 161 splines, 0 off by >3 m; roads sit ~0.6 m proud |
+| building bases | **lowest** ground under the footprint, each vertex lifted by it | 1,493 tile meshes, 0 outside the tile's terrain band |
+
+Two bugs this fixed, both found by measuring rather than eyeballing:
+
+- The elevation grid used to be a fixed 10×10 over the whole extract, i.e. samples
+  1.2 km apart on the 12 km Central extract. Bilinear interpolation dragged the 515 m
+  Peak down onto the harbour (a footprint in the middle of Central was being placed at
+  ~400 m). The grid is now sized to the extract at ~250 m spacing.
+- `ElevationGrid.at` extrapolated outside its bbox instead of clamping, which produced
+  heights hundreds of metres off for any point just outside a district.
 
 ### Ground textures
 
