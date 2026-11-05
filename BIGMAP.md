@@ -63,6 +63,19 @@ Two bugs this fixed, both found by measuring rather than eyeballing:
 detail texture generated into `Sceneryobjects/HK_Objects/texture/`) so the terrain shows
 a surface instead of the engine default.
 
+### Road widths
+
+Roads get their width from OSM's `lanes` tag rather than from the highway class
+default, because HK tags lane counts on almost every road:
+
+- `lanes` counts **both** directions, so the spline is `lanes × 3.25 m + 0.5 m`
+  (2 lanes → 7.0 m, 3 → 10.2 m), clamped to 3.5–30 m.
+- One `.sli` per width used (`Splines/HK_Roads/w7.0.sli`, `w10.2.sli`, …), 22 files;
+  a single file per highway type cannot draw a 2-lane and a 6-lane road correctly.
+- Resulting spread: 7.0 m ×15,250 · 4.5 m ×12,778 · 3.8 m ×9,718 · 10.2 m ×4,550 ·
+  13.5 m ×1,315 — i.e. mostly 2-lane streets with service lanes and a few trunks,
+  which is what Hong Kong looks like.
+
 ## How it is built
 
 ```
@@ -76,7 +89,8 @@ Steps per district:
 1. Parse `src/osm/<CODE>.osm`.
 2. Sample a 10×10 ASTER 30 m elevation grid over the extract's bbox (OpenTopoData).
 3. Every `highway` way is clipped per 300 m tile (Liang-Barsky) and written as one
-   `[spline]` per surviving segment, with `grad_start`/`grad_end` from the terrain.
+   `[spline]` per surviving segment, with `grad_start`/`grad_end` from the terrain and
+   the width from the road's `lanes` tag.
 4. Every `building` way is extruded from its real OSM footprint (ear-clipped roof) and
    kept only if it fits inside a single tile, then **baked per tile** into one
    `.sco` + one `.o3d` per material. Baker: 12,311 buildings → 408 meshes

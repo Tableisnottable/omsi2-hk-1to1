@@ -197,9 +197,15 @@ def main():
     # ---- shared road splines + facade textures ----
     write_bmp(os.path.join(splines_dir, "texture", "asphalt.bmp"), 256, 256,
               lambda x, y: (90 + (x % 17) - 8, 90 + (y % 17) - 8, 88 + ((x + y) % 17) - 8))
-    for sli_name, width in sorted({v[0]: v[1] for v in ROAD_CATS.values()}.items()):
+    # One .sli per width actually used. A single file per road type cannot
+    # express a 2-lane and a 6-lane road, so the widths come from the lane
+    # counts in the data; the type defaults are added for untagged roads.
+    widths = {round(v[1], 1) for v in ROAD_CATS.values()}
+    for n in range(1, 19):
+        widths.add(round(max(3.5, min(n * 3.25 + 0.5, 30.0)), 1))
+    for width in sorted(widths):
         half = width / 2.0
-        write_ascii(os.path.join(splines_dir, sli_name), [
+        write_ascii(os.path.join(splines_dir, f"w{width:.1f}.sli"), [
             "[texture]", "texture\\asphalt.bmp", "",
             "[profile]", "0",
             "[profilepnt]", f"{-half:.4f}", "0", "0", "1",
@@ -336,7 +342,20 @@ def main():
             hw = tags.get("highway")
             if hw not in DRIVABLE:
                 continue
-            sli = ROAD_CATS[hw][0]
+            # Prefer the real lane count: OSM tags lanes on most HK roads, and a
+            # 4-lane trunk drawn 12 m wide (the type default) looks wrong next to
+            # a 2-lane residential road at 6 m.
+            base_width = ROAD_CATS[hw][1]
+            try:
+                n_lanes = int(tags.get("lanes", ""))
+            except ValueError:
+                n_lanes = 0
+            if n_lanes > 0:
+                # OSM's `lanes` counts both directions: 3.25 m per lane plus a
+                # 0.5 m edge margin, so a 2-lane street comes out at 7 m.
+                width = round(max(3.5, min(n_lanes * 3.25 + 0.5, 30.0)), 1)
+            else:
+                width = round(base_width, 1)
             pts = [to_global(*nodes[r]) for r in (nd.get("ref") for nd in w.findall("nd")) if r in nodes]
             for i in range(len(pts) - 1):
                 ax, ay = pts[i]
@@ -355,7 +374,7 @@ def main():
                         z1 = elev(*to_latlon(ox + x1, oy + y1))
                         tile = tiles.setdefault((tx, ty), TileBuilder(tx, ty))
                         tile.splines.append({
-                            "file": f"Splines\\HK_Roads\\{sli}",
+                            "file": f"Splines\\HK_Roads\\w{width:.1f}.sli",
                             "id": next_spline_id,
                             "pos": (x0, y0, z0),
                             "heading": math.degrees(math.atan2(x1 - x0, y1 - y0)),
