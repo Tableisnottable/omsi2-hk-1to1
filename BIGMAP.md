@@ -27,6 +27,27 @@ where their extracts overlap.
 Tile grid spans X 4…113, Y 12…110. Tile indices are non-negative: the whole HK extent
 is shifted by `OFFSET_X/OFFSET_Y` (24 km / 18 km) instead of using negative indices.
 
+### Terrain
+
+Every tile's `.map.terrain` holds a real 61×61 ASTER 30 m height lattice
+(0 m at the harbour up to 391.7 m), not a flat grid:
+
+- The lattice is row-major south→north, so row *j* is `y = j/60 · 300 m` and
+  column *i* is `x = i/60 · 300 m`.
+- Each tile samples every district grid whose bbox covers it; where grids overlap the
+  **highest** wins, so a hill is not flattened by a coastal neighbour.
+- Verified: **46,665 border sample pairs across all tiles differ by 0.000 m**, so the
+  terrain is seamless — a single continuous surface, not 483 separate plates.
+- Spline heights and building bases are taken from the same grids, so roads sit ~1.1 m
+  above the ground they were sampled from (0 of 161 splines in a spot-check deviate by
+  more than 3 m).
+
+### Ground textures
+
+`global.cfg` declares three `[groundtex]` layers (grass, asphalt, pavement, each with a
+detail texture generated into `Sceneryobjects/HK_Objects/texture/`) so the terrain shows
+a surface instead of the engine default.
+
 ## How it is built
 
 ```
@@ -96,23 +117,31 @@ The generated map passes structural validation:
 - **0 missing** `Sceneryobjects` references from the tiles
 - every `.sco`/`.o3d` written, every texture present
 
-Loading it in the stock OMSI 2 on this machine is currently blocked by a
-**host GPU problem, not a map problem**: OMSI reports
+Loading it in the stock OMSI 2 on this machine is currently blocked by the **host
+environment, not the map**. Two findings settle that:
 
-```
-Fatal Error: Error while creating Direct3D-Device - Direct9 Error: D3DERR_NOTAVAILABLE
-```
+1. **OMSI's own `Berlin-Spandau` behaves identically.** Launched the same way
+   (`-map maps\Berlin-Spandau\global.cfg`) it also stalls with its log frozen at
+   343 bytes right after `OMSI is working in fullscreen mode`. If the stock map cannot
+   load either, the fault is not in this map's content.
+2. **OMSI's Direct3D 9 device fails on this hybrid-GPU laptop.** It reports
 
-so it never gets as far as parsing map content. The desktop is attached to the Intel
-Iris Xe iGPU while the RTX 4060 has no display output, and OMSI's Direct3D 9 device
-creation fails in that hybrid arrangement (`GpuPreference=2`, `[adapter]`, windowed
-mode and `D3D9On12` were all tried).
+   ```
+   Fatal Error: Error while creating Direct3D-Device - Direct9 Error: D3DERR_NOTAVAILABLE
+   Fatal Error: Error while creating Direct3D-Device - Direct9 Error: D3DERR_DEVICELOST
+   ```
+
+   The desktop is attached to the Intel Iris Xe iGPU while the RTX 4060 has no display
+   output. `GpuPreference=2`, `[adapter] 1`, windowed mode and the `D3D9On12` shim were
+   all tried; none fixed it. When the device does come up, OMSI drains the log
+   (5882 bytes, full init, no error) and then stalls while loading tiles.
 
 Launching with `-map maps\HK_BigMap\global.cfg` (a **path**, not a situation name)
 does get OMSI past `The file … could not be loaded` and into
-`Loading Situation maps\HK_BigMap\global.cfg…`, which is where the D3D failure stops it.
+`Loading Situation maps\HK_BigMap\global.cfg…`, which is as far as it gets here.
 `-map <situation name>` only works for names in `Situations\` — and even OMSI's own
 `Mauerfall` fails that way, so use the `global.cfg` path form.
 
-To test the map itself, run it on a machine where OMSI can create its D3D9 device, or
-use OpenOMSI, which takes `-map` directly and does not use Steam DRM.
+To see the map running, use a machine where OMSI can create its D3D9 device (a
+single-GPU desktop, or force the dGPU as the sole display adapter), or use OpenOMSI,
+which takes `-map` directly and does not use Steam DRM.

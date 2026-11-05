@@ -192,6 +192,29 @@ def main():
     for _diffuse, tex in set(BUILDING_MATERIALS.values()) | {DEFAULT_MATERIAL}:
         write_facade_texture(os.path.join(tex_dir, tex), tex)
 
+    # Terrain ground layers (see [groundtex] in global.cfg): a walking surface,
+    # asphalt and pavement, each with its detail texture.
+    def ground_pattern(base, spread, kind):
+        def px(x, y):
+            if kind == "grass":
+                v = base + ((x * 7 + y * 13) % spread) - spread // 2
+                return (max(0, v - 18), min(255, v + 12), max(0, v - 30))
+            if kind == "asphalt":
+                v = base + ((x * 11 + y * 5) % spread) - spread // 2
+                return (v, v, v - 3)
+            v = base + ((x // 8 + y // 8) % 2) * spread // 2 - spread // 4
+            return (v, v - 4, v - 10)
+        return px
+
+    for name, base, spread, kind in (
+        ("ground_grass", 86, 26, "grass"),
+        ("ground_asphalt", 92, 18, "asphalt"),
+        ("ground_pavement", 132, 22, "pavement"),
+    ):
+        write_bmp(os.path.join(tex_dir, name + ".bmp"), 128, 128, ground_pattern(base, spread, kind))
+        write_bmp(os.path.join(tex_dir, name + "_det.bmp"), 64, 64,
+                  ground_pattern(base + 8, spread // 2, kind))
+
     districts = sorted(
         f[:-4] for f in os.listdir(osm_dir)
         if f.endswith(".osm") and os.path.getsize(os.path.join(osm_dir, f)) > 100_000
@@ -208,6 +231,7 @@ def main():
     spline_total = building_total = stop_total = 0
     building_verts = {}          # object id -> (verts, tris, material key)
     MATERIAL_LOOKUP = dict(BUILDING_MATERIALS)
+    grids = []                   # every district's ElevationGrid, for terrain writing
 
     # A spawn object per district: OMSI reads a map's entry points from the
     # [entrypoint] scenery objects placed in its tiles, so each district needs
@@ -238,6 +262,7 @@ def main():
             values = fetch_elevation_grid(lat_min, lon_min, lat_max, lon_max)
             if values:
                 grid = ElevationGrid(lat_min, lon_min, lat_max, lon_max, values)
+                grids.append(grid)
                 print(f"    ASTER {min(values):.0f}-{max(values):.0f} m")
             else:
                 print("    ASTER unavailable -> flat")
@@ -394,10 +419,20 @@ def main():
             sco_lines += ["[collision_mesh]", f"model\\{part}.o3d", ""]
         write_ascii(os.path.join(sco_dir, mesh_name + ".sco"), sco_lines)
         tile.objects = [o for o in tile.objects if o["id"] not in building_verts]
+        # the merged mesh is modelled in tile-local coordinates, so the object sits
+        # at the tile origin at that corner's terrain height
+        lat, lon = to_latlon(tx * TILE, ty * TILE)
+        base_z = 0.0
+        if grids:
+            for grid in grids:
+                if (grid.lat_min - 1e-9 <= lat <= grid.lat_max + 1e-9
+                        and grid.lon_min - 1e-9 <= lon <= grid.lon_max + 1e-9):
+                    base_z = grid.at(lat, lon)
+                    break
         tile.objects.append({
             "file": f"Sceneryobjects\\HK_Objects\\{mesh_name}.sco",
             "id": next_object_id,
-            "pos": (0.0, 0.0, 0.0),
+            "pos": (0.0, 0.0, base_z),
             "heading": 0.0,
             "labels": [],
         })
@@ -436,11 +471,30 @@ def main():
             lines.append("")
         write_utf16(os.path.join(out, f"tile_{tx}_{ty}.map"), lines)
 
-        # flat terrain grid: the relief already rides on the spline/object heights
+        # Real terrain: sample every district grid at this tile's 61x61 lattice.
+        # The lattice is row-major south->north, so row j maps to
+        # y = j/CELLS * TILE and column i to x = i/CELLS * TILE. Where several
+        # district grids overlap the highest wins, which keeps a hill from being
+        # flattened by a coastal neighbour.
+        heights = [None] * ((CELLS + 1) ** 2)
+        for j in range(CELLS + 1):
+            gy = ty * TILE + j / CELLS * TILE
+            for i in range(CELLS + 1):
+                gx = tx * TILE + i / CELLS * TILE
+                lat, lon = to_latlon(gx, gy)
+                best = None
+                for grid in grids:
+                    if not (grid.lat_min - 1e-9 <= lat <= grid.lat_max + 1e-9):
+                        continue
+                    if not (grid.lon_min - 1e-9 <= lon <= grid.lon_max + 1e-9):
+                        continue
+                    h = grid.at(lat, lon)
+                    if best is None or h > best:
+                        best = h
+                heights[j * (CELLS + 1) + i] = best if best is not None else 0.0
         with open(os.path.join(out, f"tile_{tx}_{ty}.map.terrain"), "wb") as f:
             f.write(struct.pack("<I", CELLS))
-            f.write(struct.pack(f"<{(CELLS + 1) ** 2}f", *([0.0] * ((CELLS + 1) ** 2))))
-
+            f.write(struct.pack(f"<{len(heights)}f", *heights))
     # ---- global.cfg ----
     gl = [
         "[name]", "HK_BigMap", "",
@@ -451,6 +505,18 @@ def main():
         "[version]", str(VERSION), "",
         "[NextIDCode]", str(next_object_id), "",
         "[LHT]", "",
+    ]
+    # Ground layers: OMSI paints the terrain with the first one, so the map does
+    # not show the engine's default blank surface.
+    gl += [
+        "[groundtex]", "Sceneryobjects\\HK_Objects\\texture\\ground_grass.bmp",
+        "Sceneryobjects\\HK_Objects\\texture\\ground_grass_det.bmp", "0", "1", "60",
+        "[groundtex]", "Sceneryobjects\\HK_Objects\\texture\\ground_asphalt.bmp",
+        "Sceneryobjects\\HK_Objects\\texture\\ground_asphalt_det.bmp", "4", "40", "12",
+        "[groundtex]", "Sceneryobjects\\HK_Objects\\texture\\ground_pavement.bmp",
+        "Sceneryobjects\\HK_Objects\\texture\\ground_pavement_det.bmp", "6", "40", "12",
+    ]
+    gl += [
         "[entrypoints]", str(len(entry_points)),
     ]
     for i, (tx, ty, lx, ly, z, oid, name) in enumerate(entry_points):
