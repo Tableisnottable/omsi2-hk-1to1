@@ -8,3 +8,12 @@ src/landsd3d/*.zip
 preview/cesium/.runtime/*.zip
 __pycache__/
 *.pyc
+
+# Generated Tsing Yi content and downloaded geographic inputs stay local.
+work/
+maps/HK_TsingYi/
+Sceneryobjects/HK_TsingYi/
+Splines/HK_TsingYi/
+*.osm.pbf
+*.hgt
+*.hgt.gz

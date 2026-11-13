@@ -1,5 +1,19 @@
 # Data and texture attribution
 
+## Tsing Yi development build
+
+`Build-TsingYi.py` uses the Geofabrik Hong Kong OpenStreetMap extract
+(<https://download.geofabrik.de/asia/china/hong-kong.html>), © OpenStreetMap
+contributors under ODbL, and the N22E114 Skadi elevation tile from the
+AWS Terrain Tiles open dataset (<https://registry.opendata.aws/terrain-tiles/>).
+Preserve the elevation provider attribution documented by Tilezen:
+<https://github.com/tilezen/joerd/blob/master/docs/attribution.md>.
+Skadi is a composite elevation dataset; do not describe it as a surveyed road
+profile or as newly measured 5 m terrain. Source digests are included in the
+generated map manifest. Building facades, road/ground textures, water and bus
+stop meshes in this build are authored procedurally by this project. They do
+not contain imagery or assets copied from the installed simulator.
+
 This file records sources used to author the OMSI package. Update it whenever
 new map data, reference imagery, or third-party texture material is added.
 
