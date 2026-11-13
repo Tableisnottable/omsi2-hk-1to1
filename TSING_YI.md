@@ -57,6 +57,36 @@ and documentation. Existing tracked project assets are not removed from history.
 
 ## Install the local development package
 
+### First manual test on this PC
+
+The map has not been verified in a loaded OMSI scene. A local isolated startup
+reached 3D initialization; this does not certify the map or driving behavior.
+
+When you are ready, with Steam open and OMSI closed, run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File src/scripts/Start-TsingYi-Test.ps1
+```
+
+This creates `work/omsi-user-test`, copies the generated map and one stock MAN
+bus family, and uses references to installed OMSI support content. It does not
+move, remove or reconfigure the original vehicle library. Its own configuration
+uses a 1280×720 window, a 30 FPS cap and a one-tile draw distance. It excludes
+obsolete internet advertising manifests from its local texture folder. Initial
+setup needs local disk space for the stock bus. No simulator files are published.
+
+Choose **Tsing Yi 1:1 - development**, **load map without buses**, then add
+**MAN / NL202 - EN92** at **Tsing Yi Station**. Start with a short, slow drive
+and check road contact, visible terrain and building placement. Passenger routes
+and AI traffic are not ready. The stock MAN is a compatibility test vehicle,
+not a Hong Kong bus model. Close other demanding games before your own test.
+
+If there is a blank screen, error dialog or startup stall, stop the test and
+report the error plus `work/omsi-user-test/logfile.txt`. Do not reinstall the
+whole simulator or replace its existing vehicle library for this test.
+
+### Standard installation
+
 1. Extract `OMSI2-TsingYi-development.zip` into the OMSI 2 installation folder,
    merging `maps`, `Splines` and `Sceneryobjects`.
 2. In the OMSI editor or map selector, choose **Tsing Yi 1:1 - development**.

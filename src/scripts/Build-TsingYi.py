@@ -505,7 +505,9 @@ def main():
         (mapdir/f'tile_{key[0]}_{key[1]}.map.terrain').write_bytes(struct.pack('<I3721f',60,*heights))
     gl=['[name]',ASSET,'[friendlyname]','Tsing Yi 1:1 - development','[description]',
         'Real OSM road and building foundation. Free-drive development map; see TSING_YI.md.','[end]',
-        '[version]',14,'[NextIDCode]',nextid,'[LHT]','[groundtex]',
+        '[version]',14,'[NextIDCode]',nextid,'[LHT]',
+        '[moneysystem]','Money\\DM\\DM.cfg','[ticketpack]','TicketPacks\\Berlin_1\\Berlin_1.otp',
+        '[years]',1988,2099,'[standarddepot]','Tsing Yi Test','[groundtex]',
         f'Sceneryobjects\\{ASSET}\\texture\\grass.bmp',f'Sceneryobjects\\{ASSET}\\texture\\grass_detail.bmp',0,1,60,
         '[entrypoints]',len(entries)]
     for name,oid,key,heading in entries:
@@ -513,9 +515,13 @@ def main():
         angle=math.radians(heading)/2
         gl += [index,oid,0,f"{obj['x']:.5f}",f"{obj['z']:.5f}",f"{obj['y']:.5f}",
                0,f'{math.sin(angle):.6f}',0,f'{math.cos(angle):.6f}',indices[key],name]
+    spawn_id=entries[0][1]; spawn_key=entries[0][2]
+    spawn_obj=next(o for o in tiles[spawn_key]['objects'] if o['id']==spawn_id)
+    gl+=['[mapcam]',spawn_key[0],spawn_key[1],spawn_obj['x'],spawn_obj['z']+12,
+         spawn_obj['y'],spawn_obj['heading'],-25,80]
     for tx,ty in order: gl+=['[map]',tx,ty,f'tile_{tx}_{ty}.map']
     text(mapdir/'global.cfg',gl,'utf-16')
-    text(mapdir/'drivers.txt',['humans\\driver.hum'])
+    text(mapdir/'drivers.txt',['humans\\axyz\\man01.hum'])
     text(mapdir/'ailists.cfg',['[aigroup_2]','NormalCars','','[end]'])
     busstops=['Time Table BusStopList File','']
     for st in stop_records:
