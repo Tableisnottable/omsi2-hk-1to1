@@ -2,7 +2,7 @@
 """Build an isolated 1:1 Tsing Yi OMSI 2 development map from OSM and Skadi DEM.
 
 No third-party OMSI meshes or textures are copied. Assets are authored here.
-The output is a free-drive foundation, not a completed scheduled-service map.
+The output is a development foundation with a provisional 248M test timetable.
 Run with --help. Requires requirements-tsingyi.txt; no network access at build time.
 """
 import argparse
@@ -558,6 +558,11 @@ def main():
              'stops':[{'x':project(s['lat'],s['lon'])[0],'y':project(s['lat'],s['lon'])[1],'name':s['name']} for s in stop_records],
              'manifest':manifest}
     (mapdir/'preview_data.json').write_text(json.dumps(preview,ensure_ascii=False),encoding='utf-8')
+    timetable_spec=importlib.util.spec_from_file_location('tsingyi_timetable',Path(__file__).with_name('Generate-TsingYi-Timetable.py'))
+    timetable_module=importlib.util.module_from_spec(timetable_spec)
+    timetable_spec.loader.exec_module(timetable_module)
+    timetable_module.generate(stage)
+    manifest=json.loads((mapdir/'build_manifest.json').read_text(encoding='utf-8'))
     # Replace only the three dedicated generated folders. Preserve the previous
     # build under work/ instead of deleting it or touching any prototype map.
     backup=work/('tsingyi-previous-'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%f'))

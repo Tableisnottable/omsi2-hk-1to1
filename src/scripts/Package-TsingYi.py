@@ -48,6 +48,10 @@ document.getElementById('reset').onclick=reset;for(let id of ['stops','bridges']
                 if path.is_file(): z.write(path,path.relative_to(root))
         for name in ('TSING_YI.md','ATTRIBUTION.md'):
             z.write(root/name,name)
+        hof=root/'maps'/'HK_TsingYi'/'TsingYi_Test.hof'
+        if hof.exists():
+            z.write(hof,'HOFs/TsingYi_Test.hof')
+            z.write(hof,'Vehicles/MAN_NL_NG/TsingYi_Test.hof')
         z.write(out/'TsingYi-validation.json','TsingYi-validation.json')
     with zipfile.ZipFile(archive) as z:
         if bad:=z.testzip(): raise RuntimeError(f'ZIP verification failed: {bad}')

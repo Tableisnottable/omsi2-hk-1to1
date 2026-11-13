@@ -4,6 +4,7 @@
 This is an offline structural check; it does not certify runtime drivability.
 """
 import argparse
+import importlib.util
 import json
 import math
 import re
@@ -133,6 +134,12 @@ def validate(root):
             'terrain_border_samples':seam_count,'maximum_terrain_seam_metres':max_seam,
             'maximum_road_grade_percent':max_grade,
             'road_segments_above_15_percent_grade':steep,'runtime_tested':False,'errors':errors}
+    if (folder/'timetable_manifest.json').exists():
+        spec=importlib.util.spec_from_file_location('tsingyi_tt_checks',Path(__file__).with_name('Generate-TsingYi-Timetable.py'))
+        module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        report['timetable']=module.validate_generated(root)
+        errors.extend(report['timetable']['errors'])
+        report['passed']=not errors
     return report
 
 

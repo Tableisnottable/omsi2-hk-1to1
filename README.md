@@ -6,6 +6,11 @@ The small build tools are versioned; the generated Tsing Yi map, geographic
 downloads and binary assets stay local. This is a development foundation, not
 a finished territory-wide playable map.
 
+Tsing Yi now includes a selectable **248M_TEST** timetable between Tsing Yi Station
+and Cheung Wang, with two duties and provisional running times. See the island
+guide for selecting it in OpenOMSI. Runtime driving and passenger operation remain
+unverified.
+
 這是免費、非商業用途的香港 1:1 OpenOMSI／OMSI 2 map project，提供 map data、route catalogue、HOF、browser viewer、OSM source snapshots 和 single installation ZIP。
 
 ## 專案狀態 / Project status

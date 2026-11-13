@@ -26,6 +26,11 @@ not yet been verified.
   points near Tsing Yi Station, Cheung On, Cheung Hong, Tsing Yi Estate, the south
   and west of the island. Spawn vehicle clearance still requires a driving check.
 - Actual OSM 248M/249M route relation memberships as authoring references.
+- Selectable **248M_TEST** timetable, Tsing Yi Station ↔ Cheung Wang, two duties
+  and 74 daily departures. It uses the 5 outbound and 4 inbound platforms recorded
+  in OSM, native `.ttl`/`.ttp` files, seven station links and a `TsingYi_Test` HOF.
+  Times and shortest-road tracks are provisional, not the published KMB timetable
+  or a surveyed route. Junctions and passenger operation still need runtime checks.
 
 Counts and source checksums are recorded in the local map's `build_manifest.json`.
 
@@ -51,6 +56,20 @@ The builder stages a complete result under `work/`. It replaces only
 `maps/HK_TsingYi`, `Sceneryobjects/HK_TsingYi` and `Splines/HK_TsingYi`, preserving
 the previous dedicated folders under `work/tsingyi-previous-*`.
 
+The builder also generates the test timetable. To add or regenerate just the
+small timetable files in an existing build, without rebuilding scenery or
+starting the simulator:
+
+```powershell
+py src/scripts/Generate-TsingYi-Timetable.py
+# Optional installation into an existing Tsing Yi map and installed bus folders:
+py src/scripts/Generate-TsingYi-Timetable.py --install "A:\SteamLibrary\steamapps\common\OMSI 2" --hof-root "A:\openomsi"
+```
+
+The generator rejects disconnected stop chains. The offline validator checks
+native path IDs, tile indices, stop IDs, profile times and overlapping duty trips.
+This does not certify junction driving, bus compatibility or passenger behavior.
+
 The ZIP, generated maps, downloaded inputs, meshes and textures stay local and
 are excluded from Git. GitHub contains the small generator, validator, packager
 and documentation. Existing tracked project assets are not removed from history.
@@ -58,6 +77,26 @@ and documentation. Existing tracked project assets are not removed from history.
 ## Install the local development package
 
 ### First manual test on this PC
+
+For **OpenOMSI**, refresh the map list or reopen the launcher when you are ready.
+Select **Tsing Yi 1:1 - development**, then **Timetable**, line **248M_TEST**, duty
+**01**, departure **17:30**, **Tsing Yi Station → Cheung Wang**. Select your installed
+bus and depot/HOF **TsingYi_Test**. The timetable runs on all days, including the
+year 2000. A game launch is not required for file installation.
+
+Station departures run every 30 minutes from 05:30 to 23:30. Return departures
+run 05:55–23:55. Outbound running time is 20 minutes; inbound is 25 minutes, with
+5 minutes at Cheung Wang and 10 minutes at Tsing Yi Station between trips.
+These are development estimates. The inbound shortest-road route is about
+4.05 km and the outbound about 2.73 km; exact KMB road routing is not certified.
+At Tsing Yi Station, arrival and departure use different platform objects.
+
+HOF route codes are **24801** outbound and **24802** inbound. Matrix and IBIS
+setup varies by bus. On this PC the project HOF was added beside real installed
+bus definitions and to the shared OpenOMSI HOF folder. Existing bus models and
+other HOF files were preserved.
+
+### Optional stock OMSI startup
 
 The map has not been verified in a loaded OMSI scene. A local isolated startup
 reached 3D initialization; this does not certify the map or driving behavior.
@@ -77,8 +116,9 @@ setup needs local disk space for the stock bus. No simulator files are published
 
 Choose **Tsing Yi 1:1 - development**, **load map without buses**, then add
 **MAN / NL202 - EN92** at **Tsing Yi Station**. Start with a short, slow drive
-and check road contact, visible terrain and building placement. Passenger routes
-and AI traffic are not ready. The stock MAN is a compatibility test vehicle,
+and check road contact, visible terrain and building placement. The 248M test
+service uses a small stock MAN AI depot; passenger operation and junctions are
+unverified. The stock MAN is a compatibility test vehicle,
 not a Hong Kong bus model. Close other demanding games before your own test.
 
 If there is a blank screen, error dialog or startup stall, stop the test and
@@ -92,8 +132,11 @@ whole simulator or replace its existing vehicle library for this test.
 2. In the OMSI editor or map selector, choose **Tsing Yi 1:1 - development**.
 3. Start with **Tsing Yi Station** and use your own installed bus.
 
-There is no bus model dependency, AI fleet or scheduled passenger service in
-this package. No bus model or third-party OMSI asset is redistributed.
+The optional timetable AI depot references the stock MAN NL202 EN92. You can
+select your own installed bus to drive. The ZIP includes the project HOF in
+`HOFs` and `Vehicles/MAN_NL_NG`; for another bus in native OMSI, copy
+`maps/HK_TsingYi/TsingYi_Test.hof` beside its `.bus` file. No bus model or
+third-party OMSI asset is redistributed.
 
 The package also provides an offline geographic HTML preview and an offline
 validation report. The preview is not an OMSI screenshot or an engine test.
@@ -110,12 +153,14 @@ validation report. The preview is not an OMSI screenshot or an engine test.
   stopping bays in the editor and by driving a full-size bus.
 - Author recognizable stations, estates and transport interchanges. Generic
   extrusions are not high-detail replicas; multipolygon buildings are not imported.
-- Match verified stop positions and ordered route paths, then create HOF,
-  `.ttp`, `.ttr`, `.ttl`, running times and AI duties for actual passenger services.
+- Verify the provisional 248M road paths, platform approach directions, passenger
+  exchange, terminal movements, HOF compatibility and running times in-engine.
+  Author 249M and further services after their road connections are verified.
 - Test stock OMSI 2 loading and memory use, then profile frame time and add LOD.
 
-`route_references.json` is a reference dataset. It must not be presented as a
-working 248M/249M timetable. Missing members are recorded explicitly.
+`route_references.json` remains an OSM reference dataset. The separate
+`timetable_manifest.json` records the provisional 248M schedule and road tracks;
+249M is still a reference only. Neither dataset certifies runtime operation.
 
 ## Sources and attribution
 
