@@ -140,6 +140,18 @@ def validate(root):
         report['timetable']=module.validate_generated(root)
         errors.extend(report['timetable']['errors'])
         report['passed']=not errors
+    if 'road_contact_repair' in manifest:
+        spec=importlib.util.spec_from_file_location('tsingyi_road_checks',Path(__file__).with_name('Repair-TsingYi-Roads.py'))
+        module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        contact=module.repair(root,audit_only=True)
+        report['road_contact']={k:v for k,v in contact.items() if k!='surface_object_ids'}
+        if contact['terrain_vertices_lowered']:
+            errors.append('Terrain still intrudes into the required road clearance envelope')
+        for key,oid in contact['surface_object_ids'].items():
+            sco=root/'Sceneryobjects/HK_TsingYi'/f'road_join_{key}.sco'
+            if oid not in ids or not sco.exists() or '[surface]' not in read(sco) or '[collision_mesh]' not in read(sco):
+                errors.append(f'Missing drivable joining surface at {key}')
+        report['passed']=not errors
     return report
 
 

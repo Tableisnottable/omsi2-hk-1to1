@@ -562,6 +562,10 @@ def main():
     timetable_module=importlib.util.module_from_spec(timetable_spec)
     timetable_spec.loader.exec_module(timetable_module)
     timetable_module.generate(stage)
+    road_spec=importlib.util.spec_from_file_location('tsingyi_road_contact',Path(__file__).with_name('Repair-TsingYi-Roads.py'))
+    road_module=importlib.util.module_from_spec(road_spec)
+    road_spec.loader.exec_module(road_module)
+    road_module.repair(stage)
     manifest=json.loads((mapdir/'build_manifest.json').read_text(encoding='utf-8'))
     # Replace only the three dedicated generated folders. Preserve the previous
     # build under work/ instead of deleting it or touching any prototype map.

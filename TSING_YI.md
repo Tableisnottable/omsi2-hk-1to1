@@ -14,6 +14,10 @@ not yet been verified.
 - One continuous 300 m tile grid covering Tsing Yi, its hills and surrounding sea.
 - Real OSM road alignments, lane counts and one-way information, with left-hand
   lane paths, native height profiles and links along each original OSM way.
+- Road-contact repair: terrain cells under each carriageway stay at least 25 cm
+  below its surface. Generated surface/collision meshes fill uncovered wedges at
+  shared bend and junction endpoints without covering the existing sloped roads.
+  This does not add AI junction paths, signals or omitted tunnel connections.
 - Skadi N22E114 terrain at 1 arcsecond sample spacing (roughly 30 m), resampled
   onto OMSI's 5 m terrain grid. Resampling does not create 5 m source accuracy.
 - Road profiles smoothed from DEM samples and constrained to an engineered
@@ -69,6 +73,29 @@ py src/scripts/Generate-TsingYi-Timetable.py --install "A:\SteamLibrary\steamapp
 The generator rejects disconnected stop chains. The offline validator checks
 native path IDs, tile indices, stop IDs, profile times and overlapping duty trips.
 This does not certify junction driving, bus compatibility or passenger behavior.
+
+### Repair an existing build with road gaps or terrain bumps
+
+The original terrain fit sampled only terrain vertices. Terrain triangles between
+them could protrude through a road; straight spline ends also left uncovered
+wedges at bends and junctions. The repair constrains every corner of each terrain
+cell touched by a road, and adds native `[surface]` collision meshes in the wedges.
+It preserves road/path IDs, elevations and timetable references, keeps separate
+height levels apart, and saves replaced files under `work/road-contact-backup-*`.
+It runs automatically in new builds. For an existing generated map:
+
+```powershell
+py src/scripts/Repair-TsingYi-Roads.py --install "A:\SteamLibrary\steamapps\common\OMSI 2"
+py src/scripts/Validate-TsingYi.py
+py -m unittest discover -s src/scripts/tests -p test_tsingyi_road_contact.py
+```
+
+Installation updates only the three dedicated `HK_TsingYi` folders and backs up
+replaced installed files under `work/road-install-backup-*`. It does not launch
+either simulator. Reload the map when ready for your own driving check. Existing
+sharp grade transitions, unsurveyed bridge heights, unconnected road ends and
+omitted tunnels still require route-specific authoring; a clear terrain envelope
+does not establish that every route can be driven.
 
 The ZIP, generated maps, downloaded inputs, meshes and textures stay local and
 are excluded from Git. GitHub contains the small generator, validator, packager
