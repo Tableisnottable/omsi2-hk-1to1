@@ -296,6 +296,23 @@ def main():
     for x,y in graph:
         initial[(x,y)]=statistics.median(dem.at(x+dx,y+dy) for dx in (-25.,0.,25.) for dy in (-25.,0.,25.))+.12
         if (x,y) in bridge_nodes: initial[(x,y)]=max(initial[(x,y)]+3.,12.)
+    # DEM noise and abrupt changes in OSM vertex spacing can still force a
+    # full grade-cap reversal between adjacent short splines. Low-pass the
+    # target elevations over connected road nodes before applying the hard
+    # grade envelope; this preserves shared junction heights and the cap.
+    smoothed=dict(initial)
+    for _ in range(32):
+        updated={}
+        for point,height in smoothed.items():
+            neighbors=graph[point]
+            if not neighbors:
+                updated[point]=height
+                continue
+            weights=[1/max(distance,5.) for _,distance in neighbors]
+            mean=sum(smoothed[other]*weight for (other,_),weight in zip(neighbors,weights))/sum(weights)
+            updated[point]=height*.65+mean*.35
+        smoothed=updated
+    initial=smoothed
     def envelope(sign):
         distances={p:sign*z for p,z in initial.items()}
         queue=[(z,p) for p,z in distances.items()]; heapq.heapify(queue)
