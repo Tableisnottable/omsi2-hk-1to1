@@ -13,6 +13,17 @@ SPEC.loader.exec_module(repair)
 
 
 class RoadContactTests(unittest.TestCase):
+    def test_elevation_envelope_midpoint_does_not_invert_lower_bound(self):
+        # Mirrors the generator's two shortest-path envelopes. The lower bound
+        # is negated by envelope(-1), so its midpoint must add both results.
+        raw = {'a': 1.0, 'b': 1.0}
+        upper = {'a': 11.0, 'b': 11.0}
+        negated_lower = {'a': -9.0, 'b': -9.0}
+        midpoint = {p: (upper[p] + negated_lower[p]) / 2 for p in raw}
+        inverted = {p: (upper[p] - negated_lower[p]) / 2 for p in raw}
+        self.assertEqual(midpoint, raw)
+        self.assertEqual(inverted, {'a': 10.0, 'b': 10.0})
+
     def fixture(self, root, second_height=4.75):
         folder = root/'maps/HK_TsingYi'; folder.mkdir(parents=True)
         (folder/'build_manifest.json').write_text('{}',encoding='utf-8')
