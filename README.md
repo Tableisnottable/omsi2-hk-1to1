@@ -1,21 +1,53 @@
-# 香港 1:1 OpenOMSI 地圖 / Hong Kong 1:1 OpenOMSI Map
+# 香港 1:1 OMSI 地圖 / Hong Kong 1:1 OMSI Map
 
-**Current focus: Tsing Yi / 青衣 for stock OMSI 2.** See [TSING_YI.md](TSING_YI.md)
-for the separate island build, installation, validation and remaining work.
-The small build tools are versioned; the generated Tsing Yi map, geographic
-downloads and binary assets stay local. This is a development foundation, not
-a finished territory-wide playable map.
+Hong Kong map-generation tools, route catalogues, HOF data and browser previews for OMSI 2 / OpenOMSI.
 
-Tsing Yi now includes a selectable **248M_TEST** timetable between Tsing Yi Station
-and Cheung Wang, with two duties and provisional running times. See the island
-guide for selecting it in OpenOMSI. Runtime driving and passenger operation remain
-unverified.
+**Current status — November 14, 2026:** the focused development build is **Tsing Yi / 青衣** (`HK_TsingYi`). It is a geographic and free-drive foundation with a provisional `248M_TEST` timetable. Loading, full-route driving, passenger operation and FPS remain unverified; this is not a finished playable service or a complete territory-wide map.
 
-這是免費、非商業用途的香港 1:1 OpenOMSI／OMSI 2 map project，提供 map data、route catalogue、HOF、browser viewer、OSM source snapshots 和 single installation ZIP。
+## Choose the correct build / 選擇正確版本
+
+| Build / 版本 | Purpose / 用途 | Guide / 文件 |
+| --- | --- | --- |
+| `HK_TsingYi` | Current focused island build, road-contact repair and provisional 248M test service | [Tsing Yi build, installation and test guide](TSING_YI.md) |
+| `HK_BigMap` | Experimental combined grid from the retained district extracts; coverage and road connectivity still need validation | [BigMap implementation notes](BIGMAP.md) |
+| `HP1C_*` | Earlier 19-area data scaffold and district converter; separate from the Tsing Yi build | Earlier HP1C workflow below |
+
+The older district extracts do not establish complete Hong Kong road coverage. A route appearing in the CSV catalogue or HOF is not proof that its road path, timetable or passenger service is playable.
+
+## Build Tsing Yi locally / 本機建立青衣
+
+Use **Python 3.11 or newer**. From the repository root:
+
+```powershell
+py -m venv work/venv
+.\work\venv\Scripts\python.exe -m pip install -r src/scripts/requirements-tsingyi.txt
+.\work\venv\Scripts\python.exe src/scripts/Fetch-TsingYi.py
+.\work\venv\Scripts\python.exe src/scripts/Build-TsingYi.py
+.\work\venv\Scripts\python.exe src/scripts/Validate-TsingYi.py
+.\work\venv\Scripts\python.exe src/scripts/Package-TsingYi.py --output release/tsingyi
+```
+
+Fetching downloads the geographic inputs; later builds can reuse the retained cache offline. The builder replaces only the dedicated `HK_TsingYi` map, scenery and spline folders and preserves their previous versions under `work/`. It also generates the test timetable and runs the road-contact repair. See [TSING_YI.md](TSING_YI.md) for prerequisites, backups and the repair command for an existing build.
+
+The retained local manifest records **321 tiles, 8,022 road splines, 1,163 buildings, 166 bus stops and six entrypoints**. Counts belong to that source snapshot; consult the generated `build_manifest.json` after rebuilding. Terrain-contact repair constrains ground beneath roads and fills uncovered join wedges. It does not author missing junction AI paths, traffic signals or tunnels.
+
+`248M_TEST` connects Tsing Yi Station and Cheung Wang with two duties and provisional 30-minute departures. Its road tracks, stop approaches and running times need in-engine checks; it is **not the published KMB timetable**. `249M` remains an authoring reference.
+
+### Install or test / 安裝及測試
+
+The dedicated packager writes `OMSI2-TsingYi-development.zip` under the chosen output folder, together with an HTML preview and an offline validation report. These generated files and geographic/mesh/texture assets remain local and are excluded from Git. A clone alone is not a ready-to-drive installation.
+
+Extract the dedicated ZIP into the OMSI 2 game folder, merging `maps`, `Splines`, `Sceneryobjects` and the supplied HOF locations. Use your own installed bus; no bus model is redistributed. Select **Tsing Yi 1:1 - development**. Follow the simulator-specific steps and HOF instructions in [TSING_YI.md](TSING_YI.md) before choosing `248M_TEST`.
+
+Remaining work includes authored junction connectors/signals, continuous bridge profiles, tunnel portals/interiors and terrain cuts, road-width/grade review, recognizable scenery, passenger/HOF tests and memory/FPS profiling. The retained build omits **54 tagged tunnel ways**, and bridge heights are estimates. Offline structural checks do not certify a drivable route.
+
+## Earlier HP1C scaffold / 早期地區骨架
+
+The remaining HP1C instructions describe the earlier district scaffold, route catalogue, HOF and browser viewer. Its combined ZIP is generated locally; use the dedicated Tsing Yi workflow above for the current island build.
 
 ## 專案狀態 / Project status
 
-目前版本是可安裝的 data-driven map scaffold，可查看 roads、bus stops、building footprints、routes 並測試 OpenOMSI package。
+早期 HP1C 版本是 data-driven map scaffold，可查看 roads、bus stops、building footprints 和 routes；package structure 並不代表模擬器載入或駕駛已驗證 / The earlier HP1C scaffold is a data and packaging experiment, with runtime operation still unverified.
 
 **已包括 / Included**
 
@@ -33,9 +65,9 @@ unverified.
 
 目前版本是 development scaffold，不是 final high-detail territory-wide map。
 
-## 下載及安裝 / Download and install
+## 建立及安裝早期套件 / Build and install the earlier package
 
-全部地圖放在**一個 ZIP**內，不是 19 個獨立下載 / All maps are distributed in **one ZIP**, not 19 separate downloads：
+早期 packager 會在本機建立**一個 ZIP**，包含全部 19 個 HP1C areas，而非 19 個獨立下載 / The earlier packager creates one local ZIP containing the 19 HP1C areas. The ZIP is ignored by Git and is not a downloadable asset in a fresh source checkout:
 
 ```text
 release\omsi2-hk-1to1-openomsi.zip
@@ -45,14 +77,15 @@ Package contents / 套件內容：
 
 - `maps\HP1C_*` — 全部 19 個 map areas / all 19 map areas。
 - `Sceneryobjects` — scenery object folders / scenery 物件資料夾。
+- `Splines` — road spline definitions / 道路 spline 定義。
 - `Vehicles` — vehicle and HOF folders / vehicle 及 HOF 資料夾。
 - `Vehicles\Annan_HK\HK_Routes.hof` — current shared HOF / 目前共用 HOF。
 
 Installation process / 安裝流程：
 
-1. 下載 single ZIP / Download the single ZIP。
+1. 使用下方指令建立本機 ZIP，或使用已保留的本機 package / Build the local ZIP with the commands below, or use a retained local package。
 2. 開啟 OpenOMSI／OMSI 2 game directory / Open your OpenOMSI or OMSI 2 game directory。
-3. 將 `maps`、`Sceneryobjects` 和 `Vehicles` 解壓到該目錄 / Extract these folders into that directory。
+3. 將 `maps`、`Sceneryobjects`、`Splines` 和 `Vehicles` 解壓到該目錄 / Extract these folders into that directory。
 4. 允許 Windows merge folders / Allow Windows to merge the folders。
 5. 啟動 simulator 並選擇 `HP1C_*` 香港地圖 / Start the simulator and select an `HP1C_*` Hong Kong map。
 
@@ -63,11 +96,21 @@ powershell.exe -File .\src\scripts\Test-Map.ps1
 powershell.exe -File .\src\scripts\Build-Release.ps1
 ```
 
+`Build-Release.ps1` archives the current `maps`, `Sceneryobjects`, `Splines` and `Vehicles` trees after checking for the 19 HP1C folders. Other generated maps present in those trees can be included too. Use `Package-TsingYi.py` for a focused Tsing Yi package.
+
 ## 網站及 Web viewer / Website and Web viewer
 
-- [網站首頁及 map / Homepage and map](web/index.html)
+Serve the **repository root** so the viewer can fetch the sibling route CSVs and map data:
+
+```powershell
+py -m http.server 8000
+```
+
+Open `http://localhost:8000/web/` or `http://localhost:8000/web/routes.html`. An internet connection is needed for the external basemap and CDN libraries. The links below open viewer source files on GitHub; they do not run the viewer there. The website’s ZIP button only works where the corresponding local release file is also served.
+
+- [網站首頁及 map 原始碼 / Homepage and map source](web/index.html)
 - [互動地圖區域 / Interactive map section](web/index.html#map)
-- [路線詳細搜尋 / Route detail search](web/routes.html)
+- [路線搜尋原始碼 / Route detail search source](web/routes.html)
 - [路線 catalogue CSV / Route catalogue CSV](routes/route_details.csv)
 - [Cesium 3D reference preview / Cesium 3D 參考預覽](preview/cesium/index.html)
 
@@ -133,30 +176,28 @@ https://www.hkemobility.gov.hk/api/em
 
 API keys 必須留在 local environment variable `LANDSD_3D_API_KEY` / API keys must stay local in that environment variable。
 
-Keys 絕不會放入 GitHub、website、CSV 或 release ZIP / 
-## Generate the 1:1 OMSI map
+## Legacy district generation / 早期地區生成器
 
-Per-district OSM extracts are fetched for each of the 19 HP1C areas, then
-converted into loadable OMSI tiles:
+The earlier converter processes each HP1C extract into a single 300 m district tile, clipping roads to that tile. This is not the Tsing Yi builder or complete cross-district coverage. Generated records still require simulator/editor checks:
 
-`powershell
+```powershell
 # 1. Fetch a real OSM extract per district (src\osm\<code>.osm)
 powershell.exe -File .\src\scripts\Fetch-HkDistricts.ps1
 
-# 2. Convert every district into OMSI tiles, splines, buildings, terrain
+# 2. Convert one district (CW shown); repeat with the matching code and centre for others
 python .\src\scripts\Convert-OsmToMap.py --osm .\src\osm\CW.osm --mapcode CW --centre 22.2825,114.1580 --root .
 
 # 3. Add real elevation from the Copernicus DEM (Open-Meteo, free)
 python .\src\scripts\Add-TerrainElevation.py --all --root .
-`
+```
 
 Convert-OsmToMap.py writes:
 
-- maps\HP1C_<code>\tile_0_0.map (UTF-16LE) with [spline] and [object] records, version 14
-- maps\HP1C_<code>\tile_0_0.map.terrain (61x61 height grid)
-- Splines\HK_Roads\*.sli road splines + 	exture\asphalt.bmp
-- Sceneryobjects\HK_Objects\bldg_*.sco + model\bldg_*.o3d building meshes, and a HK_BusStop.sco per stop
-- maps\HP1C_<code>\osm_*.csv source data and osm_import.json manifest
+- `maps/HP1C_<code>/tile_0_0.map` (UTF-16LE), with `[spline]` and `[object]` records, version 14.
+- `maps/HP1C_<code>/tile_0_0.map.terrain` (61 × 61 height grid).
+- `Splines/HK_Roads/*.sli` road splines and their `texture/asphalt.bmp`.
+- `Sceneryobjects/HK_Objects/bldg_*.sco`, `model/bldg_*.o3d` building meshes and bus-stop objects.
+- `maps/HP1C_<code>/osm_*.csv` source data and the `osm_import.json` manifest.
 
 The tile is centred on the district's HP1C sheet centre; each tile is
 300 m x 300 m and uses plain (non-world-coordinate) local coordinates. The
@@ -172,10 +213,13 @@ Google Maps／Google Earth imagery 不會 packaged as distributable map assets /
 
 | Path / 路徑 | Contents / 內容 |
 | --- | --- |
-| `maps\HP1C_*` | 19 map areas and OSM-derived CSV data / 19 個地圖區域及 OSM CSV 資料 |
+| `maps\HK_TsingYi` | Generated current island build; ignored by Git / 本機生成的青衣地圖 |
+| `maps\HK_BigMap` | Experimental combined district grid / 實驗性合併地圖 |
+| `maps\HP1C_*` | Earlier 19 district areas and OSM-derived CSV data / 早期地區及 CSV 資料 |
 | `routes\` | Route CSV files and source metadata / 路線 CSV 及 source metadata |
 | `Vehicles\Annan_HK\HK_Routes.hof` | Basic OMSI HOF / 基本 OMSI HOF |
-| `Sceneryobjects\HK_Objects` | Hong Kong scenery object location / 香港 scenery object 位置 |
+| `Sceneryobjects\HK_Objects` | Earlier Hong Kong scenery objects / 早期 scenery 物件 |
+| `Splines\HK_TsingYi`, `Sceneryobjects\HK_TsingYi` | Generated island splines and scenery; local only / 青衣生成資產，保留本機 |
 | `web\` | Homepage, Leaflet map and route page / 首頁、Leaflet map 及路線頁 |
 | `preview\cesium\` | Lands Department 3D reference viewer / Lands Department 3D 參考 viewer |
 | `src\osm\` | OSM source snapshots / OSM source snapshot |
@@ -190,7 +234,7 @@ Google Maps／Google Earth imagery 不會 packaged as distributable map assets /
 powershell.exe -File .\src\scripts\Test-Map.ps1
 ```
 
-它會檢查 all 19 map folders、route files、HOF、website assets 和 required package structure / It checks the complete package structure。
+此 validator 主要檢查 19 個 HP1C map folders、required files、JSON 及 route CSV structure / This validator checks the earlier HP1C folder/file and route-data structure. It does not validate the Tsing Yi road network, website runtime or simulator driving. Use `Validate-TsingYi.py` for the island build, followed by a separate manual in-engine test。
 
 Actual driving 仍需要本機 OpenOMSI／OMSI 2 installation / Actual driving still requires a local simulator installation；repository 不包含 simulator executable / no simulator executable is included。
 
@@ -200,6 +244,6 @@ High-fidelity target 請參閱 [`QUALITY_TARGET.md`](QUALITY_TARGET.md) / See th
 
 ## 問題回報 / Report a problem
 
-請提供 `HP1C_*` area、route or stop name、expected result、actual result，以及 screenshot or log / Please include these details in a report。
+請提供 map ID (`HK_TsingYi`, `HK_BigMap` or `HP1C_*`)、route/stop or nearby entrypoint、expected result、actual result，以及 screenshot 和 relevant simulator `logfile.txt` / Include the build stage and whether the problem occurs in the browser, editor, loading screen or while driving。
 
 This is an independent community project，不是 official OpenOMSI／OMSI 2 product / It is not an official product。

@@ -20,7 +20,7 @@ services and regular hotel services. These listings are not fixed route
 catalogues in the same sense as franchised buses; the linked official PDF
 contains the detailed schedule and stops.
 
-Regenerate the snapshots with:
+From the repository root, regenerate the snapshots with:
 
 ```powershell
 python .\src\scripts\Import-BusRoutes.py
@@ -40,9 +40,8 @@ python .\src\scripts\Import-CancelledRoutes.py
 
 Cancelled routes are also merged into `route_details.csv` under the `Cancelled route 已取消` service group.
 
-Every route CSV carries a `category` column, assigned by
-`src\scripts\RouteCategories.py` following the official Hong Kong bus
-route numbering method documented by the [Hong Kong Bus Wiki](https://hkbus.fandom.com/wiki/%E5%B7%B4%E5%A3%AB%E8%B7%AF%E7%B7%9A%E7%B7%A8%E8%99%9F%E6%96%B9%E6%B3%95):
+Every route CSV carries a `category` column, assigned heuristically by
+`src\scripts\RouteCategories.py` using route-number patterns described by the [Hong Kong Bus Wiki](https://hkbus.fandom.com/wiki/%E5%B7%B4%E5%A3%AB%E8%B7%AF%E7%B7%9A%E7%B7%A8%E8%99%9F%E6%96%B9%E6%B3%95):
 letter prefixes (A airport, B border, E Lantau, N overnight, R recreational,
 X express, K/M MTR feeder), letter suffixes (P peak, R recreational,
 X express, H hospital, N deep-night) and regional number ranges (1-99 Hong
@@ -55,4 +54,4 @@ from the origin/destination place names. Recompute with:
 python .\src\scripts\Classify-BusRoutes.py
 ```
 
-`category_summary.json` records the category counts per dataset.
+`category_summary.json` records the category counts per dataset. Categories and inferred regions are catalogue aids, not authoritative operating rules; operator-specific exceptions need manual review. These route snapshots do not create playable OMSI services. The focused island timetable is the separate provisional `248M_TEST` described in [TSING_YI.md](../TSING_YI.md).
