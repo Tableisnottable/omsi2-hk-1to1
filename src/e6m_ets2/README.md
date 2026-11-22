@@ -26,6 +26,20 @@ unfinished 0.2.0 coach integration:
 
 ## Build inputs
 
+To see which installed OMSI packages are candidates for future drivable
+conversions, run the inventory tool. It follows root-level `.bus` files to model
+CFGs and O3D references, labels likely AI/traffic packages, and writes only a
+local report; it does not copy or publish game assets.
+
+```powershell
+python .\src\e6m_ets2\inventory_buses.py
+```
+
+The report is written to `work/e6m_ets2/bus_inventory.json` by default. A
+drivable candidate is only an inventory result; encrypted geometry, shared
+dependencies, author permissions, cockpit setup, axle layouts, and ETS2 runtime
+compatibility must still be checked before packaging each bus.
+
 Only the conversion scripts and reports belong in this repository. Locally
 installed OMSI and SCS game meshes, textures, sounds, compiled packages, Blender
 scenes, and downloaded conversion tools remain in the ignored build workspace.
