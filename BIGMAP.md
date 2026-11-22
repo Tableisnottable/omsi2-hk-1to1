@@ -139,6 +139,20 @@ is tile-local.
 
 ## Current status
 
+The full local `HK_BigMap` package has been regenerated and installed into the
+configured OMSI 2 directory. The current local package contains:
+
+- 483 map tiles and 483 matching terrain files
+- 46,898 road splines, 12,311 buildings and 2,177 bus stops
+- 982 unique route timetable files (`.ttl`/`.ttp`) generated from 2,286 route
+  records whose matched termini are present in the retained extracts
+- AI traffic definitions generated from the vehicle files present in the local
+  OMSI installation
+
+The generated map and scenery remain local because they are large assets. The
+repository stores the converter, route-data generator and documentation needed
+to reproduce them.
+
 The generated map passes structural validation:
 
 - 483 `[map]` records ↔ 483 tile files ↔ 483 terrain files
