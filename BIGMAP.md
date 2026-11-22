@@ -148,6 +148,8 @@ configured OMSI 2 directory. The current local package contains:
   records whose matched termini are present in the retained extracts
 - AI traffic definitions generated from the vehicle files present in the local
   OMSI installation
+- road endpoint heights smoothed across the territory with an 8.0% design-grade
+  cap; the rebuilt package has **0 segments above 8.5%**
 
 The generated map and scenery remain local because they are large assets. The
 repository stores the converter, route-data generator and documentation needed

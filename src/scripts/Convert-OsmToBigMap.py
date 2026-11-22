@@ -21,6 +21,7 @@ Usage:
 """
 
 import argparse
+import heapq
 import importlib.util
 import json
 import math
@@ -54,6 +55,12 @@ write_bmp = conv.write_bmp
 write_facade_texture = conv.write_facade_texture
 write_o3d = conv.write_o3d
 write_utf16 = conv.write_utf16
+
+
+def write_ansi(path, lines):
+    """Side files (ailists.cfg, drivers.txt, parklist_p.txt) are ANSI, not UTF-16."""
+    with open(path, "w", encoding="cp1252", errors="replace", newline="\r\n") as f:
+        f.write("\n".join(lines) + "\n")
 
 TILE = 300.0
 CELLS = 60
@@ -470,6 +477,59 @@ def main():
                     best = hv
         return best if best is not None else 0.0
 
+    # Raw terrain samples can change sharply between nearby OSM vertices. That
+    # creates impossible road grades, especially on short segments. Build one
+    # graph from all emitted spline endpoints and solve a smoothed 8.0% height
+    # envelope across connected roads before serializing the splines.
+    road_graph = defaultdict(list)
+    road_initial = {}
+    road_keys = {}
+    for tile in tiles.values():
+        for s in tile.splines:
+            (lat0, lon0), (lat1, lon1) = s["ends"]
+            p0 = tuple(round(v, 3) for v in to_global(lat0, lon0))
+            p1 = tuple(round(v, 3) for v in to_global(lat1, lon1))
+            if p0 == p1:
+                continue
+            length = math.dist(p0, p1)
+            road_graph[p0].append((p1, length * 0.08))
+            road_graph[p1].append((p0, length * 0.08))
+            road_initial.setdefault(p0, ground_at(lat0, lon0))
+            road_initial.setdefault(p1, ground_at(lat1, lon1))
+            road_keys[id(s)] = (p0, p1)
+
+    smoothed = dict(road_initial)
+    for _ in range(12):
+        updated = {}
+        for point, height in smoothed.items():
+            neighbors = road_graph[point]
+            if not neighbors:
+                updated[point] = height
+                continue
+            weights = [1.0 / max(distance, 5.0) for _, distance in neighbors]
+            mean = sum(smoothed[other] * weight for (other, _), weight in zip(neighbors, weights)) / sum(weights)
+            updated[point] = height * 0.7 + mean * 0.3
+        smoothed = updated
+
+    def road_envelope(sign):
+        distances = {point: sign * height for point, height in smoothed.items()}
+        queue = [(height, point) for point, height in distances.items()]
+        heapq.heapify(queue)
+        while queue:
+            height, point = heapq.heappop(queue)
+            if height > distances[point]:
+                continue
+            for other, cost in road_graph[point]:
+                candidate = height + cost
+                if candidate < distances[other]:
+                    distances[other] = candidate
+                    heapq.heappush(queue, (candidate, other))
+        return distances
+
+    upper = road_envelope(1)
+    lower = road_envelope(-1)
+    road_heights = {point: (upper[point] + lower[point]) / 2.0 for point in road_initial}
+
     for bid, (btx, bty, blocal) in footprint_xy.items():
         want = min(ground_at(*to_latlon(btx * TILE + px, bty * TILE + py)) for px, py in blocal)
         verts, tris, material = building_verts[bid]
@@ -481,12 +541,14 @@ def main():
                 [(v[0], v[1], v[2] + delta) + tuple(v[3:]) for v in verts], tris, material)
 
     # Spline ends ride the final ground too, so a road never sinks below the
-    # terrain or floats above it.
+    # terrain or floats above it. Heights use the road envelope above so the
+    # road remains driveable across steep DEM noise and tile boundaries.
     for tile in tiles.values():
         for s in tile.splines:
             (lat0, lon0), (lat1, lon1) = s["ends"]
-            z0 = ground_at(lat0, lon0)
-            z1 = ground_at(lat1, lon1)
+            p0, p1 = road_keys.get(id(s), (None, None))
+            z0 = road_heights.get(p0, ground_at(lat0, lon0))
+            z1 = road_heights.get(p1, ground_at(lat1, lon1))
             s["pos"] = (s["pos"][0], s["pos"][1], z0)
             s["grad"] = (z1 - z0) / s["length"] * 100.0 if s["length"] else 0.0
             s["delta_h"] = z1 - z0
@@ -623,10 +685,14 @@ def main():
     write_utf16(os.path.join(out, "global.cfg"), gl)
 
     # ---- side files ----
+    # TTData, ailists.cfg, parklist_p.txt and drivers.txt are ANSI, unlike
+    # global.cfg and the tiles (UTF-16LE BOM). Generate-BigMapTTData.py rebuilds
+    # Busstops.cfg with the right tile indices; this is the raw first pass.
     if stop_cfg:
-        write_utf16(os.path.join(out, "TTData", "Busstops.cfg"), "\n".join(stop_cfg))
-    write_utf16(os.path.join(out, "drivers.txt"), ["DefaultDriver"])
-    write_utf16(os.path.join(out, "ailists.cfg"), ["[sorts]", "1", "0", "", "[ailist]", "0", "-1"])
+        write_ansi(os.path.join(out, "TTData", "Busstops.cfg"), "\n".join(stop_cfg))
+    write_ansi(os.path.join(out, "drivers.txt"), ["humans\\driver.hum"])
+    write_ansi(os.path.join(out, "ailists.cfg"),
+               ["[aigroup_2]", "NormalCars", "HK_BigMap AI", "[end]", ""])
 
     print(f"\ndone -> {out}")
     print(f"  tiles       {len(order)}")
