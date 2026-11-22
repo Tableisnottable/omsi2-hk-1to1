@@ -354,7 +354,6 @@ mod_package : .e6m_package {
  display_name: "KMB ADL Enviro500 MMC E6M - conversion prototype"
  author: "Original OMSI asset authors; local ETS2 conversion"
  category[]: "truck"
- category[]: "bus"
  description_file: "mod_description.txt"
 }
 }

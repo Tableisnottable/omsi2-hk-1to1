@@ -1,15 +1,16 @@
 # Local E6M conversion for ETS2
 
-Version 0.2.1 targets the locally installed ETS2 1.62.3.3. It adds an experimental
+Version 0.2.2 targets the locally installed ETS2 1.62.3.3. It adds an experimental
 native Coach Mode E6M alongside the truck prototype. Dealer preview, purchasing,
 driving, doors, and passenger boarding still need runtime verification.
 
 ## Crash investigation
 
-The most recent available normal-home log is from November 14, 2026 at 02:16.
-It loaded version 0.1.1 and reported missing wheel instances 4 and 5, an incorrect
-rear wheel definition, and failure to create a 2x2 image. These logs do not
-establish whether a later build has been tested.
+The November 22, 2026 log reaches profile `trucksmp` without an E6M crash. It
+scans the package in Mod Manager, but does not record the E6M mod becoming active.
+It also warns that `bus` is an unknown package category, so version 0.2.2 removes
+that category while retaining the native Coach Mode dealer definitions. The
+separate crash file is from March 23, 2025 on ETS2 1.53.3.21, not this test.
 
 The 0.1.2 repair added rear wheel accessories at offset 2 and resized seven
 undersized textures to 4x4 before DDS compilation. This version also fixes

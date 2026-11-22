@@ -1,20 +1,21 @@
 {
   "target_game": "ETS2 1.62.3.3",
-  "last_available_crash_log": "2026-11-14 02:16, mod 0.1.1",
+  "latest_log": "2026-11-22 startup reached profile trucksmp; E6M was scanned but not recorded as active; no E6M crash recorded",
+  "previous_crash": "2026-11-14 log from E6M package 0.1.1",
   "checks": {
     "BUILD_REPORT.json": {
       "package": "ADL_E6M_ETS2_Test_v0.1.scs",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "files": 771,
-      "bytes": 58520078,
-      "sha256": "b0d6473500450318db99494ac132a484a9643d3f7446b71581803bcfd5b57b34",
+      "bytes": 58520071,
+      "sha256": "ec152ca2b35ad4e9bdb1f4862eb82170704028362eea546b2ac513eae2c3e4f5",
       "compiler_errors": 0,
       "definitions_checked": 27,
       "includes_checked": 13,
       "invalid_indented_includes": 0
     },
     "DEFINITION_CHECK.json": {
-      "version": "0.2.1",
+      "version": "0.2.2",
       "archive_crc": "passed",
       "definition_syntax": "passed",
       "global_unit_ids_unique": "passed",
@@ -83,9 +84,9 @@
       "game_runtime_verified": false
     },
     "INSTALL_REPORT.json": {
-      "version": "0.2.1",
-      "installed_sha256": "b0d6473500450318db99494ac132a484a9643d3f7446b71581803bcfd5b57b34",
-      "previous_sha256": "94ac2a17661583bb6937328023ef0fa2ae7b166e9bf5447c53878a0b21bca934",
+      "version": "0.2.2",
+      "installed_sha256": "ec152ca2b35ad4e9bdb1f4862eb82170704028362eea546b2ac513eae2c3e4f5",
+      "previous_sha256": "b0d6473500450318db99494ac132a484a9643d3f7446b71581803bcfd5b57b34",
       "runtime_retest_pending": true
     },
     "REGRESSION_CHECK.json": {
@@ -94,5 +95,5 @@
       "archived_small_textures": 7
     }
   },
-  "runtime_status": "Not verified: dealer preview, purchase, driving, doors and boarding require a user test."
+  "runtime_status": "E6M activation, dealer preview, purchase and driving remain unverified."
 }

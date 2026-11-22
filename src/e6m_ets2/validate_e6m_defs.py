@@ -116,6 +116,7 @@ def main():
             return '\n'.join(output)
         parsed={path:Parser(expand(path),path).units() for path in sorted(names) if path.endswith('.sii')}
         assert parsed['manifest.sii']['.e6m_package']['attrs']['package_version'][0]==VERSION
+        assert parsed['manifest.sii']['.e6m_package']['attrs']['category[]']==['truck'], 'Manifest contains an ETS2-unknown category'
         global_owners={}
         for path,defs in parsed.items():
             for name in defs:
