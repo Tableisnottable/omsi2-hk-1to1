@@ -1,8 +1,10 @@
 # Local E6M conversion for ETS2
 
-Version 0.2.2 targets the locally installed ETS2 1.62.3.3. It adds an experimental
-native Coach Mode E6M alongside the truck prototype. Dealer preview, purchasing,
-driving, doors, and passenger boarding still need runtime verification.
+Version 0.3.0 targets the locally installed ETS2 1.62.3.3. It contains the E6M
+prototype plus a second drivable Coach Mode model, the ADL Enviro500 ATENU. The
+ATENU uses the installed `ATENU.bus` configuration and a measured three-axle
+layout. Dealer preview, purchasing, driving, doors, and passenger boarding still
+need runtime verification.
 
 ## Crash investigation
 
@@ -23,6 +25,9 @@ unfinished 0.2.0 coach integration:
 - Native coach dealer and browser registrations use the bus definition tree.
 - Passenger capacity is provisionally 80 and suspension class is `bus`.
 - Automatic coach jobs stay disabled until door/boarding support is tested.
+- The ATENU has its own model and texture paths, coach definitions, dealer entry,
+  camera IDs, and wheel locators. Engine and passenger capacity values are
+  provisional copies from the E6M coach template.
 
 ## Build inputs
 
@@ -39,6 +44,33 @@ The report is written to `work/e6m_ets2/bus_inventory.json` by default. A
 drivable candidate is only an inventory result; encrypted geometry, shared
 dependencies, author permissions, cockpit setup, axle layouts, and ETS2 runtime
 compatibility must still be checked before packaging each bus.
+
+Before attempting a family, inspect a specific OMSI bus configuration with the
+local O3D importer. This report checks each referenced mesh, flags encrypted or
+unreadable geometry, measures mesh bounds, and lists missing textures. It does
+not modify the source bus or package an ETS2 mod.
+
+```powershell
+$env:E6M_WORKSPACE = '<path to the existing E6M build workspace>'
+python .\src\e6m_ets2\inspect_bus.py 'A:\SteamLibrary\steamapps\common\OMSI 2\Vehicles\ADL_E500MMC_KMB_ATENU\ATENU.bus'
+```
+
+The per-configuration report is written under `work/bus_audits/` in the local
+build workspace unless `--output` is specified.
+
+The current ATENU geometry was built from `ATENU.bus` after passing that audit.
+To rebuild visible body geometry and measured two- or three-axle wheel locators
+in the local SCS source tree:
+
+```powershell
+python .\src\e6m_ets2\build_bus_geometry.py 'A:\SteamLibrary\steamapps\common\OMSI 2\Vehicles\ADL_E500MMC_KMB_ATENU\ATENU.bus' --key adl_atenu
+```
+
+The first geometry build for a new family produces intermediate model files
+only. After the model files exist, `build.ps1 -SkipMeshes` writes Coach Mode
+definitions, compiles and packages the mod, then runs the preflight. The 0.3.0
+package includes E6M and ATENU; the other inventoried buses still need their own
+geometry and definitions.
 
 Only the conversion scripts and reports belong in this repository. Locally
 installed OMSI and SCS game meshes, textures, sounds, compiled packages, Blender
@@ -76,12 +108,13 @@ SHA256. A static pass does not confirm playability.
 
 ## Test
 
-Restart ETS2, use a separate test profile, activate the E6M mod, then switch to
-Coach Mode. Look for ADL / Enviro500 MMC E6M in the coach dealer or bus browser.
-This menu route is inferred from the installed dealer registration and still
-needs a runtime check. The old truck prototype remains at Access Mod Dealer /
-Scania. Use F2 virtual mirrors and automatic transmission. Dashboard, steering
-wheel, doors, displays, wipers, and boarding remain unfinished.
+Restart ETS2, use a separate test profile, activate **KMB Bus Conversion Pack -
+E6M and ATENU**, then switch to Coach Mode. Look for E6M or ATENU in the ADL
+coach dealer or bus browser. This menu route is inferred from the installed
+dealer registration and still needs a runtime check. The old E6M truck prototype
+remains at Access Mod Dealer / Scania. Use F2 virtual mirrors and automatic
+transmission. Dashboard controls, destination displays, animated doors, wipers,
+and passenger boarding remain unfinished for both coaches.
 
 After a failure, preserve `game.log.txt` and `game.crash.txt` from the game home
 before restarting. Check the mod version in that log and record the exact stage

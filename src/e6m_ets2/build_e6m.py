@@ -8,6 +8,7 @@ from inspect_e6m import ROOT, BUS, mesh_blocks, load
 BASE = ROOT/'work/scs_source'
 DEST = BASE/'vehicle/truck/adl_e6m'
 TEXT = DEST/'textures'
+MODEL_KEY = 'adl_e6m'
 REPORT = {'missing_textures': [], 'materials': [], 'meshes': [], 'excluded': []}
 
 def put(path, text):
@@ -49,8 +50,8 @@ def texture(name):
         img=img.resize((nw,nh),Image.Resampling.LANCZOS)
     alpha = img.getchannel('A').getextrema()
     img.save(TEXT/(alias+'.tga'))
-    put(f'vehicle/truck/adl_e6m/textures/{alias}.tobj',f'map 2d\n /vehicle/truck/adl_e6m/textures/{alias}.tga\naddr\n repeat\n repeat\n')
-    out={'path':f'/vehicle/truck/adl_e6m/textures/{alias}', 'file':str(TEXT/(alias+'.tga')), 'alpha':alpha, 'source':str(src) if src else None}
+    put(f'vehicle/truck/{MODEL_KEY}/textures/{alias}.tobj',f'map 2d\n /vehicle/truck/{MODEL_KEY}/textures/{alias}.tga\naddr\n repeat\n repeat\n')
+    out={'path':f'/vehicle/truck/{MODEL_KEY}/textures/{alias}', 'file':str(TEXT/(alias+'.tga')), 'alpha':alpha, 'source':str(src) if src else None}
     TEX_MAP[key]=out
     return out
 

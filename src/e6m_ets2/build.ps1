@@ -22,6 +22,8 @@ if (-not $SkipMeshes) {
 }
 python (Join-Path $PSScriptRoot 'write_defs.py')
 if ($LASTEXITCODE -ne 0) { throw 'Definition generation failed' }
+python (Join-Path $PSScriptRoot 'write_bus_defs.py')
+if ($LASTEXITCODE -ne 0) { throw 'Additional coach definitions failed' }
 Push-Location -LiteralPath $toolsDir
 try {
     & '.\resconvert.exe' -update -root e6m

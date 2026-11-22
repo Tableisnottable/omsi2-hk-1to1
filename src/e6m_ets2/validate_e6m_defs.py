@@ -175,9 +175,12 @@ def main():
                 expected_bus={'a_tire':[0,2],'a_disc':[0,2],'a_hub':[0,2],'a_nuts':[0,2], 'b_tire':[0],'b_disc':[0],'b_hub':[0],'b_nuts':[0]}
                 assert {k:sorted(v) for k,v in wheel_offsets.items()}==expected_bus, f'{path}: incomplete coach axle wheel coverage {wheel_offsets}'
         # Verify the two custom cameras actually exist in the camera registry files.
-        for suffix in ('',' .oculus'):
-            name='camera.interior.adl.e6m'+suffix.replace(' ','')
-            assert any(name in defs for path,defs in parsed.items() if path.startswith('def/camera/camera_storage'))
+        camera_registrations=0
+        for model in ('e6m','atenu'):
+            for suffix in ('','.oculus'):
+                name=f'camera.interior.adl.{model}{suffix}'
+                assert any(name in defs for path,defs in parsed.items() if path.startswith('def/camera/camera_storage'))
+                camera_registrations+=1
         required=['chassis','cabin','interior','engine','transmission','paint_job','head_light','f_tire','r_tire']
         data=parsed['def/vehicle/truck/adl.e6m/data.sii']['vehicle.adl.e6m']['attrs']
         fallbacks={value.split('|',1)[0]:value.split('|',1)[1] for value in data['fallback[]']}
@@ -195,19 +198,26 @@ def main():
         assert bus_chassis['suspension_class'][0]=='bus'
         assert int(bus_chassis['passenger_capacity'][0])==80
         assert len(bus_chassis['residual_travel[]'])==3
-        assert bus_config_count==2, 'Expected coach dealer and browser registrations'
+        atenu_data=parsed['def/vehicle/bus/adl.atenu.coach/data.sii']['vehicle.adl.atenu.coach']['attrs']
+        assert atenu_data['interior_camera'][0]=='camera.interior.adl.atenu'
+        atenu_chassis=parsed['def/vehicle/bus/adl.atenu.coach/chassis/6x2.sii']['6x2.adl.atenu.coach.chassis']['attrs']
+        assert atenu_chassis['suspension_class'][0]=='bus'
+        assert len(atenu_chassis['residual_travel[]'])==3
+        assert bus_config_count==4, 'Expected dealer and browser presets for both coaches'
         assert 'def/vehicle/bus_line/adl_e6m.sii' not in names, 'Quick jobs must wait for door/boarding runtime validation'
         model_checks={}
-        for kind,expected in [('truck',{'wheel_f_0_0','wheel_f_1_0','wheel_r_0_0','wheel_r_1_0','wheel_r_2_0','wheel_r_3_0'}),
-                              ('coach',{'wheel_a_0','wheel_a_1','wheel_a_2','wheel_a_3','wheel_b_0','wheel_b_1'})]:
-            path='vehicle/truck/adl_e6m/'+kind+'.pmg'
+        models=[('adl_e6m','truck',{'wheel_f_0_0','wheel_f_1_0','wheel_r_0_0','wheel_r_1_0','wheel_r_2_0','wheel_r_3_0'}),
+                ('adl_e6m','coach',{'wheel_a_0','wheel_a_1','wheel_a_2','wheel_a_3','wheel_b_0','wheel_b_1'}),
+                ('adl_atenu','coach',{'wheel_a_0','wheel_a_1','wheel_a_2','wheel_a_3','wheel_b_0','wheel_b_1'})]
+        for model_key,kind,expected in models:
+            path=f'vehicle/truck/{model_key}/{kind}.pmg'
             locators=compiled_locators(z.read(path))
             actual={name for name in locators if name.startswith('wheel_')}
-            assert actual==expected, f'{kind}: compiled wheel locators {actual} differ from {expected}'
+            assert actual==expected, f'{model_key}/{kind}: compiled wheel locators {actual} differ from {expected}'
             positions=[locators[name] for name in sorted(actual)]
-            assert len({round(p[2],3) for p in positions})==3, f'{kind}: wheels do not cover three longitudinal axle positions'
+            assert len({round(p[2],3) for p in positions})==3, f'{model_key}/{kind}: wheels do not cover three longitudinal axle positions'
             assert sum(p[0]<0 for p in positions)==3 and sum(p[0]>0 for p in positions)==3
-            model_checks[kind]=sorted(actual)
+            model_checks[f'{model_key}_{kind}']=sorted(actual)
         dds_count=0
         for path in sorted(names):
             if not path.endswith('.dds'): continue
@@ -223,12 +233,14 @@ def main():
             size=sum(max(1,(max(1,w>>i)+3)//4)*max(1,(max(1,h>>i)+3)//4)*16 for i in range(mips))
             assert len(blob)==148+size, f'{path}: truncated DDS ({len(blob)} vs {148+size})'
             dds_count+=1
-        for kind,folder in (('truck','truck/adl.e6m'),('coach','bus/adl.e6m.coach')):
-            for category in ('chassis/6x2.sii','cabin/e6m.sii'):
+        for model_key,folder,kind,cabin_file in (('adl_e6m','truck/adl.e6m','truck','e6m.sii'),
+                                                  ('adl_e6m','bus/adl.e6m.coach','coach','e6m.sii'),
+                                                  ('adl_atenu','bus/adl.atenu.coach','coach','atenu.sii')):
+            for category in ('chassis/6x2.sii','cabin/'+cabin_file):
                 attrs=next(iter(parsed['def/vehicle/'+folder+'/'+category].values()))['attrs']
-                assert attrs['model'][0]=='/vehicle/truck/adl_e6m/'+kind+'.pmd'
+                assert attrs['model'][0]==f'/vehicle/truck/{model_key}/{kind}.pmd'
                 assert attrs['model'][0].lstrip('/') in names
-        report={'version':VERSION,'archive_crc':'passed','definition_syntax':'passed','global_unit_ids_unique':'passed','sii_files':len(parsed),'include_edges':len(includes),'truck_dealer_and_browser_presets':dealer_count,'native_coach_presets':bus_config_count,'preset_accessory_references':accessory_count,'truck_fallbacks':len(required),'camera_registrations':2,'truck_axles':axle_count,'truck_wheel_pair_offsets':expected_wheels,'native_coach_suspension':'bus','coach_passenger_capacity':80,'coach_axle_wheel_coverage':'passed','compiled_model_wheel_locators':model_checks,'compiled_dds_textures':dds_count,'dds_dimensions_and_payloads':'passed','single_lod_model_paths':'passed','game_runtime_verified':False}
+        report={'version':VERSION,'archive_crc':'passed','definition_syntax':'passed','global_unit_ids_unique':'passed','sii_files':len(parsed),'include_edges':len(includes),'truck_dealer_and_browser_presets':dealer_count,'native_coach_presets':bus_config_count,'preset_accessory_references':accessory_count,'truck_fallbacks':len(required),'camera_registrations':camera_registrations,'truck_axles':axle_count,'truck_wheel_pair_offsets':expected_wheels,'native_coach_suspension':'bus','coach_passenger_capacity':80,'coach_axle_wheel_coverage':'passed','compiled_model_wheel_locators':model_checks,'compiled_dds_textures':dds_count,'dds_dimensions_and_payloads':'passed','single_lod_model_paths':'passed','game_runtime_verified':False}
         (ROOT/'outputs/E6M_ETS2/DEFINITION_CHECK.json').write_text(json.dumps(report,indent=2),encoding='utf8')
         print(json.dumps(report,indent=2))
 

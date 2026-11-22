@@ -9,9 +9,12 @@ MODNAME = 'ADL_E6M_ETS2_Test_v0.1.scs'
 
 def main():
     OUT.mkdir(parents=True,exist_ok=True)
-    for name in ('truck.pmd','truck.pmg','truck.pmc','coach.pmd','coach.pmg','coach.pmc','interior.pmd','interior.pmg'):
-        path=CACHE/'vehicle/truck/adl_e6m'/name
-        assert path.is_file() and path.stat().st_size > 1000, str(path)
+    for model_key,names in (('adl_e6m',('truck.pmd','truck.pmg','truck.pmc','coach.pmd','coach.pmg','coach.pmc','interior.pmd','interior.pmg')),
+                            ('adl_atenu',('coach.pmd','coach.pmg','coach.pmc','interior.pmd','interior.pmg'))):
+        for name in names:
+            path=CACHE/'vehicle/truck'/model_key/name
+            minimum=500 if name.endswith('.pmc') else 1000
+            assert path.is_file() and path.stat().st_size > minimum, str(path)
     log=(ROOT/'work/compile_final.log').read_text(errors='replace')
     assert '*** ERROR ***' not in log, 'Compiler reported errors'
     assert 'Conversion finished' in log, 'Compiler did not finish'
