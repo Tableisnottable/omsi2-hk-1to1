@@ -383,6 +383,12 @@ def main():
                         tile.splines.append({
                             "file": f"Splines\\HK_Roads\\w{width:.1f}.sli",
                             "id": next_spline_id,
+                            "way_id": int(w.get("id") or 0),
+                            "way_segment": i,
+                            "source_start": (ax, ay),
+                            "source_end": (bx, by),
+                            "global_start": (ox + x0, oy + y0),
+                            "global_end": (ox + x1, oy + y1),
                             "pos": (x0, y0, z0),
                             "heading": math.degrees(math.atan2(x1 - x0, y1 - y0)),
                             "length": length,
@@ -553,6 +559,44 @@ def main():
             s["grad"] = (z1 - z0) / s["length"] * 100.0 if s["length"] else 0.0
             s["delta_h"] = z1 - z0
 
+    # Link only consecutive pieces from the same OSM way. The old writer linked
+    # every spline in a tile by list order, which joined unrelated streets and
+    # made the road network impossible to drive across busy tiles.
+    all_splines = [s for tile in tiles.values() for s in tile.splines]
+    by_way_segment = defaultdict(list)
+    for s in all_splines:
+        s["prev"] = 0
+        s["next"] = 0
+        by_way_segment[(s["way_id"], s["way_segment"])].append(s)
+
+    def piece_order(s):
+        sx, sy = s["source_start"]
+        ex, ey = s["source_end"]
+        dx, dy = ex - sx, ey - sy
+        denom = dx * dx + dy * dy or 1.0
+        gx, gy = s["global_start"]
+        return ((gx - sx) * dx + (gy - sy) * dy) / denom
+
+    def join(a, b):
+        a_key = road_keys.get(id(a), (None, None))[1]
+        b_key = road_keys.get(id(b), (None, None))[0]
+        z_gap = abs(road_heights.get(a_key, 0.0) - road_heights.get(b_key, 0.0))
+        if math.dist(a["global_end"], b["global_start"]) <= 0.05 and z_gap <= 0.25:
+            a["next"] = b["id"]
+            b["prev"] = a["id"]
+
+    by_way = defaultdict(list)
+    for (way_id, segment_index), pieces in by_way_segment.items():
+        pieces.sort(key=piece_order)
+        for a, b in zip(pieces, pieces[1:]):
+            join(a, b)
+        by_way[way_id].append((segment_index, pieces))
+    for segments in by_way.values():
+        segments.sort(key=lambda item: item[0])
+        for (_, previous), (_, following) in zip(segments, segments[1:]):
+            if previous and following:
+                join(previous[-1], following[0])
+
     # ---- one merged building mesh per tile ----
     # 12k separate .sco files made OMSI crawl on startup, so each tile's
     # buildings are baked into a single mesh/SCO pair instead.
@@ -599,14 +643,13 @@ def main():
     print(f"\nwriting {len(order)} tiles")
     for tx, ty in order:
         tile = tiles[(tx, ty)]
-        ids = [s["id"] for s in tile.splines]
         lines = ["[version]", str(VERSION), "", "[terrain]", ""]
         for i, s in enumerate(tile.splines):
             # OMSI's own tiles write 19 numbers per [spline] and no per-record
             # keyword: the 19th is [spline_h], the height gained over the length.
             lines += [
                 "[spline]", "0", s["file"], str(s["id"]),
-                str(ids[i - 1] if i else -1), str(ids[i + 1] if i + 1 < len(ids) else -1),
+                str(s["prev"]), str(s["next"]),
                 f"{s['pos'][0]:.6f}", f"{s['pos'][2]:.6f}", f"{s['pos'][1]:.6f}",
                 f"{s['heading']:.6f}", f"{s['length']:.6f}", "0",
                 f"{s['grad']:.6f}", f"{s['grad']:.6f}",

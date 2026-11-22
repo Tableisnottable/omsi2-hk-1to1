@@ -150,6 +150,8 @@ configured OMSI 2 directory. The current local package contains:
   OMSI installation
 - road endpoint heights smoothed across the territory with an 8.0% design-grade
   cap; the rebuilt package has **0 segments above 8.5%**
+- spline links follow the source OSM way across tile borders; unrelated roads
+  are left unlinked instead of being chained by tile-file order
 
 The generated map and scenery remain local because they are large assets. The
 repository stores the converter, route-data generator and documentation needed
