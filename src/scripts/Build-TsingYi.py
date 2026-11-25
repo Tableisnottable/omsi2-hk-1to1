@@ -325,12 +325,9 @@ def main():
                     distances[q]=candidate; heapq.heappush(queue,(candidate,q))
         return distances
     upper=envelope(1); lower=envelope(-1)
-    # `lower` is stored in negated form by envelope(-1): the shortest-path
-    # result is -max(raw_height - grade_limit * distance). Add the two bounds
-    # to recover their midpoint. Subtracting it creates alternating full-cap
-    # slopes at adjacent OSM vertices, which appear as driveable-looking but
-    # severe bumps in the simulator.
-    road_heights={p:(upper[p]+lower[p])/2 for p in initial}
+    # The negative-seed search returns the negated lower estimate. Restore
+    # its sign before averaging so a level road retains its DEM elevation.
+    road_heights={p:(upper[p]-lower[p])/2 for p in initial}
 
     # Native road splines are linked only within their real OSM way, including
     # across tile boundaries. Unrelated streets never receive arbitrary links.
