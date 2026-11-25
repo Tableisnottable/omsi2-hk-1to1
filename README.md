@@ -12,6 +12,28 @@ Hong Kong map-generation tools, route catalogues, HOF data and browser previews 
 | `HK_BigMap` | Experimental combined grid from the retained district extracts; coverage and road connectivity still need validation | [BigMap implementation notes](BIGMAP.md) |
 | `HP1C_*` | Earlier 19-area data scaffold and district converter; separate from the Tsing Yi build | Earlier HP1C workflow below |
 
+## Real-world import workflow
+
+The Tsing Yi builder converts OpenStreetMap roads and building footprints, terrain
+heights and the coastline into native OMSI 2 assets. It is the pilot for a workflow
+similar to [Earth2Cities](https://mods.paradoxplaza.com/mods/140919/Windows), which
+imports real-world data into Cities: Skylines II. OMSI's road surfaces, collision and
+bus paths need their own export and driving checks.
+
+Use the Python environment and cached extract from the Tsing Yi instructions below
+to plan expansion of the Hong Kong grid:
+
+```powershell
+work/venv/Scripts/python src/scripts/Plan-HongKongImport.py
+```
+
+Open `work/hk-import/road-tiles.geojson` in a GIS viewer. Each 300 m tile reports
+source road length by surface, bridge and tunnel, and whether the tile is registered
+in `HK_BigMap`. Use `--bounds WEST SOUTH EAST NORTH` to measure a smaller area.
+Tile overlap measures geographic coverage only. A registered tile can contain
+missing roads. The report uses the full cached extract boundary and does not
+clip to the administrative boundary or generate OMSI map files.
+
 The older district extracts do not establish complete Hong Kong road coverage. A route appearing in the CSV catalogue or HOF is not proof that its road path, timetable or passenger service is playable.
 
 ## Build Tsing Yi locally / 本機建立青衣
