@@ -71,6 +71,12 @@ Extract the dedicated ZIP into the OMSI 2 game folder, merging `maps`, `Splines`
 
 Remaining work includes authored junction connectors/signals, continuous bridge profiles, tunnel portals/interiors and terrain cuts, road-width/grade review, recognizable scenery, passenger/HOF tests and memory/FPS profiling. The retained build omits **54 tagged tunnel ways**, and bridge heights are estimates. Offline structural checks do not certify a drivable route.
 
+## OMSI 2 buses in ETS2 / 巴士轉換
+
+The experimental **KMB Bus Conversion Pack** `0.3.0` includes the **ADL Enviro500 MMC E6M** and **ADL Enviro500 ATENU** for ETS2 Coach Mode. The build targets ETS2 `1.62.3.3` and passed offline checks for vehicle definitions, dealer presets, models, and wheel locators. In-game dealer preview, purchase, and driving still need verification. Animated doors and passenger boarding are unfinished, so coach jobs are disabled. The rest of the OMSI fleet is still pending.
+
+Build the `.scs` locally from your installed OMSI 2 bus assets using the SCS Conversion Tools. GitHub hosts the conversion scripts and instructions. The generated mod, models, and textures stay local. For prerequisites and test steps, see the [ETS2 bus conversion guide](src/e6m_ets2/README.md).
+
 ## Earlier HP1C scaffold / 早期地區骨架
 
 The remaining HP1C instructions describe the earlier district scaffold, route catalogue, HOF and browser viewer. Its combined ZIP is generated locally; use the dedicated Tsing Yi workflow above for the current island build.
