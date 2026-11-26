@@ -2,37 +2,45 @@
 
 Hong Kong map-generation tools, route catalogues, HOF data and browser previews for OMSI 2 / OpenOMSI.
 
-**Current status — November 14, 2026:** the focused development build is **Tsing Yi / 青衣** (`HK_TsingYi`). It is a geographic and free-drive foundation with a provisional `248M_TEST` timetable. Loading, full-route driving, passenger operation and FPS remain unverified; this is not a finished playable service or a complete territory-wide map.
+**Current status / 目前進度** · 26 November 2026
+
+**Tsing Yi / 青衣** (`HK_TsingYi`) is the first area built from real-world terrain and OpenStreetMap data. The latest rebuild corrects the imported road elevations and includes the provisional `248M_TEST` timetable. The offline validator passed. OMSI loading, driving, passenger operation and frame rate still need in-game checks.
 
 ## Choose the correct build / 選擇正確版本
 
 | Build / 版本 | Purpose / 用途 | Guide / 文件 |
 | --- | --- | --- |
-| `HK_TsingYi` | Current focused island build, road-contact repair and provisional 248M test service | [Tsing Yi build, installation and test guide](TSING_YI.md) |
-| `HK_BigMap` | Experimental combined grid from the retained district extracts; coverage and road connectivity still need validation | [BigMap implementation notes](BIGMAP.md) |
+| `HK_TsingYi` | Tsing Yi development build with corrected road elevations, road-contact repair and provisional 248M test service | [Tsing Yi build, installation and test guide](TSING_YI.md) |
+| `HK_BigMap` | Experimental map built from partial district extracts, with gaps between areas | [BigMap implementation notes](BIGMAP.md) |
 | `HP1C_*` | Earlier 19-area data scaffold and district converter; separate from the Tsing Yi build | Earlier HP1C workflow below |
 
-## Real-world import workflow
+## Real-world import workflow / 真實地圖匯入
 
-The Tsing Yi builder converts OpenStreetMap roads and building footprints, terrain
-heights and the coastline into native OMSI 2 assets. It is the pilot for a workflow
-similar to [Earth2Cities](https://mods.paradoxplaza.com/mods/140919/Windows), which
-imports real-world data into Cities: Skylines II. OMSI's road surfaces, collision and
-bus paths need their own export and driving checks.
+The Tsing Yi builder converts OpenStreetMap roads, building footprints and
+coastline, along with Skadi terrain heights, into native OMSI 2 assets. The
+workflow takes inspiration from real-world map imports in Cities: Skylines II.
+The current tools build Tsing Yi and let you select other areas for road coverage
+planning. Building other areas from a browser selection is still in development.
+[Earth2Cities reference](https://mods.paradoxplaza.com/mods/140919/Windows)
+
+The cached Hong Kong extract contains **6,342 road-bearing 300 m tiles** for
+the road classes measured by the planner. Of these, **481** intersect the
+registered `HK_BigMap` grid and **5,861** are outside it. This measures where
+source roads overlap the existing grid. Individual road coverage and
+connectivity within each registered tile still need checking.
 
 Use the Python environment and cached extract from the Tsing Yi instructions below
 to plan expansion of the Hong Kong grid:
 
 ```powershell
-work/venv/Scripts/python src/scripts/Plan-HongKongImport.py
+.\work\venv\Scripts\python.exe src/scripts/Plan-HongKongImport.py
 ```
 
 Open `work/hk-import/road-tiles.geojson` in a GIS viewer. Each 300 m tile reports
 source road length by surface, bridge and tunnel, and whether the tile is registered
-in `HK_BigMap`. Use `--bounds WEST SOUTH EAST NORTH` to measure a smaller area.
-Tile overlap measures geographic coverage only. A registered tile can contain
-missing roads. The report uses the full cached extract boundary and does not
-clip to the administrative boundary or generate OMSI map files.
+in `HK_BigMap`. Use `--bounds WEST SOUTH EAST NORTH` to measure a smaller area
+in WGS84 longitude and latitude. Without that option, the planner measures the
+full extract, including roads beyond Hong Kong's administrative boundary.
 
 The older district extracts do not establish complete Hong Kong road coverage. A route appearing in the CSV catalogue or HOF is not proof that its road path, timetable or passenger service is playable.
 
@@ -51,9 +59,9 @@ py -m venv work/venv
 
 Fetching downloads the geographic inputs; later builds can reuse the retained cache offline. The builder replaces only the dedicated `HK_TsingYi` map, scenery and spline folders and preserves their previous versions under `work/`. It also generates the test timetable and runs the road-contact repair. See [TSING_YI.md](TSING_YI.md) for prerequisites, backups and the repair command for an existing build.
 
-The retained local manifest records **321 tiles, 8,022 road splines, 1,163 buildings, 166 bus stops and six entrypoints**. Counts belong to that source snapshot; consult the generated `build_manifest.json` after rebuilding. Terrain-contact repair constrains ground beneath roads and fills uncovered join wedges. It does not author missing junction AI paths, traffic signals or tunnels.
+The latest build has **321 tiles, 8,022 road splines, 1,163 buildings, 166 bus stops and six entrypoints**. The elevation fix removed a sign error that placed 4,334 spline starts more than 1 m below sea level in the previous build. The rebuilt map has zero such starts. Offline checks passed for road grades, terrain seams, road clearance and timetable references. See the generated `build_manifest.json` for counts from your source snapshot.
 
-`248M_TEST` connects Tsing Yi Station and Cheung Wang with two duties and provisional 30-minute departures. Its road tracks, stop approaches and running times need in-engine checks; it is **not the published KMB timetable**. `249M` remains an authoring reference.
+`248M_TEST` connects Tsing Yi Station and Cheung Wang with two duties and provisional 30-minute departures. Departure times and running times are generated for testing. Road tracks and stop approaches still need in-game checks. `249M` remains an authoring reference.
 
 ### Install or test / 安裝及測試
 
